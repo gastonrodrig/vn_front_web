@@ -1,0 +1,68 @@
+<div
+  class="flex flex-col items-center w-full bg-dark-blue-1 h-screen p-5 relative shadow-2xl"
+  [ngClass]="{ 'w-72': open, 'w-20': !open }">
+  <div
+    class="bg-white text-dark-blue-1 flex justify-center items-center 
+    rounded-full w-10 h-10 absolute -right-3 border border-dark-blue-1 
+    cursor-pointer hover:bg-light-blue-1" 
+    (click)="toggleOpen()">
+    <i class="fa-solid fa-arrow-left" [ngClass]="{ 'rotate-180 ' : !open }"></i>
+  </div>
+
+  <!-- Titulo -->
+  <div class="flex justify-center items-center cursor-pointer" routerLink="/admin">
+    <i 
+      class="fa-solid fa-school text-white me-2 text-xl"
+      [ngClass]="{ 'me-0' : !open }" 
+      >
+    </i>
+    <p 
+      class="text-white origin-left font-thin text-2xl " 
+      [ngClass]="{ 'scale-0 hidden transition-all duration-1000' : !open }"
+      (click)="clearSelection()"
+    >
+      Colegio
+    </p>
+  </div>
+
+  <!-- Buscador -->
+  <div class="flex items-center mt-6">
+    <input 
+      type="text"
+      class="rounded-ss-2xl rounded-es-2xl bg-dark-blue-2 w-full px-3 py-2 outline-none text-white"
+      placeholder="Buscar ..." 
+      [ngClass]="{ 'scale-0 hidden' : !open }"
+    >
+    <i 
+      class="fa-solid fa-magnifying-glass rounded-ee-2xl rounded-se-2xl active:bg-dark-blue-2
+      bg-dark-blue-3 p-3 fa-solid text-white "
+      [ngClass]="{ 'rounded-ss-2xl rounded-es-2xl' : !open }"
+    ></i>
+  </div>
+
+  <!-- Modulos -->
+  <ul class="pt-2">
+    @for (modulo of listaModulos; track modulo.id) {
+      <li 
+        class="text-gray-300 text-sm cursor-pointer p-2  rounded-md mt-2"
+        [ngClass]="{ 
+          'bg-cyan-600 hover:bg-cyan-600': modulo.id === selectedModule,
+          'hover:bg-dark-blue-2' : modulo.id !== selectedModule
+          }"
+        (click)="toggleClick(modulo)"
+        [routerLink]="'/admin/' + modulo.route"
+        >
+        <div class="grid grid-cols-12 items-center">
+          <div [ngClass]="{ 'col-span-12': !open, 'col-span-3': open }">
+            <span class="text-xl flex justify-center px-6">
+              <i [class]="'fa-solid fa-' + modulo.icon"></i>
+            </span>
+          </div>
+          <div [ngClass]="{ 'hidden' : !open, 'col-span-9' : open }">
+            <span [ngClass]="{ 'scale-0 hidden' : !open }">{{ modulo.titulo }}</span>
+          </div>
+        </div>
+      </li>
+    }
+  </ul>
+</div>

@@ -8,9 +8,9 @@ export const listaModulos = [
     },
     {
         id: 2,
-        nombre: 'Alumnos',
-        route: 'gestionar-alumnos',
-        titulo: 'Alumnos',
+        nombre: 'Estudiantes',
+        route: 'gestionar-estudiantes',
+        titulo: 'Estudiantes',
         icon: 'user-graduate'
     },
     {

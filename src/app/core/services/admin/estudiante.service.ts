@@ -5,8 +5,13 @@ import { baseUrl } from '../../helpers/baseUrl';
 @Injectable({
   providedIn: 'root'
 })
-export class AlumnoService {
+export class EstudianteService {
   constructor(private http:HttpClient) {}
  
-
+  listarEstudiantes() {
+    return this.http.get(`${baseUrl}/estudiante/`);
+  }
+  ObtenerEstudiante(id: string) {
+    return this.http.get(`${baseUrl}/estudiante/${id}`);
+  }
 }

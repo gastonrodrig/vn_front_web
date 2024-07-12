@@ -1,0 +1,26 @@
+<div class="m-4 shadow-md rounded-lg">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Apellido</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Documento</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grado</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seccion</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Periodo</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            @for (estudiante of estudiantes; track estudiante.estudiante_id) {
+                <tr class="px-6 py-4 whitespace-nowrap text-sm">
+                    <td class="px-6 py-4">{{ estudiante.nombre }}</td>
+                    <td class="px-6 py-4">{{ estudiante.apellido }}</td>
+                    <td class="px-6 py-4">{{ estudiante.numero_documento }}</td>
+                    <td class="px-6 py-4">{{ estudiante.seccion.grado.nombre }}</td>
+                    <td class="px-6 py-4">{{ estudiante.seccion.nombre }}</td>
+                    <td class="px-6 py-4">{{ estudiante.seccion.periodo.anio }}</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

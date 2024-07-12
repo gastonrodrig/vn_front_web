@@ -1,5 +1,5 @@
 <div class="flex flex-col items-center w-full bg-dark-blue-1 h-screen p-5 duration-500 relative"
-  [ngClass]="{ 'w-[220px]': open, 'w-[75px]': !open }">
+  [ngClass]="{ 'w-[230px]': open, 'w-[80px]': !open }">
 
   <!-- Boton de control del Sidebar -->
   <div
@@ -45,7 +45,7 @@
       <li 
         class="text-gray-300 text-base cursor-pointer p-2 px-6 rounded-md mt-2 w-full transition-all hover:bg-dark-blue-2"
         (click)="toggleClick(modulo)"
-        [ngClass]="{ 'text-cyan-400 hover:text-cyan-400': modulo.id === selectedModule }"
+        [ngClass]="{ 'text-cyan-500 hover:text-cyan-500': modulo.id === selectedModule }"
         [ngClass]="{ 'px-0' : !open, 'px-6' : open }"
         [routerLink]="'/admin/' + modulo.route"
         >

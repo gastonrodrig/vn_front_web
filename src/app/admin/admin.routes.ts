@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { GestionarAlumnosComponent } from './pages/gestionar-alumnos/gestionar-alumnos.component';
+import { GestionarEstudiantesComponent } from './pages/gestionar-estudiantes/gestionar-estudiantes.component';
 import { GestionarApoderadosComponent } from './pages/gestionar-apoderados/gestionar-apoderados.component';
 import { GestionarDocentesComponent } from './pages/gestionar-docentes/gestionar-docentes.component';
 import { GestionarSeccionesComponent } from './pages/gestionar-secciones/gestionar-secciones.component';
@@ -20,8 +20,8 @@ export const ADMIN_ROUTES: Routes = [
                 component: GestionarApoderadosComponent
             },
             {
-                path: 'gestionar-alumnos',
-                component: GestionarAlumnosComponent
+                path: 'gestionar-estudiantes',
+                component: GestionarEstudiantesComponent
             },
             {
                 path: 'gestionar-docentes',

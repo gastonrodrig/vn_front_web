@@ -15,14 +15,14 @@ export class GestionarApoderadosComponent {
     private apoderadoService: ApoderadoService
   ) {}
 
-  ngOnInit() : void {
-    this.apoderadoService.listarApoderados().subscribe(
-      (data: any) => {
-        this.listaApoderados = data
-      },
-      (error)=> {
-        console.log(error)
-      }
-    )
-  }
+  // ngOnInit() : void {
+  //   this.apoderadoService.listarApoderados().subscribe(
+  //     (data: any) => {
+  //       this.listaApoderados = data
+  //     },
+  //     (error)=> {
+  //       console.log(error)
+  //     }
+  //   )
+  // }
 }

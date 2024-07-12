@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { listaModulos } from '../../constants/itemsSidebarAdmin';
 import { RouterModule } from '@angular/router';
 import { MainContentComponent } from '../../../admin/main-content/main-content.component';
@@ -13,14 +13,15 @@ import { MainContentComponent } from '../../../admin/main-content/main-content.c
 })
 export class SideBarComponent {
 
-  open = true;
-  listaModulos = listaModulos;
-  selectedModule: any;
-
+  open = true
+  listaModulos = listaModulos
+  selectedModule: any
+  
+  @Input() sidebarMostrado: any
   @Output() modulo = new EventEmitter<Object>();
 
   toggleOpen() {
-    this.open = !this.open;
+    this.open = !this.open
   }
 
   clearSelection() {

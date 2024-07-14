@@ -18,7 +18,6 @@ export class SideBarComponent {
   selectedModule: any
   
   @Input() sidebarMostrado: any
-  @Output() modulo = new EventEmitter<Object>();
 
   toggleOpen() {
     this.open = !this.open
@@ -30,6 +29,5 @@ export class SideBarComponent {
 
   toggleClick(modulo: any) {
     this.selectedModule = modulo.id
-    this.modulo.emit(modulo)
   }
 }

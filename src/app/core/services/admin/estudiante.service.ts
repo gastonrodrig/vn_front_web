@@ -11,7 +11,7 @@ export class EstudianteService {
   listarEstudiantes() {
     return this.http.get(`${baseUrl}/estudiante/`);
   }
-  ObtenerEstudiante(id: string) {
+  obtenerEstudiante(id: string) {
     return this.http.get(`${baseUrl}/estudiante/${id}`);
   }
 }

@@ -1,0 +1,12 @@
+<div class="flex flex-col items-center">
+    <div class="text-base m-3">
+        @if(data.isEdit) { 
+            <p>Editar Estudiante</p> 
+        }
+        @if(data.isCreate) { 
+            <p>Agregar Estudiante</p>
+        }
+    </div>
+    
+</div>
+<p>{{ data.estudiante.nombre }}</p>

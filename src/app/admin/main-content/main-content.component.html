@@ -1,15 +1,10 @@
-<div class="bg-gray-200 shadow-lg">
+<div class="bg-gray-200 shadow-md">
     <app-nav-bar 
         (sidebar)="menuClicked($event)" 
         [sidebarShowed]="sidebarShowed"
     ></app-nav-bar>
 </div>
 <div class="p-7">
-    <div class="flex justify-start">
-        @if(!validateModule()) {
-            <p class="text-xl">Gestionar {{ modulo.nombre }}</p>
-        }
-    </div>
     <h1 class="text-2xl font-semibold">
         <router-outlet></router-outlet>
     </h1>

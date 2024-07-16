@@ -5,6 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DocumentoService } from '../../../../core/services/admin/documento.service';
 import { SoloNumerosDirective } from '../../../directives/solo-numeros.directive';
 import { ApoderadoService } from '../../../../core/services/admin/apoderado.service';
@@ -42,6 +43,7 @@ export class ModalEstudianteComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<ModalEstudianteComponent>,
+    private snack: MatSnackBar,
     private tipoDocumentService: DocumentoService,
     private apoderadoService: ApoderadoService,
     private seccionService: SeccionService,
@@ -52,6 +54,7 @@ export class ModalEstudianteComponent {
     if (this.data.isEdit) {
       this.estudiante = this.data.estudiante;
       this.estudianteId = this.data.estudiante.estudiante_id
+
     } else {
       this.estudiante = {
         nombre: '',
@@ -107,10 +110,17 @@ export class ModalEstudianteComponent {
       apoderado_id : this.estudiante.apoderado.apoderado_id
     }
 
+    if(dataEstudiante.nombre === '') {
+      this.snack.open('El nombre del estudiante es requerido', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+
     if(this.data.isCreate) {
       this.estudianteService.agregarEstudiante(dataEstudiante).subscribe(
         (data) => {
-          this.loading = false
           Swal.fire('Estudiante guardado', 'El estudiante ha sido guardado con éxito', 'success').then(
             (e)=> {
               this.closeModel()

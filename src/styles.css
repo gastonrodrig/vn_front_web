@@ -1,5 +1,117 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* mat-basic-button (angular material) */
+body .mat-mdc-button.mat-custom-color {
+    color: #1f2329;
+    padding: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    border-radius: 0.5rem;
+}
+body .mat-mdc-button.mat-custom-color:hover {
+    background: #f6f8f9;
+}
+
+/* mat-flat-button (angular material) */
+body .mdc-button--unelevated.mat-custom-color {
+    color: white;
+    padding: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    border-radius: 0.5rem;
+    background: linear-gradient(45deg, #4b5563, #6b7280);
+}
+body .mdc-button--unelevated.mat-custom-color:hover,
+body .mdc-button--unelevated.mat-custom-color:disabled {
+    background: linear-gradient(45deg, #6b7280, #9ca3af);
+}
+
+/* progress bar (angular material) */
+.mat-mdc-progress-bar {
+    --mdc-linear-progress-active-indicator-color: #06b6d4;
+}
+
+/* pagination (ngx-pagination) */
+body .ngx-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+  
+body .ngx-pagination li {
+    width: 35px;
+    height: 35px;
+    border-radius: 50% !important;
+    background: #f8f8f8;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+body .ngx-pagination li.small-screen {
+    display: none !important;
+}
+
+body .ngx-pagination li.pagination-previous a,
+body .ngx-pagination li.pagination-previous span,
+body .ngx-pagination li.pagination-next a,
+body .ngx-pagination li.pagination-next span {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    color: #f8f8f8;
+}
+
+body .ngx-pagination .pagination-previous a::before,
+body .ngx-pagination .pagination-previous.disabled::before,
+body .ngx-pagination .pagination-next::before {
+    margin-right: 0px !important;
+    font-size: 26px;
+    margin-top: -8px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    color: #06b6d4;
+    left: 0;
+    pointer-events: none;
+}
+  
+body .ngx-pagination .pagination-next::before {
+    content: '\bb';
+}
+  
+body .ngx-pagination .pagination-next::after {
+    display: none !important;
+}
+  
+body .ngx-pagination .pagination-previous.disabled::before,
+body .ngx-pagination .pagination-next.disabled::before {
+    opacity: 0.4;
+}
+  
+body .ngx-pagination .pagination-previous.disabled:hover {
+    background: #f8f8f8 !important;
+}
+  
+body .ngx-pagination a:hover,
+body .ngx-pagination button:hover {
+    background: initial !important;
+}  
+
+body .ngx-pagination .current {
+    background: #06b6d4 !important;
+}

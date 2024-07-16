@@ -1,4 +1,4 @@
-<div class="p-4">
+<!-- <div class="p-4">
     <div class="flex flex-col items-center">
         <div class="text-base mt-2 mb-6 font-medium">
             <p>{{ data.isEdit ? 'Editar Estudiante' : 'Agregar Estudiante' }}</p> 
@@ -96,19 +96,25 @@
                 [ngModelOptions]="{standalone: true}"
             >
         </mat-form-field>
-        <div class="flex justify-between">
-            <p class="pl-0.5 pb-4 font-medium">Datos del apoderado (Maximo 2): </p>
-            <button mat-></button>
-        </div>
-
+        <p class="pl-0.5 pb-4 font-medium">Datos del apoderado:</p>
+        <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Nombre</mat-label>
+            <input
+                [(ngModel)]="estudiante.direccion"
+                type="text"
+                placeholder="Ingrese su Direccion"
+                matInput
+                [ngModelOptions]="{standalone: true}"
+            >
+        </mat-form-field>
         <div class="flex justify-end w-full">
             <div class="p-2">
-                <button mat-flat-button color="custom-color" class="me-2">{{ data.isEdit ? 'Editar' : 'Guardar' }}</button>
-                <button mat-button mat-dialog-close color="custom-color">Cancelar</button>
+                <button mat-flat-button class="bg-gray-800 text-white me-2">{{ data.isEdit ? 'Editar' : 'Agregar' }}</button>
+                <button mat-button mat-dialog-close (click)="closeModel()">Cancelar</button>
             </div>
         </div>
     </form>
 </div>
 @if(loading) {
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-}
+} -->

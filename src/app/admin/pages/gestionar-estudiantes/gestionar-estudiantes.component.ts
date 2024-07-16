@@ -71,7 +71,7 @@ export class GestionarEstudiantesComponent {
       data: {
         isCreate: true
       },
-      width: '50%'
+      width: '70%'
     })
 
     dialogRef.afterClosed().subscribe(
@@ -133,6 +133,7 @@ export class GestionarEstudiantesComponent {
           )
         },
         (error) => {
+          this.loading = false
           console.log(error);
         }
       );

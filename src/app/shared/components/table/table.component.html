@@ -1,4 +1,4 @@
-<div class="flex flex-col m-3 md:h-auto h-screen">
+  <div class="flex flex-col m-3 md:h-auto h-screen">
     <div class="overflow-x-auto">
       <div class="inline-block min-w-full align-middle p-2">
         <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
@@ -44,18 +44,24 @@
             </tbody>
           </table>
         </div>
+        @if(data.length === 0) {
+          <p class="flex justify-center text-sm my-4 font-medium">No se han encontrado registros.</p>
+        }
       </div>
     </div>
-    <div class="mt-3 flex justify-between items-center text-sm text-left">
+    <div class="mt-3 flex justify-between items-center text-sm">
       <pagination-controls 
         (pageChange)="p = $event"
       ></pagination-controls>
-      <div class="font-normal me-2 -mt-2">
-        @if(totalResults > 5) {
-          Mostrando {{ p }}-{{ totalPages }} de {{ totalResults }} resultados
+      <div class="font-normal me-2 -mt-6 text-right">
+        @if(totalResults > itemsPerPage) {
+          Mostrando {{ p }} - {{ totalPages }} de {{ totalResults }} resultados
         }
-        @else {
+        @if(totalResults <= itemsPerPage && totalResults > 1) {
           Mostrando {{ totalResults }} resultados
+        }
+        @if(totalResults === 1) {
+          Mostrando 1 resultado
         }
       </div>
     </div>

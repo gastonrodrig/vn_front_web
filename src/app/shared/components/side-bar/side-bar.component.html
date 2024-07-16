@@ -2,12 +2,14 @@
   [ngClass]="{ 'w-[230px]': open, 'w-[80px]': !open }">
 
   <!-- Boton de control del Sidebar -->
-  <div
-    class="bg-white text-dark-blue-1 flex justify-center items-center 
-    rounded-full w-10 h-10 absolute bottom-5 -right-5 border border-dark-blue-1 
-    cursor-pointer hover:bg-light-blue-1 transition-transform duration-500" 
-    (click)="toggleOpen()">
-    <i class="fa-solid fa-arrow-left duration-500" [ngClass]="{ 'rotate-180' : !open }"></i>
+  <div class="hidden md:block">
+    <div
+      class="bg-white text-dark-blue-1 flex justify-center items-center 
+      rounded-full w-10 h-10 absolute bottom-5 -right-5 border border-dark-blue-1 
+      cursor-pointer hover:bg-light-blue-1 transition-transform duration-500" 
+      (click)="toggleOpen()">
+      <i class="fa-solid fa-arrow-left duration-500" [ngClass]="{ 'rotate-180' : !open }"></i>
+    </div>
   </div>
 
   <!-- Titulo -->

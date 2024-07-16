@@ -37,8 +37,7 @@ export class TableComponent {
   ngOnChanges() {
     if(this.loadedComplete === true) {
       this.totalResults = this.data.length
-      const div = this.data.length/this.itemsPerPage
-      this.totalPages = Math.ceil(div)
+      this.totalPages = Math.ceil(this.data.length/this.itemsPerPage)
     }
   }
 }

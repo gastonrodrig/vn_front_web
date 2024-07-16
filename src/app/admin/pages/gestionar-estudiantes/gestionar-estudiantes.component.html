@@ -11,6 +11,7 @@
                 name="search"
                 placeholder="Buscar"
                 autocomplete="off"
+                [(ngModel)]="searchTerm"
                 class="px-3 py-2 font-medium placeholder-gray-500 text-black rounded-2xl border-none
                 ring-2 ring-gray-300 focus:ring-gray-500 focus:ring-2 pr-3 pl-10"
             >
@@ -18,16 +19,16 @@
         <button 
             (click)="agregarEstudiante()"
             class="bg-gradient-to-r from-gray-600 to-gray-500 text-white rounded-lg 
-            text-sm p-2 font-medium shadow-lg hover:from-gray-500 hover:to-gray-400 duration-300 hover:scale-110" 
+            text-sm p-2 -me-2 md:-me-0 font-medium shadow-lg hover:from-gray-500 hover:to-gray-400 duration-300 hover:scale-110" 
             mat-raised-button
         > + Agregar </button>
     </div>
 </div>
 <app-table 
     [columns]="columns" 
-    [data]="estudiantes"
+    [data]="displayedEstudiantes()"
     [trackByField]="trackByField"
     [loadedComplete]="loadedComplete"
     (editAction)="editarEstudiante($event.isEdit, $event.id)"
-    (deleteAction)="eliminarEstudiante($event)"
+    (deleteAction)="eliminarEstudiante($event.isDeleted, $event.id)"
 ></app-table>

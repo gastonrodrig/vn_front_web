@@ -1,11 +1,11 @@
 <div class="p-4">
     <div class="flex flex-col items-center">
-        <div class="text-base mt-2 mb-6 font-medium">
+        <div class="text-lg mt-2 mb-4 font-medium">
             <p>{{ data.isEdit ? 'Editar Estudiante' : 'Agregar Estudiante' }}</p> 
         </div> 
     </div>
-    <form (ngSubmit)="guardarInformacion()">
-        <p class="pl-0.5 pb-4 font-medium">Datos del estudiante:</p>
+    <form>
+        <p class="pl-0.5 pb-4 font-normal">Datos del Estudiante:</p>
         <div class="grid grid-cols-2 gap-x-4">
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Nombre</mat-label>
@@ -56,7 +56,7 @@
                 >
             </mat-form-field>
 
-            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+            <mat-form-field appearance="fill" class="col-span-2">
                 <mat-label>Seccion</mat-label>
                 <mat-select 
                     [(ngModel)]="estudiante.seccion.seccion_id"
@@ -71,20 +71,6 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-                <mat-label>Apoderado</mat-label>
-                <mat-select 
-                    [(ngModel)]="estudiante.apoderado.apoderado_id"
-                    [ngModelOptions]="{standalone: true}"
-                >
-                <mat-option 
-                        *ngFor="let e of apoderado" 
-                        [value]="e.apoderado_id"
-                    >
-                        {{ e.nombre + ', ' + e.apellido }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
         </div>
         <mat-form-field appearance="fill" class="w-full">
             <mat-label>Direccion</mat-label>
@@ -96,15 +82,49 @@
                 [ngModelOptions]="{standalone: true}"
             >
         </mat-form-field>
-        <div class="flex justify-between">
-            <p class="pl-0.5 pb-4 font-medium">Datos del apoderado (Maximo 2): </p>
-            <button mat-></button>
-        </div>
-
+        @if(data.isEdit) {
+            <div class="flex justify-between items-center mb-4 mx-0.5 font-normal">
+                <p class="font-normal">Datos del apoderado: {{ data.isCreate ? '(Maximo 2 apoderados)' : '' }}</p>
+                <button 
+                    mat-flat-button 
+                    color="custom-color" 
+                    (click)="agregarApoderado()" 
+                    [disabled]="apoderadoList.length >= 2"
+                >+ Agregar Apoderado</button>
+            </div>
+            <div class="my-2 font-normal">
+                @if(apoderadoList.length === 0) {
+                    <p class="flex justify-center my-3 font-medium">No hay apoderados registrados</p>
+                }
+                @else {
+                    <div class="flex text-sm">
+                        <p class="font-medium uppercase me-2">Apoderados: </p>
+                        <div class="flex-col justify-start items-center -mt-0.5">
+                            @for(apoderado of apoderadoList; track apoderado.apoderado_id) {
+                                <div class="flex justify-between max-w-72 px-2 py-1 mb-2 bg-gray-400 
+                                text-black duration-300 rounded-lg shadow-md">
+                                    <p>
+                                        {{ apoderado.nombre + ' ' + apoderado.apellido + ' (Nro.Documento: ' + apoderado.numero_documento + ')'  }}
+                                    </p>
+                                    <div class="flex flex-col items-center justify-center gap-y-2.5">
+                                        <i class="fa-solid fa-pen hover:cursor-pointer" (click)="editarApoderado(apoderado.apoderado_id)"></i>
+                                        <i class="fa-solid fa-trash hover:cursor-pointer" (click)="eliminarApoderado(apoderado.apoderado_id)"></i>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
         <div class="flex justify-end w-full">
             <div class="p-2">
-                <button mat-flat-button color="custom-color" class="me-2">{{ data.isEdit ? 'Editar' : 'Guardar' }}</button>
-                <button mat-button mat-dialog-close color="custom-color">Cancelar</button>
+                <button mat-flat-button color="custom-color" class="me-2" (click)="guardarInformacion()">
+                    {{ data.isEdit ? 'Editar' : '+ Añadir Estudiante' }}
+                </button>
+                @if(data.isCreate || apoderadoList.length >= 1) {
+                    <button mat-button mat-dialog-close color="custom-color">Cancelar</button>
+                }
             </div>
         </div>
     </form>

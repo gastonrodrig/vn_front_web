@@ -103,7 +103,7 @@ export class GestionarEstudiantesComponent {
         (data: any) => {
           this.estudiante = data
           this.loading = false
-          const dialogRef =  this.dialog.open(ModalEstudianteComponent, {
+          const dialogRef = this.dialog.open(ModalEstudianteComponent, {
             data: {
               estudiante: this.estudiante,
               isEdit: isEdit

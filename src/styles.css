@@ -28,9 +28,13 @@ body .mdc-button--unelevated.mat-custom-color {
     border-radius: 0.5rem;
     background: linear-gradient(45deg, #4b5563, #6b7280);
 }
-body .mdc-button--unelevated.mat-custom-color:hover,
-body .mdc-button--unelevated.mat-custom-color:disabled {
+body .mdc-button--unelevated.mat-custom-color:hover {
     background: linear-gradient(45deg, #6b7280, #9ca3af);
+    cursor: pointer;
+}
+body .mdc-button--unelevated.mat-custom-color:disabled {
+    background: linear-gradient(45deg, #a6a6a6, #c4c4c4);
+    cursor: not-allowed;
 }
 
 /* progress bar (angular material) */

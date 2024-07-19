@@ -11,7 +11,19 @@ export class ApoderadoService {
   listarApoderados() {
     return this.http.get(`${baseUrl}/apoderado/`);
   }
-  ObtenerApoderado(id: string) {
+  agregarApoderado(apoderado: any){
+    return this.http.post(`${baseUrl}/apoderado/`, apoderado);
+  }
+  modificarApoderado(id: string, apoderado: any){
+    return this.http.put(`${baseUrl}/apoderado/${id}`, apoderado);
+  }
+  eliminarApoderado(id: string){
+    return this.http.delete(`${baseUrl}/apoderado/${id}`);
+  }
+  obtenerApoderado(id: string) {
     return this.http.get(`${baseUrl}/apoderado/${id}`);
+  }
+  listarApoderadosPorEstudiante(id: string) {
+    return this.http.get(`${baseUrl}/apoderado/estudiante/${id}`)
   }
 }

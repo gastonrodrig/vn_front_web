@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 import { EstudianteService } from '../../../../core/services/admin/estudiante.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import Swal from 'sweetalert2';
+import { ModalApoderadoComponent } from '../modal-apoderado/modal-apoderado.component';
 
 @Component({
   selector: 'app-modal-estudiante',
@@ -34,27 +35,38 @@ import Swal from 'sweetalert2';
 })
 export class ModalEstudianteComponent {
   tipoDocumento: any[] = []
-  apoderado: any[] = []
   seccion: any[] = []
   estudiante: any
   estudianteId: any
+  apoderadoList: any[] = []
   loading = false
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialog: MatDialog,
     private dialogRef: MatDialogRef<ModalEstudianteComponent>,
     private snack: MatSnackBar,
     private tipoDocumentService: DocumentoService,
     private apoderadoService: ApoderadoService,
     private seccionService: SeccionService,
     private estudianteService: EstudianteService
-  ) {}
+  ) {
+    dialogRef.disableClose = true
+  }
 
   ngOnInit() {
     if (this.data.isEdit) {
       this.estudiante = this.data.estudiante;
       this.estudianteId = this.data.estudiante.estudiante_id
 
+      this.apoderadoService.listarApoderadosPorEstudiante(this.estudianteId).subscribe(
+        (data: any) => {
+          this.apoderadoList = data
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
     } else {
       this.estudiante = {
         nombre: '',
@@ -66,9 +78,6 @@ export class ModalEstudianteComponent {
         },
         seccion: {
           seccion_id: ''
-        },
-        apoderado: {
-          apoderado_id: ''
         }
       }
     }
@@ -79,14 +88,6 @@ export class ModalEstudianteComponent {
       (error) => {
         console.log(error)
       },
-    )
-    this.apoderadoService.listarApoderados().subscribe(
-      (data: any) => {
-        this.apoderado = data
-      },
-      (error) => {
-        console.log(error)
-      }
     )
     this.seccionService.listarSecciones().subscribe(
       (data: any) => {
@@ -106,12 +107,11 @@ export class ModalEstudianteComponent {
       direccion : this.estudiante.direccion,
       numero_documento : this.estudiante.numero_documento,
       documento_id : this.estudiante.documento.documento_id,
-      seccion_id : this.estudiante.seccion.seccion_id,
-      apoderado_id : this.estudiante.apoderado.apoderado_id
+      seccion_id : this.estudiante.seccion.seccion_id
     }
 
     if(dataEstudiante.nombre === '') {
-      this.snack.open('El nombre del estudiante es requerido', '', {
+      this.snack.open('El nombre del estudiante es requerido', 'Cerrar', {
         duration: 3000
       })
       this.loading = false
@@ -124,6 +124,13 @@ export class ModalEstudianteComponent {
           Swal.fire('Estudiante guardado', 'El estudiante ha sido guardado con éxito', 'success').then(
             (e)=> {
               this.closeModel()
+              this.dialog.open(ModalApoderadoComponent, {
+                data: {
+                  estudiante: data,
+                  isCreate: true
+                },
+                width: '70%'
+              });
             }
           );
         },
@@ -134,6 +141,13 @@ export class ModalEstudianteComponent {
     }
 
     if(this.data.isEdit) {
+      if (this.apoderadoList.length < 1) {
+        this.snack.open('Debe incluir como mínimo 1 apoderado', 'Cerrar', {
+          duration: 3000
+        })
+        this.loading = false
+        return
+      }
       this.estudianteService.modificarEstudiante(this.estudianteId, dataEstudiante).subscribe(
         (data) => {
           this.loading = false
@@ -148,6 +162,74 @@ export class ModalEstudianteComponent {
         }
       )
     }
+  }
+
+  agregarApoderado() {
+    const dialogRef = this.dialog.open(ModalApoderadoComponent, {
+      data: {
+        estudiante: this.estudiante,
+        isCreateOnEdit: true
+      },
+      width: '70%'
+    })
+
+    dialogRef.afterClosed().subscribe(
+      (data) => {
+        this.apoderadoService.listarApoderadosPorEstudiante(this.estudianteId).subscribe(
+          (data: any) => { this.apoderadoList = data }
+        )
+      }
+    )
+  }
+
+  editarApoderado(id: any) {
+    const dialogRef = this.dialog.open(ModalApoderadoComponent, {
+      data: {
+        apoderado_id: id,
+        estudiante_id: this.data.estudiante.estudiante_id,
+        isEdit: true
+      },
+      width: '70%'
+    })
+
+    dialogRef.afterClosed().subscribe(
+      (data) => {
+        this.apoderadoService.listarApoderadosPorEstudiante(this.estudianteId).subscribe(
+          (data: any) => { this.apoderadoList = data }
+        )
+      }
+    )
+  }
+
+  eliminarApoderado(id: any) {
+    Swal.fire({
+      title: 'Eliminar apoderado',
+      text: '¿Estás seguro de eliminar al apoderado?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.loading = true
+        this.apoderadoService.eliminarApoderado(id).subscribe(
+          (data: any) => {
+            this.apoderadoService.listarApoderadosPorEstudiante(this.estudianteId).subscribe(
+              (data: any) => { this.apoderadoList = data }
+            )
+            this.snack.open('El apoderado ha sido eliminado con éxito', 'Cerrar', {
+              duration: 3000
+            })
+            this.loading = false
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
+      }
+    });
   }
 
   closeModel() {

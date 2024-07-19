@@ -9,10 +9,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { SoloNumerosDirective } from '../../../directives/solo-numeros.directive';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import Swal from 'sweetalert2';
 import { DocenteService } from '../../../../core/services/admin/docente.service';
 import { DocumentoService } from '../../../../core/services/admin/documento.service';
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal-docente',
@@ -127,4 +126,5 @@ export class ModalDocenteComponent {
   closeModel() {
     this.dialogRef.close()
   }
+
 }

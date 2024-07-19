@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { listaModulos } from '../../constants/itemsSidebarAdmin';
 import { RouterModule } from '@angular/router';
 import { MainContentComponent } from '../../../admin/main-content/main-content.component';

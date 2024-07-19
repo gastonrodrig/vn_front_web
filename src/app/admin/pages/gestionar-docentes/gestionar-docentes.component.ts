@@ -1,13 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import Swal from 'sweetalert2';
-import { EstudianteService } from '../../../core/services/admin/estudiante.service';
-
 import { DocenteService } from '../../../core/services/admin/docente.service';
 import { ModalDocenteComponent } from '../../../shared/components/modal/modal-docente/modal-docente.component';
 import { FormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TableComponent } from '../../../shared/components/table/table.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestionar-docentes',
@@ -18,7 +16,6 @@ import { TableComponent } from '../../../shared/components/table/table.component
 })
 export class GestionarDocentesComponent {
   @Input() sidebarShowed: any
-
   docentes = []
   docente = []
   trackByField = 'docente_id'
@@ -189,6 +186,5 @@ export class GestionarDocentesComponent {
       });
     }
   }
-
 
 }

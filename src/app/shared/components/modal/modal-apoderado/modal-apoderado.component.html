@@ -1,16 +1,26 @@
-<!-- <div class="p-4">
+<div class="p-4">
     <div class="flex flex-col items-center">
-        <div class="text-base mt-2 mb-6 font-medium">
-            <p>{{ data.isEdit ? 'Editar Estudiante' : 'Agregar Estudiante' }}</p> 
+        <div class="text-lg mt-2 mb-6 font-medium">
+            <p>{{ data.isEdit ? 'Editar Apoderado' : 'Agregar Apoderado(s)' }}</p> 
         </div> 
     </div>
-    <form (ngSubmit)="guardarInformacion()">
-        <p class="pl-0.5 pb-4 font-medium">Datos del estudiante:</p>
+    <form>
+        <div class="flex justify-between items-center mb-4 mx-0.5 font-normal">
+            <p class="font-normal">Datos del apoderado: {{ data.isCreate ? '(Maximo 2 apoderados)' : '' }}</p>
+            @if(data.isCreate) {
+                <button 
+                    mat-flat-button 
+                    color="custom-color" 
+                    (click)="agregarApoderado()" 
+                    [disabled]="apoderadoList.length >= 2"
+                >+ Agregar Apoderado</button>
+            }
+        </div>
         <div class="grid grid-cols-2 gap-x-4">
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Nombre</mat-label>
                 <input
-                    [(ngModel)]="estudiante.nombre"
+                    [(ngModel)]="apoderado.nombre"
                     type="text"
                     placeholder="Ingrese el nombre"
                     matInput
@@ -21,7 +31,7 @@
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Apellido</mat-label>
                 <input
-                    [(ngModel)]="estudiante.apellido"
+                    [(ngModel)]="apoderado.apellido"
                     type="text"
                     placeholder="Ingrese el apellido"
                     matInput
@@ -32,7 +42,7 @@
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Tipo de Documento</mat-label>
                 <mat-select 
-                    [(ngModel)]="estudiante.documento.documento_id"
+                    [(ngModel)]="apoderado.documento.documento_id"
                     [ngModelOptions]="{standalone: true}"
                 >
                     <mat-option 
@@ -47,7 +57,7 @@
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Numero de Documento</mat-label>
                 <input
-                    [(ngModel)]="estudiante.numero_documento"
+                    [(ngModel)]="apoderado.numero_documento"
                     type="text"
                     placeholder="Ingrese el Numero del Documento"
                     matInput
@@ -57,64 +67,64 @@
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-                <mat-label>Seccion</mat-label>
-                <mat-select 
-                    [(ngModel)]="estudiante.seccion.seccion_id"
+                <mat-label>Telefono</mat-label>
+                <input
+                    [(ngModel)]="apoderado.numero"
+                    type="text"
+                    placeholder="Ingrese su Numero"
+                    matInput
+                    appSoloNumeros
                     [ngModelOptions]="{standalone: true}"
                 >
-                    <mat-option 
-                        *ngFor="let e of seccion" 
-                        [value]="e.seccion_id"
-                    >
-                        {{ e.nombre + ', ' + e.grado.nombre + ', ' + e.periodo.anio }}
-                    </mat-option>
-                </mat-select>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-                <mat-label>Apoderado</mat-label>
-                <mat-select 
-                    [(ngModel)]="estudiante.apoderado.apoderado_id"
+                <mat-label>Direccion</mat-label>
+                <input
+                    [(ngModel)]="apoderado.direccion"
+                    type="text"
+                    placeholder="Ingrese su Direccion"
+                    matInput
                     [ngModelOptions]="{standalone: true}"
                 >
-                <mat-option 
-                        *ngFor="let e of apoderado" 
-                        [value]="e.apoderado_id"
-                    >
-                        {{ e.nombre + ', ' + e.apellido }}
-                    </mat-option>
-                </mat-select>
             </mat-form-field>
         </div>
-        <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Direccion</mat-label>
-            <input
-                [(ngModel)]="estudiante.direccion"
-                type="text"
-                placeholder="Ingrese su Direccion"
-                matInput
-                [ngModelOptions]="{standalone: true}"
-            >
-        </mat-form-field>
-        <p class="pl-0.5 pb-4 font-medium">Datos del apoderado:</p>
-        <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Nombre</mat-label>
-            <input
-                [(ngModel)]="estudiante.direccion"
-                type="text"
-                placeholder="Ingrese su Direccion"
-                matInput
-                [ngModelOptions]="{standalone: true}"
-            >
-        </mat-form-field>
+        @if(data.isCreate) {
+            <p class="pl-0.5 font-normal">Datos del estudiante:</p>
+            <div class="flex flex-col my-2 font-normal text-sm">
+                <p><span class="font-medium uppercase">Nombre: </span>{{ estudiante.nombre + ', ' + estudiante.apellido }}</p>
+                <p><span class="font-medium uppercase">{{ estudiante.documento.type }}: </span>{{ estudiante.numero_documento }}</p>
+                @if(apoderadoList.length === 0) {
+                    <p><span class="font-medium uppercase">Apoderados: </span>No hay apoderados registrados</p>
+                }
+                @else {
+                    <div class="flex">
+                        <p class="font-medium uppercase me-2">Apoderados: </p>
+                        <div class="flex-col justify-start items-center -mt-1">
+                            @for(apoderado of apoderadoList; track apoderado.apoderado_id) {
+                                <div class="flex justify-between max-w-72 px-2 py-1 mb-2 bg-gray-400 
+                                text-black duration-300 rounded-lg shadow-md">
+                                    <p>
+                                        {{ apoderado.nombre + ' ' + apoderado.apellido + ' (Nro.Documento: ' + apoderado.numero_documento + ')'  }}
+                                    </p>
+                                    <i class="fa-solid fa-xmark hover:cursor-pointer" (click)="eliminarApoderado(apoderado.apoderado_id)"></i>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
         <div class="flex justify-end w-full">
             <div class="p-2">
-                <button mat-flat-button class="bg-gray-800 text-white me-2">{{ data.isEdit ? 'Editar' : 'Agregar' }}</button>
-                <button mat-button mat-dialog-close (click)="closeModel()">Cancelar</button>
+                <button mat-flat-button color="custom-color" (click)="guardarInformacion()" class="me-2">
+                    {{ data.isEdit || data.isCreateOnEdit ? 'Guardar' : 'Terminar' }}
+                </button>
+                <button mat-button mat-dialog-close color="custom-color" *ngIf="data.isCreateOnEdit || data.isEdit" (click)="closeModel()">Cancelar</button>
             </div>
         </div>
     </form>
 </div>
 @if(loading) {
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-} -->
+}

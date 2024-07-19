@@ -16,7 +16,6 @@ import Swal from 'sweetalert2';
 })
 export class GestionarDocentesComponent {
   @Input() sidebarShowed: any
-
   docentes = []
   docente = []
   trackByField = 'docente_id'
@@ -187,6 +186,5 @@ export class GestionarDocentesComponent {
       });
     }
   }
-
 
 }

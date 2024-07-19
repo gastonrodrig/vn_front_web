@@ -126,4 +126,5 @@ export class ModalDocenteComponent {
   closeModel() {
     this.dialogRef.close()
   }
+
 }

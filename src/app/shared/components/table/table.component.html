@@ -19,24 +19,28 @@
               @for (row of ( data | paginate: { itemsPerPage: itemsPerPage, currentPage: p }); track row[trackByField]) {
                 <tr>
                   @for (column of columns; track column.field) {
-                    <td class="whitespace-nowrap py-3 pl-5 pr-3 text-sm font-normal text-gray-900 sm:pl-6">
+                    <td class="whitespace-nowrap py-3 pl-5 pr-3 text-sm font-normal text-gray-900 sm:pl-6 truncate">
                       {{ getNestedProperty(row, column.field) }}
                     </td>
                   }
                   <td>
-                    <div class="flex py-3 pl-5 pr-3 text-base">
-                      <div 
-                        class="hover:text-blue-500 hover:cursor-pointer hover:scale-125 duration-200 me-3"
-                        (click)="edit(row[trackByField])"
-                      >
-                        <i class="fa-solid fa-pen"></i>
-                      </div>
-                      <div 
-                        class="hover:text-red-500 hover:cursor-pointer hover:scale-125 duration-200"
-                        (click)="delete(row[trackByField])"
-                      >
-                        <i class="fa-solid fa-trash"></i>
-                      </div>
+                    <div class="flex py-3 pl-5 pr-3 text-base gap-x-3">
+                      @if(editActive) {
+                        <div 
+                          class="hover:text-blue-500 hover:cursor-pointer hover:scale-125 duration-200"
+                          (click)="edit(row[trackByField])"
+                        >
+                          <i class="fa-solid fa-pen"></i>
+                        </div>
+                      }
+                      @if(deleteActive) {
+                        <div 
+                          class="hover:text-red-500 hover:cursor-pointer hover:scale-125 duration-200"
+                          (click)="delete(row[trackByField])"
+                        >
+                          <i class="fa-solid fa-trash"></i>
+                        </div>
+                      }
                     </div>
                   </td>
                 </tr>

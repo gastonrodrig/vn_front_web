@@ -28,6 +28,8 @@
     [data]="displayedDocentes()"
     [trackByField]="trackByField"
     [loadedComplete]="loadedComplete"
+    [editActive]="true"
+    [deleteActive]="true"
     (editAction)="editarDocente($event.isEdit, $event.id)"
     (deleteAction)="eliminarDocente($event.isDeleted, $event.id)"
 ></app-table>

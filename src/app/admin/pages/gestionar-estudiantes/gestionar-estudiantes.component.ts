@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { EstudianteService } from '../../../core/services/admin/estudiante.service';
+import { EstudianteService } from '../../../core/services/estudiante.service';
 import { TableComponent } from '../../../shared/components/table/table.component';
 import { ModalEstudianteComponent } from '../../../shared/components/modal/modal-estudiante/modal-estudiante.component';
 import { FormsModule } from '@angular/forms';
@@ -15,8 +15,6 @@ import Swal from 'sweetalert2';
   styleUrl: './gestionar-estudiantes.component.css'
 })
 export class GestionarEstudiantesComponent {
-  @Input() sidebarShowed: any
-
   estudiantes = []
   estudiante = []
   trackByField = 'estudiante_id'
@@ -187,8 +185,5 @@ export class GestionarEstudiantesComponent {
       });
     }
   }
-
-  
-
 
 }

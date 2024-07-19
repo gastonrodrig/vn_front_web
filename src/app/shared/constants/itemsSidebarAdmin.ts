@@ -1,9 +1,9 @@
 export const listaModulos = [
     {
         id: 1,
-        route: 'gestionar-apoderados',
-        titulo: 'Apoderados',
-        icon: 'people-line'
+        route: '',
+        titulo: 'Inicio',
+        icon: 'house'
     },
     {
         id: 2,

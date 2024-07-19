@@ -13,6 +13,8 @@ export class TableComponent {
   @Input() data!: any[];
   @Input() trackByField: string = '';
   @Input() loadedComplete: any
+  @Input() editActive: any
+  @Input() deleteActive: any
 
   @Output() editAction = new EventEmitter<{ isEdit: boolean, id: any }>();
   @Output() deleteAction = new EventEmitter<{ isDeleted: boolean, id: any }>();

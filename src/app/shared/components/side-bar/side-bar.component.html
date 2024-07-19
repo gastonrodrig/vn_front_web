@@ -1,5 +1,5 @@
 <div class="flex flex-col items-center w-full bg-dark-blue-1 h-screen p-5 duration-500 relative"
-  [ngClass]="{ 'w-[220px]': open, 'w-[75px]': !open }">
+  [ngClass]="{ 'w-[230px]': open, 'w-[80px]': !open }">
 
   <!-- Boton de control del Sidebar -->
   <div class="hidden md:block">
@@ -8,7 +8,7 @@
       rounded-full w-10 h-10 absolute bottom-5 -right-5 border border-dark-blue-1 
       cursor-pointer hover:bg-light-blue-1 transition-transform duration-500" 
       (click)="toggleOpen()">
-      <i class="fa-solid fa-arrow-left duration-500" [ngClass]="{ 'rotate-180' : !open }"></i>
+      <i class="fa-solid fa-chevron-left duration-500" [ngClass]="{ 'rotate-180' : !open }"></i>
     </div>
   </div>
 
@@ -27,11 +27,13 @@
   </div>
 
   <!-- Buscador -->
-  <div class="flex items-center mt-6">
+  <div class="flex items-center mt-6 relative">
     <input 
       type="text"
       class="rounded-ss-2xl rounded-es-2xl bg-dark-blue-2 w-full px-3 py-2 outline-none text-white"
       placeholder="Buscar ..." 
+      [(ngModel)]="searchTerm"
+      (change)="inputText()"
       [ngClass]="{ 'scale-0 hidden' : !open }"
     >
     <i 
@@ -39,6 +41,19 @@
       bg-dark-blue-3 p-3 fa-solid text-white "
       [ngClass]="{ 'rounded-ss-2xl rounded-es-2xl' : !open }"
     ></i>
+    @if(inputText()) {
+      <ul class="absolute rounded-sm bg-white w-full max-h-32 top-10 overflow-y-auto">
+      @for (modulo of displayedModules(); track modulo.id) {
+          <li 
+            (click)="toggleClick(modulo)"
+            class="p-2 ps-4 hover:font-semibold hover:cursor-pointer"
+            [routerLink]="'/admin/' + modulo.route"
+          >
+            {{ modulo.titulo }}
+          </li>
+      }
+      </ul>
+    }
   </div>
 
   <!-- Modulos -->
@@ -47,7 +62,7 @@
       <li 
         class="text-gray-300 text-base cursor-pointer p-2 px-6 rounded-md mt-2 w-full transition-all hover:bg-dark-blue-2"
         (click)="toggleClick(modulo)"
-        [ngClass]="{ 'text-cyan-400 hover:text-cyan-400': modulo.id === selectedModule }"
+        [ngClass]="{ 'text-cyan-500 hover:text-cyan-500': modulo.id === selectedModule }"
         [ngClass]="{ 'px-0' : !open, 'px-6' : open }"
         [routerLink]="'/admin/' + modulo.route"
         >

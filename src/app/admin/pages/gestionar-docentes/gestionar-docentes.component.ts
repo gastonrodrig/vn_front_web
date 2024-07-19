@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DocenteService } from '../../../core/services/admin/docente.service';
+import { DocenteService } from '../../../core/services/docente.service';
 import { ModalDocenteComponent } from '../../../shared/components/modal/modal-docente/modal-docente.component';
 import { FormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -40,7 +40,6 @@ export class GestionarDocentesComponent {
     this.loading = true
     this.docenteService.listarDocentes().subscribe(
       (data: any) => {
-        console.log(data)
         this.docentes = data.sort((a: any, b: any) => {
           if (a.apellido.toLowerCase() < b.apellido.toLowerCase()) {
             return -1;

@@ -6,15 +6,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DocumentoService } from '../../../../core/services/admin/documento.service';
+import { DocumentoService } from '../../../../core/services/documento.service';
 import { SoloNumerosDirective } from '../../../directives/solo-numeros.directive';
-import { ApoderadoService } from '../../../../core/services/admin/apoderado.service';
-import { SeccionService } from '../../../../core/services/admin/seccion.service';
+import { ApoderadoService } from '../../../../core/services/apoderado.service';
+import { SeccionService } from '../../../../core/services/seccion.service';
 import { CommonModule } from '@angular/common';
-import { EstudianteService } from '../../../../core/services/admin/estudiante.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import Swal from 'sweetalert2';
+import { MatIconModule } from '@angular/material/icon';
+import { EstudianteService } from '../../../../core/services/estudiante.service';
 import { ModalApoderadoComponent } from '../modal-apoderado/modal-apoderado.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal-estudiante',
@@ -28,7 +29,8 @@ import { ModalApoderadoComponent } from '../modal-apoderado/modal-apoderado.comp
     MatSelectModule, 
     MatButtonModule, 
     CommonModule, 
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatIconModule
   ],
   templateUrl: './modal-estudiante.component.html',
   styleUrl: './modal-estudiante.component.css'
@@ -56,11 +58,12 @@ export class ModalEstudianteComponent {
 
   ngOnInit() {
     if (this.data.isEdit) {
-      this.estudiante = this.data.estudiante;
+      this.estudiante = this.data.estudiante
       this.estudianteId = this.data.estudiante.estudiante_id
-
+      this.loading = true
       this.apoderadoService.listarApoderadosPorEstudiante(this.estudianteId).subscribe(
         (data: any) => {
+          this.loading = false
           this.apoderadoList = data
         },
         (error) => {

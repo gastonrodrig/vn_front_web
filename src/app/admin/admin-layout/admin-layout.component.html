@@ -1,5 +1,6 @@
 <div class="flex min-w-screen">
   <app-side-bar 
+    [listaModulos]="listaModulos"
     (modulo)="obtenerModulo($event)" 
     [ngClass]="{ 'fixed inset-y-0 left-0 w-64 z-50' : sidebarMostrado, 'hidden md:block' : !sidebarMostrado }"
   ></app-side-bar>

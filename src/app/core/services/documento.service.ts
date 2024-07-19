@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { baseUrl } from '../../helpers/baseUrl';
+import { baseUrl } from '../helpers/baseUrl';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SeccionService {
+export class DocumentoService {
   constructor(private http:HttpClient) {}
  
-  listarSecciones() {
-    return this.http.get(`${baseUrl}/seccion/`);
+  listarTiposDocumento() {
+    return this.http.get(`${baseUrl}/documento/`);
   }
 }

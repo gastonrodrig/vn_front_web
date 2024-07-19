@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DocumentoService } from '../../../../core/services/admin/documento.service';
+import { DocumentoService } from '../../../../core/services/documento.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,8 +9,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
 import { SoloNumerosDirective } from '../../../directives/solo-numeros.directive';
-import { ApoderadoService } from '../../../../core/services/admin/apoderado.service';
+import { ApoderadoService } from '../../../../core/services/apoderado.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -25,7 +26,8 @@ import Swal from 'sweetalert2';
     MatSelectModule, 
     MatButtonModule, 
     CommonModule, 
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatIconModule
   ],
   templateUrl: './modal-apoderado.component.html',
   styleUrl: './modal-apoderado.component.css'

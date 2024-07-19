@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { GestionarEstudiantesComponent } from './pages/gestionar-estudiantes/gestionar-estudiantes.component';
-import { GestionarApoderadosComponent } from './pages/gestionar-apoderados/gestionar-apoderados.component';
 import { GestionarDocentesComponent } from './pages/gestionar-docentes/gestionar-docentes.component';
 import { GestionarSeccionesComponent } from './pages/gestionar-secciones/gestionar-secciones.component';
 import { GestionarCursosComponent } from './pages/gestionar-cursos/gestionar-cursos.component';
@@ -9,6 +8,7 @@ import { GestionarMatriculaComponent } from './pages/gestionar-matricula/gestion
 import { GestionarGradoComponent } from './pages/gestionar-grado/gestionar-grado.component';
 import { GestionarSalonesComponent } from './pages/gestionar-salones/gestionar-salones.component';
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
+import { InicioComponent } from './pages/inicio/inicio.component';
 
 export const ADMIN_ROUTES: Routes = [
     { 
@@ -16,8 +16,8 @@ export const ADMIN_ROUTES: Routes = [
         component: AdminLayoutComponent,
         children: [
             {
-                path: 'gestionar-apoderados',
-                component: GestionarApoderadosComponent
+                path: '',
+                component: InicioComponent
             },
             {
                 path: 'gestionar-estudiantes',

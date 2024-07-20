@@ -1,12 +1,14 @@
-<div class="flex flex-col items-center w-full bg-dark-blue-1 h-screen p-5 duration-500 relative"
-  [ngClass]="{ 'w-[230px]': open, 'w-[80px]': !open }">
+<div 
+  class="flex flex-col items-center w-full h-screen p-5 duration-500 relative"
+  [ngClass]="changeSideBarState()" 
+  [class]="bgColor">
 
   <!-- Boton de control del Sidebar -->
   <div class="hidden md:block">
     <div
-      class="bg-white text-dark-blue-1 flex justify-center items-center 
-      rounded-full w-10 h-10 absolute bottom-5 -right-5 border border-dark-blue-1 
-      cursor-pointer hover:bg-light-blue-1 transition-transform duration-500" 
+      class="bg-gray-500 text-white flex justify-center items-center 
+      rounded-full w-10 h-10 absolute bottom-5 -right-5 font-semibold
+      cursor-pointer hover:bg-gray-600 duration-500" 
       (click)="toggleOpen()">
       <i class="fa-solid fa-chevron-left duration-500" [ngClass]="{ 'rotate-180' : !open }"></i>
     </div>
@@ -30,15 +32,16 @@
   <div class="flex items-center mt-6 relative">
     <input 
       type="text"
-      class="rounded-ss-2xl rounded-es-2xl bg-dark-blue-2 w-full px-3 py-2 outline-none text-white"
+      class="rounded-ss-2xl rounded-es-2xl w-full px-3 py-2 outline-none text-white"
       placeholder="Buscar ..." 
+      [class]="searchBgColorInput"
       [(ngModel)]="searchTerm"
       (change)="inputText()"
       [ngClass]="{ 'scale-0 hidden' : !open }"
     >
     <i 
-      class="fa-solid fa-magnifying-glass rounded-ee-2xl rounded-se-2xl active:bg-dark-blue-2
-      bg-dark-blue-3 p-3 fa-solid text-white "
+      class="fa-solid fa-magnifying-glass rounded-ee-2xl rounded-se-2xl p-3 fa-solid text-white"
+      [class]="searchBgColorIcon"
       [ngClass]="{ 'rounded-ss-2xl rounded-es-2xl' : !open }"
     ></i>
     @if(inputText()) {
@@ -60,10 +63,11 @@
   <ul class="pt-2 w-full">
     @for (modulo of listaModulos; track modulo.id) {
       <li 
-        class="text-gray-300 text-base cursor-pointer p-2 px-6 rounded-md mt-2 w-full transition-all hover:bg-dark-blue-2"
+        class="text-gray-300 text-base cursor-pointer p-2 px-6 rounded-md mt-2 w-full transition-all"
         (click)="toggleClick(modulo)"
-        [ngClass]="{ 'text-cyan-500 hover:text-cyan-500': modulo.id === selectedModule }"
-        [ngClass]="{ 'px-0' : !open, 'px-6' : open }"
+        [class]="moduleBgColorHover"
+        [ngClass]="changeColorTexts(modulo)"
+        [ngClass]="{ 'px-0' : !open, 'px-6' : open,  }"
         [routerLink]="'/admin/' + modulo.route"
         >
         <div class="grid grid-cols-12 items-center">

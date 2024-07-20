@@ -53,6 +53,8 @@ export class GestionarDocentesComponent {
         this.loadedComplete = true
       },
       (error) => {
+        this.loading = false
+        Swal.fire('Error', 'Error al cargar los datos', 'error')
         console.log(error)
       }
     )

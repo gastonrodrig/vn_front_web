@@ -17,6 +17,13 @@ export class SideBarComponent {
   searchTerm = ''
   @Input() listaModulos : any
   @Input() sidebarMostrado: any
+  @Input() bgColor: string = ''
+  @Input() paddingXOpen: string = ''
+  @Input() paddingXClosed: string = ''
+  @Input() searchBgColorInput: string = ''
+  @Input() searchBgColorIcon: string = ''
+  @Input() moduleBgColorHover: string = ''
+  @Input() moduleTextColor: string = ''
 
   toggleOpen() {
     this.open = !this.open
@@ -41,5 +48,13 @@ export class SideBarComponent {
     return this.listaModulos.filter((modulo: any) =>
       modulo.titulo.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
+  }
+
+  changeSideBarState() {
+    return { [this.paddingXOpen]: this.open, [this.paddingXClosed]: !this.open }
+  }
+
+  changeColorTexts(modulo: any) {
+    return { [this.moduleTextColor]: modulo.id === this.selectedModule }
   }
 }

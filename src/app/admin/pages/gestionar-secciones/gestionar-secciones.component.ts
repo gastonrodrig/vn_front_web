@@ -6,6 +6,8 @@ import { SeccionService } from '../../../core/services/seccion.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalEstudianteComponent } from '../../../shared/components/modal/modal-estudiante/modal-estudiante.component';
 import Swal from 'sweetalert2';
+import { GradoService } from '../../../core/services/grado.service';
+import { PeriodoService } from '../../../core/services/periodo.service';
 
 @Component({
   selector: 'app-gestionar-secciones',
@@ -16,11 +18,15 @@ import Swal from 'sweetalert2';
 })
 export class GestionarSeccionesComponent {
   secciones = []
-  seccion = []
+  seccion: any[] = []
+  grados: any[] = []
+  periodos: any[] = []
   trackByField = 'seccion_id'
   loading = false
   loadedComplete: any
-  searchTerm: string = '';
+  searchTerm: string = ''
+  gradoSelected = 'all'
+  periodoSelected = 'all'
 
   columns = [
     { header: 'Nombre', field: 'nombre' },
@@ -31,6 +37,8 @@ export class GestionarSeccionesComponent {
 
   constructor(
     private seccionService: SeccionService,
+    private gradoService: GradoService,
+    private periodoService: PeriodoService,
     public dialog: MatDialog
   ){}
 
@@ -43,15 +51,38 @@ export class GestionarSeccionesComponent {
         this.loadedComplete = true
       },
       (error) => {
+        this.loading = false
+        Swal.fire('Error', 'Error al cargar los datos', 'error')
+        console.log(error)
+      }
+    )
+    this.gradoService.listarGrados().subscribe(
+      (data: any) => {
+        this.grados = data
+        console.log(this.grados)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    this.periodoService.listarPeriodos().subscribe(
+      (data: any) => {
+        this.periodos = data
+        console.log(this.periodos)
+      },
+      (error) => {
         console.log(error)
       }
     )
   }
 
   displayedSecciones() {
-    return this.secciones.filter((seccion: any) =>
-      seccion.aula.includes(this.searchTerm)
-    );
+    return this.secciones.filter((seccion: any) => {
+      const matchSearchTerm = seccion.aula.includes(this.searchTerm)
+      const matchGrado = this.gradoSelected === 'all' || seccion.grado.grado_id === Number(this.gradoSelected)
+      const matchPeriodo = this.periodoSelected === 'all' || seccion.periodo.periodo_id === Number(this.periodoSelected)
+      return matchSearchTerm && matchGrado && matchPeriodo
+    })
   }
 
   agregarSeccion() {
@@ -151,4 +182,5 @@ export class GestionarSeccionesComponent {
       });
     }
   }
+
 }

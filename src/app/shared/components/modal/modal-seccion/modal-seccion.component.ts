@@ -50,6 +50,7 @@ export class ModalSeccionComponent {
   ngOnInit() {
     if (this.data.isEdit) {
       this.seccion = this.data.seccion;
+      console.log(this.seccion)
       this.seccionId = this.data.seccion.seccion_id
     } else {
       this.seccion = {
@@ -85,7 +86,7 @@ export class ModalSeccionComponent {
     this.loading = true
     const dataSeccion = {
       nombre : this.seccion.nombre,
-      aula : this.seccion.apellido,
+      aula : this.seccion.aula,
       grado_id : this.seccion.grado.grado_id,
       periodo_id : this.seccion.periodo.periodo_id
     }
@@ -116,6 +117,7 @@ export class ModalSeccionComponent {
     if(this.data.isEdit) {
       this.seccionService.modificarSeccion(this.seccionId, dataSeccion).subscribe(
         (data) => {
+          console.log(dataSeccion)
           this.loading = false
           Swal.fire('Seccion modificada', 'La seccion ha sido modificado con éxito', 'success').then(
             (e)=> {

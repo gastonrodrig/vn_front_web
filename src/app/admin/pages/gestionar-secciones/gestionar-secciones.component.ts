@@ -48,7 +48,7 @@ export class GestionarSeccionesComponent {
     this.loading = true
     this.seccionService.listarSecciones().subscribe(
       (data: any) => {
-        this.secciones = data
+        this.secciones = data.sort((a: any, b: any) => a.grado.grado_id - b.grado.grado_id);
         this.loading = false
         this.loadedComplete = true
       },
@@ -97,7 +97,7 @@ export class GestionarSeccionesComponent {
       (data) => {
         this.seccionService.listarSecciones().subscribe(
           (data: any) => {
-            this.secciones = data
+            this.secciones = data.sort((a: any, b: any) => a.grado.grado_id - b.grado.grado_id);
           },
           (error) => {
             console.log(error)
@@ -126,7 +126,8 @@ export class GestionarSeccionesComponent {
             (data) => {
               this.seccionService.listarSecciones().subscribe(
                 (data: any) => {
-                  this.secciones = data
+                  this.secciones = data.sort((a: any, b: any) => a.grado.grado_id - b.grado.grado_id);
+                  console.log(this.secciones)
                 },
                 (error) => {
                   console.log(error)

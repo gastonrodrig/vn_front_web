@@ -1,0 +1,14 @@
+<select
+  [(ngModel)]="optionSelected"
+  (ngModelChange)="onOptionSelectedChange($event)"
+  class="px-3 py-2 font-medium placeholder-gray-500 text-black rounded-2xl border-none
+         ring-2 ring-gray-300 focus:ring-gray-500 focus:ring-2 pr-3 max-[1184px]:w-40 max-[956px]:w-32 max-sm:w-40"
+>
+  <option value="all" class="py-2 text-gray-700">Todos los {{ nombreFiltro }}</option>
+  @for(e of options; track e[optionKey]) {
+    <option 
+      class="py-2 text-gray-700"
+      [value]="e[optionKey]"
+    >{{ e[optionLabel] }}</option>
+  }
+</select>

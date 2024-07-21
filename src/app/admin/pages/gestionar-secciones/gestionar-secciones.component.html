@@ -3,47 +3,33 @@
 }
 <div class="mx-5 mt-2">
     <p class="text-xl font-medium mb-4">Gestionar Secciones</p>
-    <div class="grid md:grid-cols-4 md:grid-rows-1 gap-4 md:gap-y-0  grid-cols-2 grid-rows-2">
-        <div class="order-1 flex items-center text-gray-400 focus-whitin:text-gray-600 text-sm">
-            <i class="fa-solid fa-magnifying-glass absolute ml-3 pointer-events-none"></i>
-            <input 
-                type="text"
-                placeholder="Buscar"
-                autocomplete="off"
-                [(ngModel)]="searchTerm"
-                class="px-3 py-2 font-medium placeholder-gray-500 text-black rounded-2xl border-none
-                ring-2 ring-gray-300 focus:ring-gray-500 focus:ring-2 pr-3 pl-10 max-[1184px]:w-40 max-[956px]:w-32 max-md:w-40"
-            >
+    <div class="grid sm:grid-cols-4 sm:grid-rows-1 gap-4 sm:gap-y-0 grid-cols-2 grid-rows-2">
+        <div class="order-1">
+            <app-input [(searchTerm)]="searchTerm"></app-input>
         </div>
-        <div class="order-3 md:order-2 flex justify-start text-sm">
-            <select
-                [(ngModel)]="gradoSelected"
-                class="px-3 py-2 font-medium placeholder-gray-500 text-black rounded-2xl border-none
-                ring-2 ring-gray-300 focus:ring-gray-500 focus:ring-2 pr-3 max-[1184px]:w-40 max-[956px]:w-32 max-md:w-40"
-            >
-                <option value="all">Todos los Grados</option>
-                @for(e of grados; track e.grado_id) {
-                    <option [value]="e.grado_id">{{ e.nombre }}</option>
-                }
-            </select>
+        <div class="order-3 sm:order-2 xl:-ms-16 flex justify-start text-sm">
+            <app-select 
+                [(optionSelected)]="gradoSelected" 
+                [options]="grados" 
+                [nombreFiltro]="'Grados'" 
+                optionKey="grado_id" 
+                optionLabel="nombre">
+            </app-select>
         </div>
-        <p class="order-4 md:order-3 flex max-md:justify-end md:justify-start text-sm">
-            <select
-                [(ngModel)]="gradoSelected"
-                class="px-3 py-2 font-medium placeholder-gray-500 text-black rounded-2xl border-none
-                ring-2 ring-gray-300 focus:ring-gray-500 focus:ring-2 pr-3 max-[1184px]:w-40 max-[956px]:w-32 max-md:w-40"
-            >
-                <option value="all">Todos los Periodos</option>
-                @for(e of periodos; track e.periodo_id) {
-                    <option [value]="e.periodo_id">{{ e.anio }}</option>
-                }
-            </select>
-        </p>
-        <div class="order-2 md:order-4 flex justify-end">
+        <div class="order-4 sm:order-3 xl:-ms-32 flex max-sm:justify-end sm:justify-start text-sm -me-2 sm:-me-0">
+            <app-select 
+                [(optionSelected)]="periodoSelected" 
+                [options]="periodos" 
+                [nombreFiltro]="'Periodos'" 
+                optionKey="periodo_id" 
+                optionLabel="anio">
+            </app-select>
+        </div>
+        <div class="order-2 sm:order-4 flex justify-end">
             <button 
                 (click)="agregarSeccion()"
                 class="bg-gradient-to-r from-gray-600 to-gray-500 text-white rounded-lg w-20
-                text-sm p-2 -me-2 md:-me-0 font-medium shadow-lg hover:from-gray-500 hover:to-gray-400 duration-300 hover:scale-110" 
+                text-sm p-2 -me-2 sm:-me-0 font-medium shadow-lg hover:from-gray-500 hover:to-gray-400 duration-300 hover:scale-110" 
             > + Agregar </button>
         </div>
     </div>

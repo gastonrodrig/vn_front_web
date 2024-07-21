@@ -25,32 +25,26 @@ export const listaModulos = [
     },
     {
         id: 5,
-                route: 'gestionar-cursos',
-        titulo: 'Cursos',
-        icon: 'book'
-    },
-    {
-        id: 6,
-        route: 'gestionar-horarios',
-        titulo: 'Horarios',
-        icon: 'calendar-days'
-    },
-    {
-        id: 7,
-        route: 'gestionar-matricula',
-        titulo: 'Matricula',
-        icon: 'file-invoice'
-    },
-    {
-        id: 8,
         route: 'gestionar-grado',
         titulo: 'Grado',
         icon: 'graduation-cap'
     },
     {
-        id: 9,
-        route: 'gestionar-salones',
-        titulo: 'Salones',
-        icon: 'chalkboard-user'
+        id: 6,
+        route: 'gestionar-cursos',
+        titulo: 'Cursos',
+        icon: 'book'
     },
+    {
+        id: 7,
+        route: 'gestionar-horarios',
+        titulo: 'Horarios',
+        icon: 'calendar-days'
+    },
+    {
+        id: 8,
+        route: 'gestionar-matricula',
+        titulo: 'Matricula',
+        icon: 'file-invoice'
+    }
 ]

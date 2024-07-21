@@ -5,12 +5,13 @@ import { ModalDocenteComponent } from '../../../shared/components/modal/modal-do
 import { FormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TableComponent } from '../../../shared/components/table/table.component';
+import { InputComponent } from '../../../shared/components/UI/input/input.component';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestionar-docentes',
   standalone: true,
-  imports: [TableComponent, MatProgressBarModule, FormsModule],
+  imports: [TableComponent, MatProgressBarModule, FormsModule, InputComponent],
   templateUrl: './gestionar-docentes.component.html',
   styleUrl: './gestionar-docentes.component.css'
 })

@@ -1,0 +1,12 @@
+<div class="flex items-center text-gray-400 focus-whitin:text-gray-600 text-sm">
+    <i class="fa-solid fa-magnifying-glass absolute ml-3 pointer-events-none"></i>
+    <input 
+        type="text"
+        placeholder="Buscar"
+        autocomplete="off"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchTermChange($event)"
+        class="px-3 py-2 font-medium placeholder-gray-500 text-black rounded-2xl border-none
+        ring-2 ring-gray-300 focus:ring-gray-500 focus:ring-2 pr-3 pl-10 max-[1184px]:w-40 max-[956px]:w-32 max-sm:w-40"
+    >
+</div>

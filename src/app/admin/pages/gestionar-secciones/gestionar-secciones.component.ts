@@ -4,15 +4,17 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TableComponent } from '../../../shared/components/table/table.component';
 import { SeccionService } from '../../../core/services/seccion.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalEstudianteComponent } from '../../../shared/components/modal/modal-estudiante/modal-estudiante.component';
-import Swal from 'sweetalert2';
+import { ModalSeccionComponent } from '../../../shared/components/modal/modal-seccion/modal-seccion.component';
 import { GradoService } from '../../../core/services/grado.service';
 import { PeriodoService } from '../../../core/services/periodo.service';
+import { InputComponent } from '../../../shared/components/UI/input/input.component';
+import { SelectComponent } from '../../../shared/components/UI/select/select.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestionar-secciones',
   standalone: true,
-  imports: [TableComponent, MatProgressBarModule, FormsModule],
+  imports: [TableComponent, MatProgressBarModule, FormsModule, InputComponent, SelectComponent],
   templateUrl: './gestionar-secciones.component.html',
   styleUrl: './gestionar-secciones.component.css'
 })
@@ -59,7 +61,6 @@ export class GestionarSeccionesComponent {
     this.gradoService.listarGrados().subscribe(
       (data: any) => {
         this.grados = data
-        console.log(this.grados)
       },
       (error) => {
         console.log(error)
@@ -68,7 +69,6 @@ export class GestionarSeccionesComponent {
     this.periodoService.listarPeriodos().subscribe(
       (data: any) => {
         this.periodos = data
-        console.log(this.periodos)
       },
       (error) => {
         console.log(error)
@@ -78,7 +78,7 @@ export class GestionarSeccionesComponent {
 
   displayedSecciones() {
     return this.secciones.filter((seccion: any) => {
-      const matchSearchTerm = seccion.aula.includes(this.searchTerm)
+      const matchSearchTerm = seccion.aula.toLowerCase().includes(this.searchTerm.toLowerCase())
       const matchGrado = this.gradoSelected === 'all' || seccion.grado.grado_id === Number(this.gradoSelected)
       const matchPeriodo = this.periodoSelected === 'all' || seccion.periodo.periodo_id === Number(this.periodoSelected)
       return matchSearchTerm && matchGrado && matchPeriodo
@@ -86,7 +86,7 @@ export class GestionarSeccionesComponent {
   }
 
   agregarSeccion() {
-    const dialogRef = this.dialog.open(ModalEstudianteComponent, {
+    const dialogRef = this.dialog.open(ModalSeccionComponent, {
       data: {
         isCreate: true
       },
@@ -106,7 +106,7 @@ export class GestionarSeccionesComponent {
       }
     )
   }
-  
+
   editarSeccion(isEdit: any, id: any) {
     this.loading = true
     if (isEdit) {
@@ -114,7 +114,7 @@ export class GestionarSeccionesComponent {
         (data: any) => {
           this.seccion = data
           this.loading = false
-          const dialogRef = this.dialog.open(ModalEstudianteComponent, {
+          const dialogRef = this.dialog.open(ModalSeccionComponent, {
             data: {
               seccion: this.seccion,
               isEdit: isEdit

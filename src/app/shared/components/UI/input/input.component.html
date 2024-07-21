@@ -1,5 +1,8 @@
 <div class="flex items-center text-gray-400 focus-whitin:text-gray-600 text-sm">
-    <i class="fa-solid fa-magnifying-glass absolute ml-3 pointer-events-none"></i>
+    <i 
+        [class]="'fa-solid fa-' + icon"
+        class="absolute ml-3 pointer-events-none"
+    ></i>
     <input 
         type="text"
         placeholder="Buscar"

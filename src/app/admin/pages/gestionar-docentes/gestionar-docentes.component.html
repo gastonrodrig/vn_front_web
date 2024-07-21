@@ -5,7 +5,7 @@
     <p class="text-xl font-medium mb-4">Gestionar Docentes</p>
     <div class="flex justify-between">
         <div class="flex items-center text-gray-400 focus-whitin:text-gray-600 text-sm">
-            <app-input [(searchTerm)]="searchTerm"></app-input>
+            <app-input [(searchTerm)]="searchTerm" [icon]="'magnifying-glass'"></app-input>
         </div>
         <button 
             (click)="agregarDocente()"

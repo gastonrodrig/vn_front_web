@@ -5,7 +5,11 @@
     <p class="text-xl font-medium mb-4">Gestionar Secciones</p>
     <div class="grid sm:grid-cols-4 sm:grid-rows-1 gap-4 sm:gap-y-0 grid-cols-2 grid-rows-2">
         <div class="order-1">
-            <app-input [(searchTerm)]="searchTerm" [icon]="'magnifying-glass'"></app-input>
+            <app-input 
+                [(searchTerm)]="searchTerm" 
+                [placeholder]="'Buscar'" 
+                [icon]="'magnifying-glass'"
+            ></app-input>
         </div>
         <div class="order-3 sm:order-2 xl:-ms-16 flex justify-start text-sm">
             <app-select 
@@ -28,8 +32,8 @@
         <div class="order-2 sm:order-4 flex justify-end">
             <button 
                 (click)="agregarSeccion()"
-                class="bg-gradient-to-r from-gray-600 to-gray-500 text-white rounded-lg w-20
-                text-sm p-2 -me-2 sm:-me-0 font-medium shadow-lg hover:from-gray-500 hover:to-gray-400 duration-300 hover:scale-110" 
+                mat-flat-button 
+                color="custom-color" 
             > + Agregar </button>
         </div>
     </div>

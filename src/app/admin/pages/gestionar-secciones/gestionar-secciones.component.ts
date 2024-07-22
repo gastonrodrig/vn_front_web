@@ -9,12 +9,13 @@ import { GradoService } from '../../../core/services/grado.service';
 import { PeriodoService } from '../../../core/services/periodo.service';
 import { InputComponent } from '../../../shared/components/UI/input/input.component';
 import { SelectComponent } from '../../../shared/components/UI/select/select.component';
+import { MatButtonModule } from '@angular/material/button';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestionar-secciones',
   standalone: true,
-  imports: [TableComponent, MatProgressBarModule, FormsModule, InputComponent, SelectComponent],
+  imports: [TableComponent, MatProgressBarModule, FormsModule, InputComponent, SelectComponent, MatButtonModule],
   templateUrl: './gestionar-secciones.component.html',
   styleUrl: './gestionar-secciones.component.css'
 })

@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 export class InputComponent {
   @Input() searchTerm = ''
   @Input() icon = ''
+  @Input() placeholder = ''
   @Output() searchTermChange = new EventEmitter<string>()
 
   onSearchTermChange(newTerm: string) {

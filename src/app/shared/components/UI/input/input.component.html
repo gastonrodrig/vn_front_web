@@ -5,7 +5,7 @@
     ></i>
     <input 
         type="text"
-        placeholder="Buscar"
+        [placeholder]="placeholder"
         autocomplete="off"
         [(ngModel)]="searchTerm"
         (ngModelChange)="onSearchTermChange($event)"

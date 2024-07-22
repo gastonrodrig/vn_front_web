@@ -6,12 +6,13 @@ import { TableComponent } from '../../../shared/components/table/table.component
 import { ModalEstudianteComponent } from '../../../shared/components/modal/modal-estudiante/modal-estudiante.component';
 import { FormsModule } from '@angular/forms';
 import { InputComponent } from '../../../shared/components/UI/input/input.component';
+import { MatButtonModule } from '@angular/material/button';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestionar-estudiantes',
   standalone: true,
-  imports: [TableComponent, MatProgressBarModule, FormsModule, InputComponent],
+  imports: [TableComponent, MatProgressBarModule, FormsModule, InputComponent, MatButtonModule],
   templateUrl: './gestionar-estudiantes.component.html',
   styleUrl: './gestionar-estudiantes.component.css'
 })

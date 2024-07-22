@@ -30,17 +30,18 @@
             text-sm p-2 me-2 md:-me-10 font-medium shadow-lg hover:from-gray-700 hover:to-gray-800">Continuar</button>
                 </div>
 
-                <!-- EJEMPLO DE BOTON REUTILIZABLE -->
+                <!-- EJEMPLO DE BOTON REUTILIZABLE (No se cambia el ancho) -->
                 <button 
                     mat-flat-button 
                     color="custom-color" 
                 > boton </button>
 
-                <!-- EJEMPLO DE INPUT REUTILIZABLE (NO SE PUEDE CAMBIAR EL TAMAÑO DE ANCHO) -->
+                <!-- EJEMPLO DE INPUT REUTILIZABLE -->
                 <app-input 
                     [(searchTerm)]="searchTerm" 
                     [placeholder]="'Ingresar usuario'" 
                     [icon]="'circle-user'"
+                    [width]="'w-[250px]'"
                 ></app-input>
                 
             </form>

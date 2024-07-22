@@ -12,6 +12,7 @@ export class InputComponent {
   @Input() searchTerm = ''
   @Input() icon = ''
   @Input() placeholder = ''
+  @Input() width = ''
   @Output() searchTermChange = new EventEmitter<string>()
 
   onSearchTermChange(newTerm: string) {

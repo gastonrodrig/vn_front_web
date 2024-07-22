@@ -9,11 +9,12 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './select.component.css'
 })
 export class SelectComponent {
-  @Input() optionSelected: string = 'all';
+  @Input() optionSelected = 'all'
   @Input() options: any[] = [];
-  @Input() nombreFiltro: string = '';
-  @Input() optionKey: string = '';
-  @Input() optionLabel: string = '';
+  @Input() nombreFiltro = ''
+  @Input() optionKey = ''
+  @Input() optionLabel = ''
+  @Input() width = ''
   @Output() optionSelectedChange = new EventEmitter<string>()
 
   onOptionSelectedChange(newOption: string) {

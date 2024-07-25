@@ -28,9 +28,8 @@ export class GestionarEstudiantesComponent {
     { header: 'Nombre', field: 'nombre' },
     { header: 'Apellido', field: 'apellido' },
     { header: 'Documento', field: 'numero_documento' },
-    { header: 'Grado', field: 'seccion.grado.nombre' },
-    { header: 'Seccion', field: 'seccion.nombre' },
-    { header: 'Periodo', field: 'seccion.periodo.anio' }
+    { header: 'Grado', field: 'grado.nombre' },
+    { header: 'Periodo', field: 'periodo.anio' }
   ];
 
   constructor(

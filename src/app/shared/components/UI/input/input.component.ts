@@ -9,14 +9,14 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './input.component.css'
 })
 export class InputComponent {
-  @Input() searchTerm = ''
+  @Input() model = ''
   @Input() icon = ''
   @Input() placeholder = ''
   @Input() width = ''
-  @Output() searchTermChange = new EventEmitter<string>()
+  @Output() modelChange = new EventEmitter<string>()
 
-  onSearchTermChange(newTerm: string) {
-    this.searchTerm = newTerm;
-    this.searchTermChange.emit(newTerm);
+  onModelChange(newTerm: string) {
+    this.model = newTerm;
+    this.modelChange.emit(newTerm);
   }
 }

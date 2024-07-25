@@ -17,7 +17,6 @@ import Swal from 'sweetalert2';
   styleUrl: './gestionar-docentes.component.css'
 })
 export class GestionarDocentesComponent {
-  @Input() sidebarShowed: any
   docentes = []
   docente = []
   trackByField = 'docente_id'

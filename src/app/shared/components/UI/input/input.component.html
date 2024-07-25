@@ -7,8 +7,8 @@
         type="text"
         [placeholder]="placeholder"
         autocomplete="off"
-        [(ngModel)]="searchTerm"
-        (ngModelChange)="onSearchTermChange($event)"
+        [(ngModel)]="model"
+        (ngModelChange)="onModelChange($event)"
         class="px-3 py-2 font-medium placeholder-gray-500 text-black rounded-2xl border-none
         ring-2 ring-gray-300 focus:ring-gray-500 focus:ring-2 pr-3 pl-10"
         [class]="width"

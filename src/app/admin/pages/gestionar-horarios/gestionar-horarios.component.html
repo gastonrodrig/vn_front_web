@@ -1,1 +1,31 @@
-<p>gestionar-horarios works!</p>
+@if(loading){
+    <mat-progress-bar mode="indeterminate" class="-mt-7 mb-8"></mat-progress-bar>
+}
+<div class="mx-5 mt-2">
+    <p class="text-xl font-medium mb-4">Gestionar Horarios por Salon</p>
+    <div class="bg-gradient-to-r from-blue-200 to-blue-300 rounded-md shadow-md min-w-full p-2">
+        <div class="flex">
+            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+                <mat-label>Tipo de Documento</mat-label>
+                <mat-select 
+                    [(ngModel)]="horario.seccion_id"
+                    [ngModelOptions]="{standalone: true}"
+                >
+                    <mat-option 
+                        *ngFor="let e of secciones" 
+                        [value]="e.seccion_id"
+                    >
+                        {{ 'Sección ' + e.nombre + ', ' + e.grado.nombre + ', ' + e.periodo.anio }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <p>{{ horario.seccion_id }}</p>
+    </div>
+    <div class="flex justify-between">
+        <button 
+            mat-flat-button 
+            color="custom-color" 
+        > + Agregar </button>
+    </div>
+</div>

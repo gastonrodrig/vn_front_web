@@ -15,9 +15,11 @@ export class TableComponent {
   @Input() loadedComplete: any
   @Input() editActive: any
   @Input() deleteActive: any
+  @Input() asignActive: any
 
   @Output() editAction = new EventEmitter<{ isEdit: boolean, id: any }>();
   @Output() deleteAction = new EventEmitter<{ isDeleted: boolean, id: any }>();
+  @Output() asignAction = new EventEmitter<{ isAsigned: boolean, id: any }>();
 
   p: number = 1
   itemsPerPage: number = 5
@@ -34,6 +36,10 @@ export class TableComponent {
 
   delete(id: any) {
     this.deleteAction.emit({ isDeleted: true, id });
+  }
+
+  asign(id: any) {
+    this.asignAction.emit({ isAsigned: true, id });
   }
   
   ngOnChanges() {

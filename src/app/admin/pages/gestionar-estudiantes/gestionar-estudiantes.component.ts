@@ -25,8 +25,8 @@ export class GestionarEstudiantesComponent {
   searchTerm: string = '';
 
   columns = [
-    { header: 'Nombre', field: 'nombre' },
-    { header: 'Apellido', field: 'apellido' },
+    { header: 'Nombre(s)', field: 'nombre' },
+    { header: 'Apellido(s)', field: 'apellido' },
     { header: 'Documento', field: 'numero_documento' },
     { header: 'Grado', field: 'grado.nombre' },
     { header: 'Periodo', field: 'periodo.anio' }

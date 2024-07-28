@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import Swal from 'sweetalert2';
+import { SeccionGradoPeriodoService } from '../../../../core/services/seccion-grado-periodo.service';
 
 @Component({
   selector: 'app-modal-seccion',
@@ -35,7 +36,9 @@ export class ModalSeccionComponent {
   grados: any[] = []
   periodos: any[] = []
   seccion: any
-  seccionId: any
+  seccionGradoPeriodo: any
+  seccionGradoPeriodo_id: any
+  seccionCreated = false
   loading = false
 
   constructor(
@@ -44,18 +47,29 @@ export class ModalSeccionComponent {
     private snack: MatSnackBar,
     private gradoService: GradoService,
     private periodoService: PeriodoService,
-    private seccionService: SeccionService
-  ) {}
+    private seccionService: SeccionService,
+    private sgpService: SeccionGradoPeriodoService
+  ) {
+    dialogRef.disableClose = true
+  }
 
   ngOnInit() {
     if (this.data.isEdit) {
-      this.seccion = this.data.seccion;
-      console.log(this.seccion)
-      this.seccionId = this.data.seccion.seccion_id
+      console.log(this.data)
+      this.seccionGradoPeriodo = this.data
+      this.seccion = this.data.seccion
+      this.seccionGradoPeriodo_id = this.data.sgp_id
     } else {
       this.seccion = {
-        nombre: '',
         aula: '',
+        nombre: ''
+      }
+      this.seccionGradoPeriodo = {
+        seccion: {
+          seccion_id: '',
+          aula: '',
+          nombre: ''
+        },
         grado: {
           grado_id: ''
         },
@@ -82,25 +96,46 @@ export class ModalSeccionComponent {
     )
   }
 
-  guardarInformacion() {
+  crearSeccion() {
     this.loading = true
     const dataSeccion = {
-      nombre : this.seccion.nombre,
-      aula : this.seccion.aula,
-      grado_id : this.seccion.grado.grado_id,
-      periodo_id : this.seccion.periodo.periodo_id
+      nombre: this.seccion.nombre,
+      aula: this.seccion.aula
     }
 
     if(dataSeccion.nombre === '') {
-      this.snack.open('El nombre de la seccion es requerida', '', {
+      this.snack.open('El nombre de la seccion es requerida', '',{
         duration: 3000
       })
       this.loading = false
       return
     }
 
+    this.seccionService.agregarSeccion(dataSeccion).subscribe(
+      (data: any) => {
+        this.loading = false
+        this.seccionCreated = true
+        this.seccionGradoPeriodo.seccion.seccion_id = data.seccion_id
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+  guardarInformacion() {
+    this.loading = true
+
     if(this.data.isCreate) {
-      this.seccionService.agregarSeccion(dataSeccion).subscribe(
+      const dataSGP = {
+        seccion_id: this.seccionGradoPeriodo.seccion.seccion_id,
+        grado_id : this.seccionGradoPeriodo.grado.grado_id,
+        periodo_id : this.seccionGradoPeriodo.periodo.periodo_id
+      }
+  
+      // VALIDACIONES
+
+      this.sgpService.agregarSeccionGradoPeriodo(dataSGP).subscribe(
         (data) => {
           Swal.fire('Seccion guardada', 'La sección ha sido guardado con éxito', 'success').then(
             (e)=> {
@@ -115,9 +150,20 @@ export class ModalSeccionComponent {
     }
 
     if(this.data.isEdit) {
-      this.seccionService.modificarSeccion(this.seccionId, dataSeccion).subscribe(
-        (data) => {
-          console.log(dataSeccion)
+      const dataSGP = {
+        seccion: {
+          seccion_id: this.seccionGradoPeriodo.seccion.seccion_id,
+          nombre: this.seccionGradoPeriodo.seccion.nombre,
+          aula: this.seccionGradoPeriodo.seccion.aula
+        },
+        grado_id : this.seccionGradoPeriodo.grado.grado_id,
+        periodo_id : this.seccionGradoPeriodo.periodo.periodo_id
+      }
+  
+      // VALIDACIONES
+
+      this.sgpService.modificarSeccionGradoPeriodo(this.seccionGradoPeriodo_id, dataSGP).subscribe(
+        (data: any) => {
           this.loading = false
           Swal.fire('Seccion modificada', 'La seccion ha sido modificado con éxito', 'success').then(
             (e)=> {

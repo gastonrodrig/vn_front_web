@@ -23,6 +23,7 @@
     [loadedComplete]="loadedComplete"
     [editActive]="true"
     [deleteActive]="true"
+    [asignActive]="false"
     (editAction)="editarEstudiante($event.isEdit, $event.id)"
     (deleteAction)="eliminarEstudiante($event.isDeleted, $event.id)"
 ></app-table>

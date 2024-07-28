@@ -25,11 +25,10 @@ export class GestionarDocentesComponent {
   searchTerm: string = '';
 
   columns = [
-    { header: 'Nombre', field: 'nombre' },
-    { header: 'Apellido', field: 'apellido' },
+    { header: 'Nombre(s)', field: 'nombre' },
+    { header: 'Apellido(s)', field: 'apellido' },
     { header: 'Documento', field: 'numero_documento' },
-    { header: 'telefono', field: 'telefono' },
-    { header: 'dirección', field: 'direccion' },
+    { header: 'Telefono', field: 'telefono' }
   ];
 
   constructor(

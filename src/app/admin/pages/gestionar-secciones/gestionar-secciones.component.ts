@@ -10,7 +10,9 @@ import { PeriodoService } from '../../../core/services/periodo.service';
 import { InputComponent } from '../../../shared/components/UI/input/input.component';
 import { SelectComponent } from '../../../shared/components/UI/select/select.component';
 import { MatButtonModule } from '@angular/material/button';
+import { SeccionGradoPeriodoService } from '../../../core/services/seccion-grado-periodo.service';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-gestionar-secciones',
@@ -20,11 +22,11 @@ import Swal from 'sweetalert2';
   styleUrl: './gestionar-secciones.component.css'
 })
 export class GestionarSeccionesComponent {
-  secciones = []
+  seccionGradoPeriodo: any[] = []
   seccion: any[] = []
   grados: any[] = []
   periodos: any[] = []
-  trackByField = 'seccion_id'
+  trackByField = 'secciongp_id'
   loading = false
   loadedComplete: any
   searchTerm: string = ''
@@ -32,8 +34,8 @@ export class GestionarSeccionesComponent {
   periodoSelected = 'all'
 
   columns = [
-    { header: 'Nombre', field: 'nombre' },
-    { header: 'Aula', field: 'aula' },
+    { header: 'Nombre', field: 'seccion.nombre' },
+    { header: 'Aula', field: 'seccion.aula' },
     { header: 'Grado', field: 'grado.nombre' },
     { header: 'Periodo', field: 'periodo.anio' }
   ];
@@ -42,14 +44,16 @@ export class GestionarSeccionesComponent {
     private seccionService: SeccionService,
     private gradoService: GradoService,
     private periodoService: PeriodoService,
-    public dialog: MatDialog
+    private sgpService: SeccionGradoPeriodoService,
+    public dialog: MatDialog,
+    private router: Router
   ){}
 
   ngOnInit() {
     this.loading = true
-    this.seccionService.listarSecciones().subscribe(
+    this.sgpService.listarSeccionGradoPeriodo().subscribe(
       (data: any) => {
-        this.secciones = data.sort((a: any, b: any) => a.grado.grado_id - b.grado.grado_id);
+        this.seccionGradoPeriodo = data.sort((a: any, b: any) => a.grado.grado_id - b.grado.grado_id);
         this.loading = false
         this.loadedComplete = true
       },
@@ -78,15 +82,15 @@ export class GestionarSeccionesComponent {
   }
 
   displayedSecciones() {
-    return this.secciones.filter((seccion: any) => {
-      const matchSearchTerm = seccion.aula.toLowerCase().includes(this.searchTerm.toLowerCase())
-      const matchGrado = this.gradoSelected === 'all' || seccion.grado.grado_id === Number(this.gradoSelected)
-      const matchPeriodo = this.periodoSelected === 'all' || seccion.periodo.periodo_id === Number(this.periodoSelected)
+    return this.seccionGradoPeriodo.filter((e: any) => {
+      const matchSearchTerm = e.seccion.aula.toLowerCase().includes(this.searchTerm.toLowerCase())
+      const matchGrado = this.gradoSelected === 'all' || e.grado.grado_id === Number(this.gradoSelected)
+      const matchPeriodo = this.periodoSelected === 'all' || e.periodo.periodo_id === Number(this.periodoSelected)
       return matchSearchTerm && matchGrado && matchPeriodo
     })
   }
 
-  agregarSeccion() {
+  agregarSeccionGradoPeriodo() {
     const dialogRef = this.dialog.open(ModalSeccionComponent, {
       data: {
         isCreate: true
@@ -96,9 +100,9 @@ export class GestionarSeccionesComponent {
 
     dialogRef.afterClosed().subscribe(
       (data) => {
-        this.seccionService.listarSecciones().subscribe(
+        this.sgpService.listarSeccionGradoPeriodo().subscribe(
           (data: any) => {
-            this.secciones = data.sort((a: any, b: any) => a.grado.grado_id - b.grado.grado_id);
+            this.seccionGradoPeriodo = data.sort((a: any, b: any) => a.grado.grado_id - b.grado.grado_id);
           },
           (error) => {
             console.log(error)
@@ -108,16 +112,18 @@ export class GestionarSeccionesComponent {
     )
   }
 
-  editarSeccion(isEdit: any, id: any) {
+  editarSeccionGradoPeriodo(isEdit: any, id: any) {
     this.loading = true
     if (isEdit) {
-      this.seccionService.obtenerSeccion(id).subscribe(
+      this.sgpService.obtenerSeccionGradoPeriodo(id).subscribe(
         (data: any) => {
-          this.seccion = data
           this.loading = false
           const dialogRef = this.dialog.open(ModalSeccionComponent, {
             data: {
-              seccion: this.seccion,
+              sgp_id: data.secciongp_id,
+              seccion: data.seccion,
+              grado: data.grado,
+              periodo: data.periodo,
               isEdit: isEdit
             },
             width: '70%'
@@ -125,10 +131,9 @@ export class GestionarSeccionesComponent {
 
           dialogRef.afterClosed().subscribe(
             (data) => {
-              this.seccionService.listarSecciones().subscribe(
+              this.sgpService.listarSeccionGradoPeriodo().subscribe(
                 (data: any) => {
-                  this.secciones = data.sort((a: any, b: any) => a.grado.grado_id - b.grado.grado_id);
-                  console.log(this.secciones)
+                  this.seccionGradoPeriodo = data.sort((a: any, b: any) => a.grado.grado_id - b.grado.grado_id);
                 },
                 (error) => {
                   console.log(error)
@@ -159,14 +164,22 @@ export class GestionarSeccionesComponent {
       }).then((result) => {
         if (result.isConfirmed) {
           this.loading = true
-          this.seccionService.eliminarSeccion(id).subscribe(
+          this.sgpService.obtenerSeccionGradoPeriodo(id).subscribe(
+            (data: any) => { 
+              const seccion_id = data.seccion.seccion_id 
+              this.seccionService.eliminarSeccion(seccion_id).subscribe(
+                (data: any) => {}
+              )
+            }
+          )
+          this.sgpService.eliminarSeccionGradoPeriodo(id).subscribe(
             (data) => {
               this.loading = false
               Swal.fire('Sección eliminada', 'La sección ha sido eliminada de la base de datos', 'success').then(
                 (e)=> {
-                  this.seccionService.listarSecciones().subscribe(
+                  this.sgpService.listarSeccionGradoPeriodo().subscribe(
                     (data: any) => {
-                      this.secciones = data
+                      this.seccionGradoPeriodo = data.sort((a: any, b: any) => a.grado.grado_id - b.grado.grado_id);
                     },
                     (error) => {
                       console.log(error)
@@ -177,11 +190,19 @@ export class GestionarSeccionesComponent {
             },
             (error) => {
               this.loading = false
+              console.log(error);
               Swal.fire('Error', 'Error al eliminar la sección de la base de datos', 'error');
             }
           );
         }
       });
+    }
+  }
+
+  asignarSeccion(isAsigned: any, id: any) {
+    this.loading = true
+    if(isAsigned) {
+      this.router.navigate([`/admin/gestionar-secciones/${id}`])
     }
   }
 

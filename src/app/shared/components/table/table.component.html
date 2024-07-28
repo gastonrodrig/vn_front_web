@@ -25,6 +25,14 @@
                   }
                   <td>
                     <div class="flex py-3 pl-5 pr-3 text-base gap-x-3">
+                      @if(asignActive) {
+                        <div 
+                          class="hover:text-amber-500 hover:cursor-pointer hover:scale-125 duration-200"
+                          (click)="asign(row[trackByField])"
+                        >
+                          <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                      }
                       @if(editActive) {
                         <div 
                           class="hover:text-blue-500 hover:cursor-pointer hover:scale-125 duration-200"

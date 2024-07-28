@@ -34,7 +34,7 @@
         </div>
         <div class="order-2 sm:order-4 flex justify-end">
             <button 
-                (click)="agregarSeccion()"
+                (click)="agregarSeccionGradoPeriodo()"
                 mat-flat-button 
                 color="custom-color" 
             > + Agregar </button>
@@ -46,8 +46,8 @@
     [data]="displayedSecciones()"
     [trackByField]="trackByField"
     [loadedComplete]="loadedComplete"
-    [editActive]="true"
     [deleteActive]="true"
-    (editAction)="editarSeccion($event.isEdit, $event.id)"
+    [asignActive]="true"
     (deleteAction)="eliminarSeccion($event.isDeleted, $event.id)"
+    (asignAction)="asignarSeccion($event.isAsigned, $event.id)"
 ></app-table>

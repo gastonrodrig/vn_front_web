@@ -23,4 +23,16 @@ export class EstudianteService {
   obtenerEstudiante(id: string) {
     return this.http.get(`${baseUrl}/estudiante/${id}`);
   }
+  asignarSeccion(id: string, seccion: any) {
+    return this.http.put(`${baseUrl}/estudiante/assign-seccion/${id}`, seccion);
+  }
+  eliminarSeccion(id: string) {
+    return this.http.put(`${baseUrl}/estudiante/remove-seccion/${id}`, null);
+  }
+  listarEstudiantePorGradoYPeriodo(gradoId: string, periodoId: string) {
+    return this.http.get(`${baseUrl}/estudiante/grado/${gradoId}/periodo/${periodoId}`);
+  }
+  listarEstudiantePorSeccionGradoYPeriodo(seccionId: string, gradoId: string, periodoId: string) {
+    return this.http.get(`${baseUrl}/estudiante/seccion/${seccionId}/grado/${gradoId}/periodo/${periodoId}`);
+  }
 }

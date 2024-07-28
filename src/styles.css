@@ -119,3 +119,16 @@ body .ngx-pagination button:hover {
 body .ngx-pagination .current {
     background: #06b6d4 !important;
 }
+
+/* checkbox (Angular Material) */
+body .mat-accent.mat-mdc-checkbox {
+    --mdc-checkbox-selected-checkmark-color: #ffffff;
+    --mdc-checkbox-selected-focus-icon-color: #4b5563;
+    --mdc-checkbox-selected-hover-icon-color: #4b5563;
+    --mdc-checkbox-selected-icon-color: #4b5563;
+    --mdc-checkbox-selected-focus-state-layer-color: #4b5563;
+    --mdc-checkbox-selected-hover-state-layer-color: #4b5563;
+    --mdc-checkbox-unselected-pressed-state-layer-color: #4b5563;
+    --mat-checkbox-disabled-label-color: rgba(26, 27, 31, 0.38);
+    --mat-checkbox-label-text-color: #1a1b1f;
+}

@@ -9,7 +9,7 @@ export const listaModulos = [
         id: 2,
         route: 'gestionar-estudiantes',
         titulo: 'Estudiantes',
-        icon: 'user-graduate'
+        icon: 'graduation-cap'
     },
     {
         id: 3,
@@ -27,7 +27,7 @@ export const listaModulos = [
         id: 5,
         route: 'gestionar-grado',
         titulo: 'Grado',
-        icon: 'graduation-cap'
+        icon: 'list-ol'
     },
     {
         id: 6,

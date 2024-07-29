@@ -132,10 +132,6 @@ export class AsignarSeccionComponent {
     );
   }
 
-  volverSecciones() {
-    this.router.navigate([`/admin/gestionar-secciones`]);
-  }
-
   isAllSelected(dataSource: MatTableDataSource<any>, selection: SelectionModel<any>): boolean {
     const numSelected = selection.selected.length;
     const numRows = dataSource.data.length;
@@ -210,5 +206,9 @@ export class AsignarSeccionComponent {
       return `${this.isAllSelected(dataSource, selection) ? 'deselect' : 'select'} all`;
     }
     return `${selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
+  volverSecciones() {
+    this.router.navigate([`/admin/gestionar-secciones`]);
   }
 }

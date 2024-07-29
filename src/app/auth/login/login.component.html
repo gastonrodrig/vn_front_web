@@ -1,49 +1,43 @@
-<div class=" bg-gray-100 flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">   
+<div class=" bg-gray-100 flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex justify-center mb-4">
+                <i class="fa-solid fa-school text-xl"></i>
+            </div>
+            <div>
+                <p class="text-center text-2xl font-medium mb-5 ">Iniciar Sesión</p>
+            </div>
             <form class="space-y-6">
-        
+
                 <!-- Correo -->
                 <div>
                     <label class="block text-sm font-medium leading-6 text-gray-900">Correo Electronico</label>
-                    <input type="email"
-                        class="rounded-md border-0 ring-1 ring-inset ring-gray-300 focus:ring-2 outline-none focus:ring-inset focus:ring-dark-blue-3">
+                    <div class="mt-2">
+                        <app-input  [type]="'email'" [(model)]="email" [placeholder]="'Ingresar usuario'" [icon]="'circle-user'"
+                            [width]="'w-[500px]'"></app-input>
+                    </div>
                 </div>
-        
+
                 <!-- Contraseña -->
                 <div>
                     <div class="flex items-center justify-between">
                         <label class="block text-sm font-medium leading-6 text-gray-900">Contraseña</label>
                         <div>
-                            <a  href="" class="font-medium text-sm">¿Olvidaste tu contraseña?</a>
+                            <a href="" class="font-medium text-sm">¿Olvidaste tu contraseña?</a>
                         </div>
-        
+
                     </div>
-        
-                    <input type="password"
-                        class="rounded-md border-0 ring-1 ring-inset ring-gray-300 focus:ring-2 outline-none focus:ring-inset focus:ring-dark-blue-3">
+                    <div class="mt-2">
+                        <app-input [type]="'password'" [(model)]="password" [placeholder]="'Ingresar contraseña'" [icon]="'lock'"
+                            [width]="'w-[500px]'"></app-input>
+                    </div>
                 </div>
-        
+
                 <!-- XDDD -->
-                <div>
-                    <button class="bg-gradient-to-r from-gray-600 to-gray-500 text-white rounded-lg w-20
-            text-sm p-2 me-2 md:-me-10 font-medium shadow-lg hover:from-gray-700 hover:to-gray-800">Continuar</button>
+                <div class="">
+                    <button mat-flat-button color="custom-color" class="w-full"> Continuar </button>
                 </div>
 
-                <!-- EJEMPLO DE BOTON REUTILIZABLE (No se cambia el ancho) -->
-                <button 
-                    mat-flat-button 
-                    color="custom-color" 
-                > boton </button>
-
-                <!-- EJEMPLO DE INPUT REUTILIZABLE -->
-                <app-input 
-                    [(model)]="searchTerm" 
-                    [placeholder]="'Ingresar usuario'" 
-                    [icon]="'circle-user'"
-                    [width]="'w-[250px]'"
-                ></app-input>
-                
             </form>
         </div>
     </div>

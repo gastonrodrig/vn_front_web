@@ -10,5 +10,6 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  searchTerm: string = '';
+  email: string = '';
+  password: string = '';
 }

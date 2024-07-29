@@ -14,6 +14,7 @@ export class InputComponent {
   @Input() placeholder = ''
   @Input() width = ''
   @Output() modelChange = new EventEmitter<string>()
+  @Input() type = ''
 
   onModelChange(newTerm: string) {
     this.model = newTerm;

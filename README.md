@@ -1,6 +1,8 @@
 # Dashboard Escolar para Virgen de la Natividad
 
-![Angular](https://angular.io/assets/images/logos/angular/angular.png)
+<p align="center">
+  <img src="https://angular.io/assets/images/logos/angular/angular.png" alt="Angular" width="200"/>
+</p>
 
 Este proyecto es una aplicación Angular desarrollada para el colegio Virgen de la Natividad. La aplicación ofrece un dashboard para la administración y docentes de la escuela primaria, con funcionalidades de inicio de sesión y vistas personalizadas para diferentes roles.
 

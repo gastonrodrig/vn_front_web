@@ -5,6 +5,18 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+/* sidebar */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+}
+.sidebar {
+    background-color: #1F2937;
+    z-index: 50;
+}
+
 /* mat-basic-button (angular material) */
 body .mat-mdc-button.mat-custom-color {
     color: #1f2329;

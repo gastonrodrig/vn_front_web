@@ -12,11 +12,10 @@
         </div>
         <div class="h-12 border-l border-gray-400 me-4"></div>
         <div class="p-2 px-4 me-3 duration-200 rounded-[4px] bg-dark-blue-2 hover:bg-dark-blue-1 text-white shadow-md cursor-pointer relative"
-            [ngClass]="{ 'bg-dark-blue-5': sidebarShowed }"
             (click)="toggleDropdown()"
         >
-            <i class="fa-solid fa-user" [ngClass]="{ 'opacity-50': sidebarShowed }"></i>
-            <i class="fa-solid fa-sort-down" [ngClass]="{ 'opacity-50': sidebarShowed }"></i>
+            <i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-sort-down"></i>
 
             @if(dropdownVisible) {
             <div class="absolute -bottom-[44px] -right-0 w-[110px]">

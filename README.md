@@ -10,15 +10,6 @@ Este proyecto es una aplicación Angular desarrollada para el colegio Virgen de 
 
 El proyecto proporciona una solución integral para la gestión administrativa y educativa del colegio Virgen de la Natividad. Incluye funcionalidades tanto para administradores como para docentes, permitiendo una gestión eficiente de la información escolar y facilitando la comunicación y seguimiento de actividades dentro de la institución.
 
-## Características
-
-- **Login Seguro**: Autenticación de usuarios con roles diferenciados para administradores y docentes.
-- **Dashboard de Administración**: Panel de control para la gestión de datos de la escuela, incluyendo gestión de usuarios, informes y configuraciones generales.
-- **Dashboard de Docente**: Vista personalizada para docentes con acceso a sus clases, horarios, y herramientas de gestión de alumnos.
-- **Interfaz Amigable**: Diseño intuitivo y accesible tanto para administradores como para docentes, utilizando [Angular Material](https://material.angular.io/) para componentes UI.
-- **Diseño Responsivo**: Compatible con dispositivos móviles y de escritorio, utilizando [Tailwind CSS](https://tailwindcss.com/) para un diseño flexible y adaptativo.
-- **Componentes Avanzados**: Utilización de [NGX](https://www.npmjs.com/org/ngx) para funcionalidades y componentes adicionales específicos para Angular.
-
 ## Tecnologías
 
 - [**Angular**](https://angular.io/) - Framework para construir aplicaciones web robustas y escalables.

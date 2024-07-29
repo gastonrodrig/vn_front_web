@@ -1,27 +1,34 @@
-# Dashboard Escolar para Virgen de la Natividad
+# frontend_virgen_natividad
 
-<p align="center">
-  <img src="https://angular.io/assets/images/logos/angular/angular.png" alt="Angular" width="200"/>
-</p>
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.5.
 
-Este proyecto es una aplicación Angular desarrollada para el colegio Virgen de la Natividad. La aplicación ofrece un dashboard para la administración y docentes de la escuela primaria, con funcionalidades de inicio de sesión y vistas personalizadas para diferentes roles.
+## Development Server
 
-## Descripción
+Run `ng serve` to start the development server. Navigate to [http://localhost:4200/](http://localhost:4200/). The app will automatically reload if you change any of the source files.
 
-El proyecto proporciona una solución integral para la gestión administrativa y educativa del colegio Virgen de la Natividad. Incluye funcionalidades tanto para administradores como para docentes, permitiendo una gestión eficiente de la información escolar y facilitando la comunicación y seguimiento de actividades dentro de la institución.
+## Code Scaffolding
 
-## Tecnologías
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-- [**Angular**](https://angular.io/) - Framework para construir aplicaciones web robustas y escalables.
-- [**TypeScript**](https://www.typescriptlang.org/) - Lenguaje para JavaScript con tipado estático, mejorando la seguridad y las herramientas de desarrollo.
-- [**Angular Material**](https://material.angular.io/) - Biblioteca de componentes UI basada en Material Design para una experiencia de usuario moderna y consistente.
-- [**Tailwind CSS**](https://tailwindcss.com/) - Framework de diseño CSS para una personalización rápida y efectiva de la interfaz de usuario.
-- [**NGX**](https://www.npmjs.com/org/ngx) - Colección de utilidades y componentes adicionales para Angular que mejoran la funcionalidad y el rendimiento.
+## Build
 
-## Instalación
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-Para comenzar a trabajar con el proyecto, sigue estos pasos:
+## Running Unit Tests
 
-1. **Clona el repositorio**:
-   ```bash
-   git clone https://github.com/gastonrodrig/front_virgen_natividad.git
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+## Running End-to-End Tests
+
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+
+## Technologies Used
+
+- **Angular**: Version 18.0.5
+- **Angular Material**: For UI components
+- **Tailwind CSS**: For styling
+- **NGX**: For additional Angular features
+
+## Further Help
+
+To get more help on the Angular CLI use `ng help` or check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.

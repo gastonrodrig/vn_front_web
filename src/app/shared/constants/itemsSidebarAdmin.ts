@@ -24,12 +24,6 @@ export const listaModulos = [
         icon: 'font'
     },
     {
-        id: 5,
-        route: 'gestionar-grado',
-        titulo: 'Grado',
-        icon: 'list-ol'
-    },
-    {
         id: 6,
         route: 'gestionar-cursos',
         titulo: 'Cursos',

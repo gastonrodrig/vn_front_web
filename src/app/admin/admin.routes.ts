@@ -5,7 +5,6 @@ import { GestionarSeccionesComponent } from './pages/gestionar-secciones/gestion
 import { GestionarCursosComponent } from './pages/gestionar-cursos/gestionar-cursos.component';
 import { GestionarHorariosComponent } from './pages/gestionar-horarios/gestionar-horarios.component';
 import { GestionarMatriculaComponent } from './pages/gestionar-matricula/gestionar-matricula.component';
-import { GestionarGradoComponent } from './pages/gestionar-grado/gestionar-grado.component';
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
 import { InicioComponent } from './pages/inicio/inicio.component';
 import { AsignarSeccionComponent } from './pages/asignar-seccion/asignar-seccion.component';
@@ -46,10 +45,6 @@ export const ADMIN_ROUTES: Routes = [
             {
                 path: 'gestionar-matricula',
                 component: GestionarMatriculaComponent
-            },
-            {
-                path: 'gestionar-grado',
-                component: GestionarGradoComponent
             }
         ]
     },

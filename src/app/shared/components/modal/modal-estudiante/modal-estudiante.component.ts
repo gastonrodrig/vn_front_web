@@ -264,5 +264,21 @@ export class ModalEstudianteComponent {
   closeModel() {
     this.dialogRef.close()
   }
+
+  get seccionCompleta() {
+    const aula = this.estudiante.seccion.aula;
+    const nombre = this.estudiante.seccion.nombre;
+    if (!aula && !nombre) {
+      return 'Sin salón';
+    } else {
+      return `${aula}, ${nombre}`;
+    }
+  }
+
+  set seccionCompleta(value: string) {
+    const [aula, nombre] = value.split(', ');
+    this.estudiante.seccion.aula = aula.trim();
+    this.estudiante.seccion.nombre = nombre.trim();
+  }
   
 }

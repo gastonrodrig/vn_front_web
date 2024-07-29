@@ -19,8 +19,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrl: './asignar-seccion.component.css'
 })
 export class AsignarSeccionComponent {
-  seccionGradoPeriodo: any;
-  searchTerm = ''
+  seccionGradoPeriodo: any
+  searchTermConSalon = ''
+  searchTermSinSalon = ''
   grado = {
     nombre: ''
   }
@@ -30,17 +31,17 @@ export class AsignarSeccionComponent {
   seccion = {
     aula: ''
   }
-  estudiantesXPeriodoGrado: any[] = [];
-  sgpId: any;
+  estudiantesXPeriodoGrado: any[] = []
+  sgpId: any
   seccionId: any
-  loading = false;
-  estudiantesSinSalon: any;
+  loading = false
+  estudiantesSinSalon: any
   estudiantesConSalon: any
-  displayedColumns: string[] = ['select', 'student'];
+  displayedColumns: string[] = ['select', 'student']
   dataSource = new MatTableDataSource<any>([])
-  dataSourceAsignados = new MatTableDataSource<any>([]);
-  selectionSinSalon = new SelectionModel<any>(true, []); // SelectionModel para la primera tabla
-  selectionAsignados = new SelectionModel<any>(true, []);
+  dataSourceAsignados = new MatTableDataSource<any>([])
+  selectionSinSalon = new SelectionModel<any>(true, [])
+  selectionAsignados = new SelectionModel<any>(true, [])
 
   constructor(
     private route: ActivatedRoute,
@@ -52,11 +53,11 @@ export class AsignarSeccionComponent {
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => this.sgpId = params.get('id'));
-    this.loading = true;
+    this.loading = true
 
     this.sgpService.obtenerSeccionGradoPeriodo(this.sgpId).subscribe(
       (data: any) => {
-        this.seccionGradoPeriodo = data;
+        this.seccionGradoPeriodo = data
         this.grado.nombre = data.grado.nombre
         this.periodo.anio = data.periodo.anio
         this.seccion.aula = data.seccion.aula
@@ -65,10 +66,10 @@ export class AsignarSeccionComponent {
         this.listarEstudiantesConSalon()
       },
       (error) => {
-        this.loading = false;
-        console.log(error);
+        this.loading = false
+        console.log(error)
       }
-    );
+    )
   }
 
   listarEstudiantesSinSalon() {
@@ -77,23 +78,23 @@ export class AsignarSeccionComponent {
       this.seccionGradoPeriodo.periodo.periodo_id
     ).subscribe(
       (data: any) => {
-        this.loading = false;
+        this.loading = false
         this.estudiantesXPeriodoGrado = data.sort((a: any, b: any) => {
           if (a.apellido < b.apellido) {
-            return -1;
+            return -1
           }
           if (a.apellido > b.apellido) {
-            return 1;
+            return 1
           }
-          return 0;
-        });
-        this.dataSource.data = this.estudiantesXPeriodoGrado;
+          return 0
+        })
+        this.dataSource.data = this.estudiantesXPeriodoGrado
       },
       (error) => {
-        this.loading = false;
-        console.log(error);
+        this.loading = false
+        console.log(error)
       }
-    );
+    )
   }
 
   listarEstudiantesConSalon() {
@@ -103,39 +104,39 @@ export class AsignarSeccionComponent {
       this.seccionGradoPeriodo.periodo.periodo_id
     ).subscribe(
       (data: any) => {
-        this.loading = false;
+        this.loading = false
         this.estudiantesConSalon = data.sort((a: any, b: any) => {
           if (a.apellido < b.apellido) {
-            return -1;
+            return -1
           }
           if (a.apellido > b.apellido) {
-            return 1;
+            return 1
           }
-          return 0;
-        });
-        this.dataSourceAsignados.data = this.estudiantesConSalon;
+          return 0
+        })
+        this.dataSourceAsignados.data = this.estudiantesConSalon
       }
     )
   }
 
   displayedEstudiantesXGradoPeriodo() {
     return this.dataSource.data.filter((e: any) =>
-      e.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      e.apellido.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+      e.nombre.toLowerCase().includes(this.searchTermSinSalon.toLowerCase()) ||
+      e.apellido.toLowerCase().includes(this.searchTermSinSalon.toLowerCase())
+    )
   }
 
   displayedEstudiantesXSeccion() {
     return this.dataSourceAsignados.data.filter((e: any) =>
-      e.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      e.apellido.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+      e.nombre.toLowerCase().includes(this.searchTermConSalon.toLowerCase()) ||
+      e.apellido.toLowerCase().includes(this.searchTermConSalon.toLowerCase())
+    )
   }
 
   isAllSelected(dataSource: MatTableDataSource<any>, selection: SelectionModel<any>): boolean {
-    const numSelected = selection.selected.length;
-    const numRows = dataSource.data.length;
-    return numSelected === numRows;
+    const numSelected = selection.selected.length
+    const numRows = dataSource.data.length
+    return numSelected === numRows
   }
 
   toggleAllRows(dataSource: MatTableDataSource<any>, selection: SelectionModel<any>) {
@@ -175,8 +176,8 @@ export class AsignarSeccionComponent {
           this.loading = false
           console.error(error)
         }
-      );
-    });
+      )
+    })
   }
 
   desplazarEstudiantesConSalon() {
@@ -197,18 +198,18 @@ export class AsignarSeccionComponent {
           this.loading = false
           console.error(error)
         }
-      );
-    });
+      )
+    })
   }
 
   checkboxLabel(dataSource: MatTableDataSource<any>, selection: SelectionModel<any>, row?: any): string {
     if (!row) {
-      return `${this.isAllSelected(dataSource, selection) ? 'deselect' : 'select'} all`;
+      return `${this.isAllSelected(dataSource, selection) ? 'deselect' : 'select'} all`
     }
-    return `${selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+    return `${selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`
   }
 
   volverSecciones() {
-    this.router.navigate([`/admin/gestionar-secciones`]);
+    this.router.navigate([`/admin/gestionar-secciones`])
   }
 }

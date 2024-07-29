@@ -57,6 +57,7 @@
                     <mat-select 
                         [(ngModel)]="seccionGradoPeriodo.grado.grado_id"
                         [ngModelOptions]="{standalone: true}"
+                        [disabled]="data.isEdit"
                     >
                         <mat-option 
                             *ngFor="let e of grados" 
@@ -72,6 +73,7 @@
                     <mat-select 
                         [(ngModel)]="seccionGradoPeriodo.periodo.periodo_id"
                         [ngModelOptions]="{standalone: true}"
+                        [disabled]="data.isEdit"
                     >
                         <mat-option 
                             *ngFor="let e of periodos" 

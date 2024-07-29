@@ -11,8 +11,8 @@ import { InputComponent } from '../../../shared/components/UI/input/input.compon
 import { SelectComponent } from '../../../shared/components/UI/select/select.component';
 import { MatButtonModule } from '@angular/material/button';
 import { SeccionGradoPeriodoService } from '../../../core/services/seccion-grado-periodo.service';
-import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestionar-secciones',
@@ -41,7 +41,6 @@ export class GestionarSeccionesComponent {
   ];
 
   constructor(
-    private seccionService: SeccionService,
     private gradoService: GradoService,
     private periodoService: PeriodoService,
     private sgpService: SeccionGradoPeriodoService,
@@ -164,14 +163,6 @@ export class GestionarSeccionesComponent {
       }).then((result) => {
         if (result.isConfirmed) {
           this.loading = true
-          this.sgpService.obtenerSeccionGradoPeriodo(id).subscribe(
-            (data: any) => { 
-              const seccion_id = data.seccion.seccion_id 
-              this.seccionService.eliminarSeccion(seccion_id).subscribe(
-                (data: any) => {}
-              )
-            }
-          )
           this.sgpService.eliminarSeccionGradoPeriodo(id).subscribe(
             (data) => {
               this.loading = false

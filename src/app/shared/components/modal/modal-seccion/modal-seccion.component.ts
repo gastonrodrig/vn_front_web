@@ -67,8 +67,6 @@ export class ModalSeccionComponent {
       this.seccionGradoPeriodo = {
         seccion: {
           seccion_id: '',
-          aula: '',
-          nombre: ''
         },
         grado: {
           grado_id: ''
@@ -150,19 +148,14 @@ export class ModalSeccionComponent {
     }
 
     if(this.data.isEdit) {
-      const dataSGP = {
-        seccion: {
-          seccion_id: this.seccionGradoPeriodo.seccion.seccion_id,
-          nombre: this.seccionGradoPeriodo.seccion.nombre,
-          aula: this.seccionGradoPeriodo.seccion.aula
-        },
-        grado_id : this.seccionGradoPeriodo.grado.grado_id,
-        periodo_id : this.seccionGradoPeriodo.periodo.periodo_id
+      const data = {
+        nombre: this.seccionGradoPeriodo.seccion.nombre,
+        aula: this.seccionGradoPeriodo.seccion.aula
       }
   
       // VALIDACIONES
 
-      this.sgpService.modificarSeccionGradoPeriodo(this.seccionGradoPeriodo_id, dataSGP).subscribe(
+      this.sgpService.modificarSeccion(this.seccionGradoPeriodo_id, data).subscribe(
         (data: any) => {
           this.loading = false
           Swal.fire('Seccion modificada', 'La seccion ha sido modificado con éxito', 'success').then(

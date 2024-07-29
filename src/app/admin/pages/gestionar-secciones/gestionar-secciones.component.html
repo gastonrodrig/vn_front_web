@@ -46,8 +46,10 @@
     [data]="displayedSecciones()"
     [trackByField]="trackByField"
     [loadedComplete]="loadedComplete"
+    [editActive]="true"
     [deleteActive]="true"
     [asignActive]="true"
+    (editAction)="editarSeccionGradoPeriodo($event.isEdit, $event.id)"
     (deleteAction)="eliminarSeccion($event.isDeleted, $event.id)"
     (asignAction)="asignarSeccion($event.isAsigned, $event.id)"
 ></app-table>

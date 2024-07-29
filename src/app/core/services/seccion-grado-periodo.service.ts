@@ -17,6 +17,9 @@ export class SeccionGradoPeriodoService {
   modificarSeccionGradoPeriodo(id: string, SGP: any){
     return this.http.put(`${baseUrl}/seccion-grado-periodo/${id}`, SGP);
   }
+  modificarSeccion(id: string, seccion: any) {
+    return this.http.put(`${baseUrl}/seccion-grado-periodo/${id}/seccion`, seccion);
+  }
   eliminarSeccionGradoPeriodo(id: string){
     return this.http.delete(`${baseUrl}/seccion-grado-periodo/${id}`);
   }

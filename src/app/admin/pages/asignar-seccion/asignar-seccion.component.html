@@ -17,7 +17,7 @@
             <div class="bg-gray-50 p-3 mx-5 rounded-xl ring-1 ring-gray-300">
                 <div class="flex justify-between max-[1366px]:grid max-[1366px]:gap-y-2 max-[1366px]:justify-center max-md:flex max-md:justify-between">
                     <app-input 
-                        [(model)]="searchTerm" 
+                        [(model)]="searchTermSinSalon" 
                         [placeholder]="'Buscar'" 
                         [icon]="'magnifying-glass'"
                         [width]="'max-[923px]:w-32 min-md:w-36'"
@@ -98,12 +98,13 @@
                 </p>
             </div>
             <div class="bg-gray-50 p-3 mx-5 rounded-xl ring-1 ring-gray-300">
-                <div class="flex justify-between max-[1366px]:grid max-[1366px]:gap-y-2 max-[1366px]:justify-center max-md:flex max-md:justify-between">
+                <div class="flex justify-between max-[1366px]:grid max-[1366px]:gap-y-2 max-[1366px]:justify-center 
+                max-md:flex max-md:justify-between max-[546px]:grid max-[546px]:gap-y-2 max-[546px]:justify-center">
                     <app-input 
-                        [(model)]="searchTerm" 
+                        [(model)]="searchTermConSalon" 
                         [placeholder]="'Buscar'" 
                         [icon]="'magnifying-glass'"
-                        [width]="'max-[923px]:w-32 min-md:w-36'"
+                        [width]="'max-[923px]:w-32 min-md:w-36 max-[546px]:w-full'"
                     ></app-input>
                     <div class="flex gap-x-2 items-center max-[1366px]:justify-center">
                         <div class="relative group">
@@ -134,7 +135,7 @@
                     <div class="inline-block min-w-full align-middle p-2">
                         <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
                             <!-- Estudiantes de una promocion con un salón -->
-                            <table mat-table [dataSource]="dataSourceAsignados" class="mat-elevation-z1">
+                            <table mat-table [dataSource]="displayedEstudiantesXSeccion()" class="mat-elevation-z1">
                                 <ng-container matColumnDef="select">
                                   <th mat-header-cell *matHeaderCellDef>
                                     <mat-checkbox

@@ -1,1 +1,29 @@
-<p>gestionar-cursos works!</p>
+@if(loading){
+    <mat-progress-bar mode="indeterminate" class="-mt-7 mb-8"></mat-progress-bar>
+}
+<div class="mx-5 mt-2">
+    <p class="text-xl font-medium mb-4">Gestionar Cursos</p>
+    <div class="flex justify-between">
+        <app-input 
+            [(model)]="searchTerm" 
+            [placeholder]="'Buscar'" 
+            [icon]="'magnifying-glass'"
+        ></app-input>
+        <button 
+            (click)="agregarCurso()"
+            mat-flat-button 
+            color="custom-color" 
+        > + Agregar </button>
+    </div>
+</div>
+<app-table 
+    [columns]="columns" 
+    [data]="displayedCursos()"
+    [trackByField]="trackByField"
+    [loadedComplete]="loadedComplete"
+    [editActive]="true"
+    [deleteActive]="true"
+    [asignActive]="false"
+    (editAction)="editarCurso($event.isEdit, $event.id)"
+    (deleteAction)="eliminarCurso($event.isDeleted, $event.id)"
+></app-table>

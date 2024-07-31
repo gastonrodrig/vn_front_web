@@ -1,0 +1,152 @@
+<div class="p-4">
+  <div class="flex flex-col items-center">
+    <div class="text-base mt-2 mb-6 font-medium">
+      <p>{{ data.isEdit ? 'Editar Curso' : 'Agregar Curso' }}</p> 
+    </div> 
+  </div>
+  <form>
+    <p class="pl-0.5 pb-4 font-medium">Datos del curso:</p>
+      <div class="grid grid-cols-2 gap-x-4">
+
+        <mat-form-field appearance="fill" class="col-span-2">
+        <mat-label>Nombre</mat-label>
+          <input
+            [(ngModel)]="curso.nombre"
+            type="text"
+            placeholder="Ingrese el nombre del curso"
+            matInput
+            [ngModelOptions]="{standalone: true}"
+            [disabled]="cursoCreated"
+          >
+        </mat-form-field>
+
+        @if(data.isCreate) {
+          <div class="col-span-2" [ngClass]="{ 'hidden' : cursoCreated }">
+            <div class="flex justify-end w-full">
+              <div class="p-2">
+                  <button 
+                    mat-flat-button 
+                    color="custom-color" 
+                    (click)="crearCurso()" 
+                    class="me-2"
+                  >+ Añadir Curso</button>
+                  <button 
+                    mat-button 
+                    mat-dialog-close 
+                    color="custom-color"
+                  >Cancelar</button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      @if(cursoCreated || data.isEdit) {
+        <p class="pl-0.5 pb-2 font-medium">Grados:</p>
+        <div class="grid grid-cols-2 gap-x-2">
+          @for(e of grados; track e.grado_id) {
+            <mat-checkbox
+                [(ngModel)]="checkedItems[e.grado_id]"
+                class="col-span-2 sm:col-span-1"
+                [ngModelOptions]="{standalone: true}"
+                (change)="onCheckboxChange(e.grado_id, $event.checked)"
+            >
+                {{ e.nombre }}
+            </mat-checkbox>
+          }  
+        </div>
+
+        <p class="pl-0.5 pb-2 font-medium mt-2.5 mb-2">Docentes a cargo: (Máximo 3 docentes)</p>
+        <div class="relative">
+          <input 
+            type="text"
+            class="rounded-ss-md rounded-se-md w-full py-[14px] px-4 ring-inset outline-none cursor-text 
+            bg-gray-1 placeholder:text-gray-3 hover:bg-gray-2 
+            disabled:bg-[#F4F2F6] disabled:hover:bg-[#F4F2F6] disabled:placeholder:opacity-40"
+            placeholder="Buscar docente por nombre, apellido o numero de documento" 
+            [(ngModel)]="searchTerm"
+            (change)="inputText()"
+            [ngModelOptions]="{standalone: true}"
+            [disabled]="docenteList.length === 3 || docentesXCurso.length === 3"
+          >
+          <div 
+            class="w-full border-b border-gray-800" 
+            [ngClass]="{ 'opacity-55' : docenteList.length === 3 }"
+          ></div>
+          @if(inputText()) {
+            <ul class="absolute rounded-sm bg-[#e2e2e2] w-full max-h-32 top-14 overflow-y-auto">
+              @if(displayedDocentes().length === 0) {
+                <li class="p-2 ps-4">
+                  No se han encontrado docentes.
+                </li>
+              }
+              @for (e of displayedDocentes(); track e.docente_id) {
+                <li 
+                  (click)="agregarDocente(e)"
+                  class="p-2 ps-4 hover:font-semibold hover:cursor-pointer"
+                >
+                  {{ e.nombre + ' ' + e.apellido + ' (Nro.Documento: ' + e.numero_documento + ')' }} 
+                </li>
+              }
+            </ul>
+          }
+          <div class="flex gap-x-2 text-sm mt-1.5">
+            <p class="me-2 my-4 font-medium uppercase">Listado: 
+              @if(data.isCreate) {
+                <span class="font-normal lowercase">{{ docenteList.length === 0 ? 'no existen docentes registrados.' : '' }}</span>
+              }
+              @if(data.isEdit) {
+                <span class="font-normal lowercase">{{ docentesXCurso.length === 0 ? 'no existen docentes registrados.' : '' }}</span>
+              }
+            </p>
+            <div class="mt-3 -ms-2">
+              @if(data.isCreate) {
+                @for(e of docenteList; track e.docente_id) {
+                  <div class="flex justify-between max-w-72 px-2 py-1 mb-2 
+                  bg-gray-400 text-black duration-300 rounded-lg shadow-md">
+                      <p>{{ e.nombre + ' ' + e.apellido + ' (Nro.Documento: ' + e.numero_documento + ')' }}</p>
+                    <div class="flex flex-col -me-0.5 mt-0.5 justify-start">
+                      <i class="fa-solid fa-x hover:cursor-pointer hover:font-medium" (click)="eliminarDocente(e.docente_id)"></i>
+                    </div>
+                  </div>
+                }
+              }
+              @if(data.isEdit && docentesXCurso.length > 0) {
+                @for(e of docentesXCurso; track e.docente_id) {
+                  <div class="flex justify-between max-w-72 px-2 py-1 mb-2 
+                  bg-gray-400 text-black duration-300 rounded-lg shadow-md">
+                      <p>{{ e.nombre + ' ' + e.apellido + ' (Nro.Documento: ' + e.numero_documento + ')' }}</p>
+                    <div class="flex flex-col -me-0.5 mt-0.5 justify-start">
+                      <i class="fa-solid fa-trash hover:cursor-pointer" (click)="eliminarDocente(e.docente_id)"></i>
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        </div>
+        
+        <div [ngClass]="{ 'h-20' : inputText() }"></div>
+        <div class="col-span-2 flex justify-end w-full"  [ngClass]="{ 'hidden' : inputText() }">
+          <div class="p-2">
+            <button 
+              mat-flat-button 
+              color="custom-color" 
+              (click)="guardarInformacion()" 
+              class="me-2"
+            >{{ data.isEdit ? 'Editar' : 'Terminar' }}</button>
+            @if(data.isEdit && docentesXCurso.length > 0 && obtenerGradosSeleccionados().length > 0) {
+              <button 
+                mat-button 
+                mat-dialog-close 
+                color="custom-color"
+              >Cancelar</button>
+            }
+          </div>
+        </div>
+      }
+  </form>
+</div>
+@if(loading) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}

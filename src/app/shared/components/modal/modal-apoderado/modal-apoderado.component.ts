@@ -192,7 +192,6 @@ export class ModalApoderadoComponent {
         documento_id: this.apoderado.documento.documento_id,
         estudiante_id: this.data.estudiante_id
       }
-      console.log(apoderado)
       this.loading = true
       this.apoderadoService.modificarApoderado(this.apoderadoId, apoderado).subscribe(
         (data) => {

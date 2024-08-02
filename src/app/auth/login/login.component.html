@@ -1,44 +1,48 @@
-<div class=" bg-gray-100 flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <div class="flex justify-center mb-4">
-                <i class="fa-solid fa-school text-xl"></i>
-            </div>
-            <div>
-                <p class="text-center text-2xl font-medium mb-5 ">Iniciar Sesión</p>
-            </div>
-            <form class="space-y-6">
-
-                <!-- Correo -->
-                <div>
-                    <label class="block text-sm font-medium leading-6 text-gray-900">Correo Electronico</label>
-                    <div class="mt-2">
-                        <app-input  [type]="'email'" [(model)]="email" [placeholder]="'Ingresar usuario'" [icon]="'circle-user'"
-                            [width]="'w-[500px]'"></app-input>
-                    </div>
-                </div>
-
-                <!-- Contraseña -->
-                <div>
-                    <div class="flex items-center justify-between">
-                        <label class="block text-sm font-medium leading-6 text-gray-900">Contraseña</label>
-                        <div>
-                            <a href="" class="font-medium text-sm">¿Olvidaste tu contraseña?</a>
-                        </div>
-
-                    </div>
-                    <div class="mt-2">
-                        <app-input [type]="'password'" [(model)]="password" [placeholder]="'Ingresar contraseña'" [icon]="'lock'"
-                            [width]="'w-[500px]'"></app-input>
-                    </div>
-                </div>
-
-                <!-- XDDD -->
-                <div class="">
-                    <button mat-flat-button color="custom-color" class="w-full"> Continuar </button>
-                </div>
-
-            </form>
+<div class="bg-gradient-to-b from-blue-300 via-cyan-50 to-green-100 flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+  <div class="mt-10 mx-auto w-full max-w-sm">
+    <div class="bg-white p-6 rounded-lg shadow-md relative">
+      <div class="flex justify-center">
+          <div class="absolute h-44 rounded-full mt-[-110px] shadow-xl bg-[#39a1a4] w-44">
+          </div>
+          <img 
+            class="w-[40%] absolute bottom-[308px]" 
+            src="assets/images/logo.png"
+          >
+      </div>
+      <p class="text-center text-lg mb-10 mt-20 font-medium uppercase text-gray-600">Colegio 
+        <span class="text-cyan-600">Virgen de la Natividad</span>
+      </p>
+      <form class="space-y-6">
+        <!-- Correo -->
+        <div>
+          <app-input 
+            [type]="'email'" 
+            [(model)]="email" 
+            [placeholder]="'Ingresar correo'"
+            [icon]="'circle-user'" 
+            [widthFont]="'w-[500px] font-normal uppercase bg-gray-1'"
+          ></app-input>
         </div>
+        <!-- Contraseña -->
+        <div>
+          <app-input 
+            [type]="'password'" 
+            [(model)]="password" 
+            [placeholder]="'Ingresar contraseña'"
+            [icon]="'lock'" 
+            [widthFont]="'w-[500px] font-normal uppercase bg-gray-1'"
+          ></app-input>
+          <div class="flex justify-end">
+            <p class="text-sm mt-3 ms-1 text-cyan-600 font-normal hover:underline hover:cursor-pointer ">¿Olvido su contraseña?</p>
+          </div>
+        </div>
+        <!-- XDDD🤨 -->
+        <button 
+          mat-flat-button 
+          color="custom-color" 
+          class="w-full"
+        > CONTINUAR </button>
+      </form>
     </div>
+  </div>
 </div>

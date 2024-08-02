@@ -12,7 +12,7 @@ export class InputComponent {
   @Input() model = ''
   @Input() icon = ''
   @Input() placeholder = ''
-  @Input() width = ''
+  @Input() widthFont = ''
   @Output() modelChange = new EventEmitter<string>()
   @Input() type = ''
 

@@ -90,6 +90,18 @@
                 >
                 <mat-icon matSuffix>location_on</mat-icon>
             </mat-form-field>
+
+            <mat-form-field appearance="fill" class="col-span-2">
+                <mat-label>Correo</mat-label>
+                <input
+                    [(ngModel)]="apoderado.correo"
+                    type="text"
+                    placeholder="Ingrese su Correo"
+                    matInput
+                    [ngModelOptions]="{standalone: true}"
+                >
+                <mat-icon matSuffix>email</mat-icon>
+            </mat-form-field>
         </div>
         @if(data.isCreate) {
             <p class="pl-0.5 font-normal">Datos del estudiante:</p>

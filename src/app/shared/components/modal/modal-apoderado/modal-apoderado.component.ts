@@ -49,7 +49,8 @@ export class ModalApoderadoComponent {
     documento: {
       documento_id: ''
     },
-    estudiante_id: ''
+    estudiante_id: '',
+    correo: ''
   }
 
   constructor(
@@ -108,7 +109,8 @@ export class ModalApoderadoComponent {
       documento: {
         documento_id: ''
       },
-      estudiante_id: this.estudiante.estudiante_id
+      estudiante_id: this.estudiante.estudiante_id,
+      correo: ''
     };
   }
 
@@ -134,7 +136,8 @@ export class ModalApoderadoComponent {
           direccion: e.direccion,
           numero_documento: e.numero_documento,
           documento_id: e.documento.documento_id,
-          estudiante_id: e.estudiante_id
+          estudiante_id: e.estudiante_id,
+          correo: e.correo
         }
     
         this.apoderadoService.agregarApoderado(apoderado).subscribe(
@@ -166,7 +169,8 @@ export class ModalApoderadoComponent {
         direccion: this.apoderado.direccion,
         numero_documento: this.apoderado.numero_documento,
         documento_id: this.apoderado.documento.documento_id,
-        estudiante_id: this.apoderado.estudiante_id
+        estudiante_id: this.apoderado.estudiante_id,
+        correo: this.apoderado.correo
       }
       this.loading = true
       this.apoderadoService.agregarApoderado(apoderado).subscribe(
@@ -190,7 +194,8 @@ export class ModalApoderadoComponent {
         direccion: this.apoderado.direccion,
         numero_documento: this.apoderado.numero_documento,
         documento_id: this.apoderado.documento.documento_id,
-        estudiante_id: this.data.estudiante_id
+        estudiante_id: this.data.estudiante_id,
+        correo: this.apoderado.correo
       }
       this.loading = true
       this.apoderadoService.modificarApoderado(this.apoderadoId, apoderado).subscribe(

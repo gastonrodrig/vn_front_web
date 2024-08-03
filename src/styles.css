@@ -54,6 +54,11 @@ body .mdc-button--unelevated.mat-custom-color:disabled {
     --mdc-linear-progress-active-indicator-color: #06b6d4;
 }
 
+/* spinner (angular material) */
+.mat-mdc-progress-spinner {
+    --mdc-circular-progress-active-indicator-color: #06b6d4;
+}
+
 /* pagination (ngx-pagination) */
 body .ngx-pagination {
     display: flex;

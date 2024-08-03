@@ -11,6 +11,7 @@ import { SeccionService } from '../../../core/services/seccion.service';
 import { DocenteService } from '../../../core/services/docente.service';
 import { CursoService } from '../../../core/services/curso.service';
 import { CommonModule } from '@angular/common';
+import { PeriodoService } from '../../../core/services/periodo.service';
 
 @Component({
   selector: 'app-gestionar-horarios',
@@ -31,6 +32,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './gestionar-horarios.component.css'
 })
 export class GestionarHorariosComponent {
+  periodos: any
   secciones: any[] = []
   loading = false
 
@@ -45,6 +47,7 @@ export class GestionarHorariosComponent {
 
   constructor(
     private seccionService: SeccionService,
+    private periodoService: PeriodoService,
     private cursoService: CursoService,
     private docenteService: DocenteService
   ){}
@@ -52,8 +55,12 @@ export class GestionarHorariosComponent {
   ngOnInit() {
     this.seccionService.listarSecciones().subscribe(
       (data: any) => {
-        console.log(data)
         this.secciones = data
+      }
+    )
+    this.periodoService.listarPeriodos().subscribe(
+      (data: any) => {
+        this.periodos = data
       }
     )
   }

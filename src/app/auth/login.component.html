@@ -1,4 +1,10 @@
-<div class="bg-gradient-to-b from-blue-300 via-cyan-50 to-green-100 flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+@if(loading) {
+  <div class="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-40 z-50">
+    <mat-spinner></mat-spinner>
+  </div>
+}
+<div class="bg-gradient-to-b from-blue-300 via-cyan-50 to-green-100 
+  flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
   <div class="mt-10 mx-auto w-full max-w-sm">
     <div class="bg-white p-6 rounded-lg shadow-md relative">
       <div class="flex justify-center">
@@ -12,37 +18,40 @@
       <p class="text-center text-lg mb-10 mt-20 font-medium uppercase text-gray-600">Colegio 
         <span class="text-cyan-600">Virgen de la Natividad</span>
       </p>
-      <form class="space-y-6">
+      <div class="space-y-6">
         <!-- Correo -->
         <div>
           <app-input 
-            [type]="'email'" 
-            [(model)]="email" 
+            [type]="'text'" 
+            [(model)]="email_usuario" 
             [placeholder]="'Ingresar correo'"
             [icon]="'circle-user'" 
-            [widthFont]="'w-[500px] font-normal uppercase bg-gray-1'"
+            [widthFont]="'w-[500px] font-normal bg-gray-1'"
           ></app-input>
         </div>
         <!-- Contraseña -->
         <div>
           <app-input 
-            [type]="'password'" 
-            [(model)]="password" 
+            [type]="'text'" 
+            [(model)]="contrasena_usuario" 
             [placeholder]="'Ingresar contraseña'"
             [icon]="'lock'" 
-            [widthFont]="'w-[500px] font-normal uppercase bg-gray-1'"
+            [widthFont]="'w-[500px] font-normal bg-gray-1'"
           ></app-input>
           <div class="flex justify-end">
-            <p class="text-sm mt-3 ms-1 text-cyan-600 font-normal hover:underline hover:cursor-pointer ">¿Olvido su contraseña?</p>
+            <p class="text-sm mt-3 me-1 text-cyan-600 font-normal hover:underline hover:cursor-pointer">
+              ¿Olvido su contraseña?
+            </p>
           </div>
         </div>
         <!-- XDDD🤨 -->
         <button 
+          (click)="login()"
           mat-flat-button 
           color="custom-color" 
           class="w-full"
         > CONTINUAR </button>
-      </form>
+      </div>
     </div>
   </div>
 </div>

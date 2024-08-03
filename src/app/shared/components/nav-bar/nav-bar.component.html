@@ -19,7 +19,8 @@
 
             @if(dropdownVisible) {
             <div class="absolute -bottom-[44px] -right-0 w-[110px]">
-                <div class="bg-white shadow-md p-3 hover:bg-gray-100 duration-200 rounded-md cursor-pointer text-black">
+                <div class="bg-white shadow-md p-3 hover:bg-gray-100 duration-200 rounded-md cursor-pointer text-black"
+                (click)="logout()">
                     <p class="text-sm">Cerrar Sesión</p>
                 </div>
             </div>

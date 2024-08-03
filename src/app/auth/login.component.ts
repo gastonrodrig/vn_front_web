@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../core/services/auth.service';
 import { Router } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import Swal from 'sweetalert2';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -20,21 +20,23 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService, 
-    private router: Router
+    private router: Router,
+    private snack: MatSnackBar
   ) {}
 
   login() {
     this.loading = true;
     this.authService.login(this.email_usuario, this.contrasena_usuario).subscribe(
-      response => {
-        console.log('Login successful, response:', response);
+      (response) => {
         this.loading = false;
         this.navigateToRole();
       },
-      error => {
+      (error) => {
         console.error('Login error:', error);
         this.loading = false;
-        Swal.fire('Error', 'Credenciales incorrectas', 'error');
+        this.snack.open('Credenciales Incorrectas', 'Cerrar', {
+          duration: 3000 
+        })
       }
     );
   }

@@ -30,8 +30,11 @@ export class AuthService {
   }
 
   getUser(): { email: string; rol: string; nombres: string } | null {
-    const user = localStorage.getItem(this.userKey);
-    return user ? JSON.parse(user) : null;
+    if (typeof localStorage !== 'undefined') {
+      const user = localStorage.getItem(this.userKey);
+      return user ? JSON.parse(user) : null;
+    }
+    return null;
   }
   
   getToken(): string | null {

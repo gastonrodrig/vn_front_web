@@ -1,31 +1,82 @@
 @if(loading){
-    <mat-progress-bar mode="indeterminate" class="-mt-7 mb-8"></mat-progress-bar>
+  <mat-progress-bar mode="indeterminate" class="-mt-7 mb-8"></mat-progress-bar>
 }
 <div class="mx-5 mt-2">
-    <p class="text-xl font-medium mb-4">Gestionar Horarios</p>
-    <div class="bg-gradient-to-r from-blue-200 to-blue-300 rounded-md shadow-md min-w-full p-2">
-        <div class="flex">
-            <!-- <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-                <mat-label>Tipo de Documento</mat-label>
-                <mat-select 
-                    [(ngModel)]="horario.seccion_id"
-                    [ngModelOptions]="{standalone: true}"
-                >
-                    <mat-option 
-                        *ngFor="let e of secciones" 
-                        [value]="e.seccion_id"
-                    >
-                        {{ 'Sección ' + e.nombre + ', ' + e.grado.nombre + ', ' + e.periodo.anio }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field> -->
-        </div>
-        <p>{{ horario.seccion_id }}</p>
+  <p class="text-xl font-medium mb-4">Gestionar Horarios</p>
+  <div class="bg-gray-50 p-2 rounded-xl ring-1 ring-gray-300">
+    <div class="flex justify-center gap-x-3">
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 pt-3">
+        <mat-label>Periodo Escolar</mat-label>
+        <mat-select 
+          [(ngModel)]="periodo.periodo_id"
+          [ngModelOptions]="{standalone: true}"
+          (ngModelChange)="listarGrados()"
+        >
+          <mat-option 
+            *ngFor="let e of periodos" 
+            [value]="e.periodo_id"
+          >
+            {{ e.anio }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 pt-3">
+        <mat-label>Grado</mat-label>
+        <mat-select 
+          [(ngModel)]="grado.grado_id"
+          [ngModelOptions]="{standalone: true}"
+          [disabled]="!gradosLoaded"
+          (ngModelChange)="listarSeccionesPorPeriodoGrado()"
+        >
+          <mat-option 
+            *ngFor="let e of grados" 
+            [value]="e.grado_id"
+          >
+            {{ e.nombre }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 pt-3">
+        <mat-label>Seccion</mat-label>
+        <mat-select 
+          [(ngModel)]="seccion.seccion_id"
+          [ngModelOptions]="{standalone: true}"
+          [disabled]="!seccionLoaded"
+          (ngModelChange)="listarHorariosPorGradoSeccion()"
+        >
+          <mat-option 
+            *ngFor="let e of secciones" 
+            [value]="e.secciongp_id"
+          >
+            {{ e.seccion.aula + ', ' + e.seccion.nombre }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
-    <div class="flex justify-between">
-        <button 
-            mat-flat-button 
-            color="custom-color" 
-        > + Agregar </button>
-    </div>
+  </div>
+
+  <div class="mx-5 overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hora</th>
+          <th *ngFor="let day of days" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ day }}</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <tr *ngFor="let time of times">
+          <td class="px-6 py-3 whitespace-nowrap text-sm text-gray-500">{{ time }}</td>
+          <td *ngFor="let day of days"
+              (click)="selectCell(day, time)"
+              [ngClass]="{'bg-blue-200': isSelected(day, time)}"
+              class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 cursor-pointer"
+              [attr.data-day]="day"
+              [attr.data-time]="time">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

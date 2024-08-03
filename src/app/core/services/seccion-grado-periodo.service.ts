@@ -26,4 +26,7 @@ export class SeccionGradoPeriodoService {
   obtenerSeccionGradoPeriodo(id: string) {
     return this.http.get(`${baseUrl}/seccion-grado-periodo/${id}`);
   }
+  listarSeccionesPorGradoPeriodo(gradoId: string, periodoId: string) {
+    return this.http.get(`${baseUrl}/seccion-grado-periodo/${gradoId}/${periodoId}`);
+  }
 }

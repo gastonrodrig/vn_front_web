@@ -170,7 +170,7 @@ export class AsignarSeccionComponent {
           this.selectionAsignados.clear()
           this.snack.open('Estudiantes desplazados', 'Cerrar', {
             duration: 3000 
-         })
+          })
         },
         (error) => {
           this.loading = false

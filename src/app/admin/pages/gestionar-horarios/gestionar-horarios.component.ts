@@ -12,6 +12,11 @@ import { DocenteService } from '../../../core/services/docente.service';
 import { CursoService } from '../../../core/services/curso.service';
 import { CommonModule } from '@angular/common';
 import { PeriodoService } from '../../../core/services/periodo.service';
+import { GradoService } from '../../../core/services/grado.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SeccionGradoPeriodoService } from '../../../core/services/seccion-grado-periodo.service';
+import { HorarioService } from '../../../core/services/horario.service';
+import { listaHoras } from '../../../shared/constants/itemsHoursPerDayClass';
 
 @Component({
   selector: 'app-gestionar-horarios',
@@ -33,8 +38,22 @@ import { PeriodoService } from '../../../core/services/periodo.service';
 })
 export class GestionarHorariosComponent {
   periodos: any
-  secciones: any[] = []
+  grados: any
+  secciones: any
+  horarios: any
   loading = false
+  gradosLoaded = false
+  seccionLoaded = false
+
+  periodo = {
+    periodo_id: ''
+  }
+  grado = {
+    grado_id: ''
+  }
+  seccion = {
+    seccion_id: ''
+  }
 
   horario = {
     seccion_id: '',
@@ -46,22 +65,94 @@ export class GestionarHorariosComponent {
   }
 
   constructor(
-    private seccionService: SeccionService,
     private periodoService: PeriodoService,
+    private seccionService: SeccionService,
+    private gradoService: GradoService,
     private cursoService: CursoService,
-    private docenteService: DocenteService
+    private docenteService: DocenteService,
+    private sgpService: SeccionGradoPeriodoService,
+    private horarioService: HorarioService,
+    private snack: MatSnackBar
   ){}
 
   ngOnInit() {
-    this.seccionService.listarSecciones().subscribe(
-      (data: any) => {
-        this.secciones = data
-      }
-    )
     this.periodoService.listarPeriodos().subscribe(
       (data: any) => {
         this.periodos = data
       }
     )
+  }
+
+  listarGrados() {
+    this.loading = true
+    this.gradoService.listarGrados().subscribe(
+      (data: any) => {
+        this.grados = data
+        this.loading = false
+        this.gradosLoaded = true
+      }
+    )
+  }
+
+  listarSeccionesPorPeriodoGrado() {
+    this.loading = true
+    this.sgpService.listarSeccionesPorGradoPeriodo(
+      this.grado.grado_id, 
+      this.periodo.periodo_id
+    ).subscribe(
+      (data: any) => {
+        this.secciones = data
+        this.loading = false
+        this.seccionLoaded = true
+
+        if (this.secciones.length === 0) {
+          this.snack.open('No se encontraron secciones', 'Cerrar', {
+            duration: 3000,
+          })
+        }
+      }
+    )
+  }
+
+  listarHorariosPorGradoSeccion() {
+    this.horarioService.listarHorariosPorSeccionGrado(
+      this.seccion.seccion_id,
+      this.grado.grado_id
+    ).subscribe(
+      (data: any) => {
+        this.horarios = data
+        console.log(data)
+      }
+    )
+  }
+
+  days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+  times = listaHoras
+  selectedCells: { [key: string]: boolean } = {};
+
+  selectCell(day: string, time: string) {
+    const key = `${day}-${time}`;
+    this.selectedCells[key] = !this.selectedCells[key];
+
+    if (this.selectedCells[key]) {
+      this.assignValue(day, time);
+    }
+  }
+
+  isSelected(day: string, time: string): boolean {
+    const key = `${day}-${time}`;
+    return !!this.selectedCells[key];
+  }
+
+  assignValue(day: string, time: string) {
+    const snackBarRef = this.snack.open(`Asignar valor a ${day} ${time}`, 'Asignar', {
+      duration: 3000,
+    });
+
+    snackBarRef.onAction().subscribe(() => {
+      // Aquí puedes asignar el valor que desees.
+      // Por ejemplo, mostrar un modal para seleccionar curso y docente
+      console.log(`Asignando valor a ${day} ${time}`);
+    });
   }
 }

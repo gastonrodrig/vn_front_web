@@ -14,7 +14,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { EstudianteService } from '../../../../core/services/estudiante.service';
 import { ModalApoderadoComponent } from '../modal-apoderado/modal-apoderado.component';
-import { SeccionPeriodoService } from '../../../../core/services/seccion-periodo.service';
 import { PeriodoService } from '../../../../core/services/periodo.service';
 import Swal from 'sweetalert2';
 import { GradoService } from '../../../../core/services/grado.service';

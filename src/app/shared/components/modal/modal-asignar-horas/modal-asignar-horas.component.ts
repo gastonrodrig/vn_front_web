@@ -68,6 +68,7 @@ export class ModalAsignarHorasComponent {
         this.snack.open('Debe asignar horas del curso a este grado.', 'Cerrar', {
           duration: 3000
         })
+        this.gchData.horas = ''
       }
     )
   }

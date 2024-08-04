@@ -16,10 +16,12 @@ export class TableComponent {
   @Input() editActive: any
   @Input() deleteActive: any
   @Input() asignActive: any
+  @Input() hoursActive: any
 
   @Output() editAction = new EventEmitter<{ isEdit: boolean, id: any }>();
   @Output() deleteAction = new EventEmitter<{ isDeleted: boolean, id: any }>();
   @Output() asignAction = new EventEmitter<{ isAsigned: boolean, id: any }>();
+  @Output() hoursAction = new EventEmitter<{ isHours: boolean, id: any }>();
 
   p: number = 1
   itemsPerPage: number = 5
@@ -40,6 +42,10 @@ export class TableComponent {
 
   asign(id: any) {
     this.asignAction.emit({ isAsigned: true, id });
+  }
+
+  hours(id: any) {
+    this.hoursAction.emit({ isHours: true, id });
   }
   
   ngOnChanges() {

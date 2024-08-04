@@ -8,6 +8,7 @@ import { CursoService } from '../../../core/services/curso.service';
 import { MatDialog } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { ModalCursoComponent } from '../../../shared/components/modal/modal-curso/modal-curso.component';
+import { ModalAsignarHorasComponent } from '../../../shared/components/modal/modal-asignar-horas/modal-asignar-horas.component';
 
 @Component({
   selector: 'app-gestionar-cursos',
@@ -91,19 +92,13 @@ export class GestionarCursosComponent {
         (data: any) => {
           this.curso = data
           this.loading = false
-          const dialogRef =  this.dialog.open(ModalCursoComponent, {
+          this.dialog.open(ModalCursoComponent, {
             data: {
               curso: this.curso,
-              isEdit: isEdit
+              isEdit: true
             },
             width: '70%'
           });
-
-          dialogRef.afterClosed().subscribe(
-            (data) => {
-              this.listarCursos()
-            }
-          )
         },
         (error) => {
           this.loading = false
@@ -143,6 +138,29 @@ export class GestionarCursosComponent {
           );
         }
       });
+    }
+  }
+
+  asignarHoras(isHours: any, id: any) {
+    this.loading = true
+    if (isHours) {
+      this.cursoService.obtenerCurso(id).subscribe(
+        (data: any) => {
+          this.curso = data
+          this.loading = false
+          this.dialog.open(ModalAsignarHorasComponent, {
+            data: {
+              curso: this.curso,
+              isHours: true
+            },
+            width: '70%'
+          });
+        },
+        (error) => {
+          this.loading = false
+          console.log(error);
+        }
+      );
     }
   }
 }

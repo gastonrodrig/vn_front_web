@@ -24,7 +24,8 @@
     [loadedComplete]="loadedComplete"
     [editActive]="true"
     [deleteActive]="true"
-    [asignActive]="false"
+    [hoursActive]="true"
     (editAction)="editarCurso($event.isEdit, $event.id)"
     (deleteAction)="eliminarCurso($event.isDeleted, $event.id)"
+    (hoursAction)="asignarHoras($event.isHours, $event.id)"
 ></app-table>

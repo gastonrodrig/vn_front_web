@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Inject, model } from '@angular/core';
-import { FormBuilder, FormsModule } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CursoDocenteService } from '../../../../core/services/curso-docente.service';
-import { GradoCursoService } from '../../../../core/services/grado-curso.service';
+import { GradoCursosHorasService } from '../../../../core/services/grado-cursos-horas.service';
 import { GradoService } from '../../../../core/services/grado.service';
 import { DocenteService } from '../../../../core/services/docente.service';
 import { CursoService } from '../../../../core/services/curso.service';
@@ -59,7 +59,7 @@ export class ModalCursoComponent {
     private cursoService: CursoService,
     private gradoService: GradoService,
     private docenteService: DocenteService,
-    private gcService: GradoCursoService,
+    private gchService: GradoCursosHorasService,
     private cdService: CursoDocenteService
   ) {
     dialogRef.disableClose = true
@@ -125,11 +125,10 @@ export class ModalCursoComponent {
   }
 
   listarGradosPorCurso() {
-    this.gcService.listarGradosPorCurso(this.cursoId).subscribe(
+    this.gchService.listarGradosCursosHorasPorCurso(this.cursoId).subscribe(
       (data: any) => {
         this.loading = false
-
-        this.gradosSeleccionados = data.map((grado: any) => grado.grado_id)
+        this.gradosSeleccionados = data.map((e: any) => e.grado.grado_id)
         this.grados.forEach((grado: any) => {
           this.checkedItems[grado.grado_id] = this.gradosSeleccionados.includes(grado.grado_id)
         })
@@ -155,11 +154,12 @@ export class ModalCursoComponent {
       this.loading = true
       // AGREGAR GRADO
       if (this.gradosSeleccionados[gradoId]) {
-        const dataGC = {
+        const dataGCH = {
           grado_id: gradoId,
-          curso_id: this.cursoId
+          curso_id: this.cursoId,
+          horas: null
         }
-        this.gcService.agregarGradoCurso(dataGC).subscribe(
+        this.gchService.agregarGradoCursosHoras(dataGCH).subscribe(
           (data: any) => {
             this.snack.open('Grado agregado al curso con éxito.', 'Cerrar', {
               duration: 3000
@@ -170,7 +170,7 @@ export class ModalCursoComponent {
       } 
       // QUITAR GRADO
       else {
-        this.gcService.eliminarGradoCursoPorGradoYCurso(gradoId, this.cursoId).subscribe(
+        this.gchService.eliminarGradoCursosHorasPorGradoYCurso(gradoId, this.cursoId).subscribe(
           (data: any) => {
             this.loading = false
             if(this.obtenerGradosSeleccionados().length > 0) {
@@ -347,9 +347,10 @@ export class ModalCursoComponent {
       const gradoPromesas = this.gradosSeleccionados.map(e => {
         const dataGC = {
           grado_id: e.grado_id,
-          curso_id: this.cursoId
+          curso_id: this.cursoId,
+          horas: null
         }
-        return this.gcService.agregarGradoCurso(dataGC).toPromise()
+        return this.gchService.agregarGradoCursosHoras(dataGC).toPromise()
       })
   
       const docentePromesas = this.docenteList.map(e => {

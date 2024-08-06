@@ -17,6 +17,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SeccionGradoPeriodoService } from '../../../core/services/seccion-grado-periodo.service';
 import { HorarioService } from '../../../core/services/horario.service';
 import { listaHoras } from '../../../shared/constants/itemsHoursPerDayClass';
+import { listaDias } from '../../../shared/constants/itemsDays';
+import { GradoCursosHorasService } from '../../../core/services/grado-cursos-horas.service';
+import { CursoDocenteService } from '../../../core/services/curso-docente.service';
 
 @Component({
   selector: 'app-gestionar-horarios',
@@ -41,36 +44,36 @@ export class GestionarHorariosComponent {
   grados: any
   secciones: any
   horarios: any
+  cursos: any
+  docentes: any
   loading = false
   gradosLoaded = false
   seccionLoaded = false
+  cursosLoaded = false
+  docentesLoaded = false
+  horarioLoaded = false
 
   periodo = {
     periodo_id: ''
   }
-  grado = {
-    grado_id: ''
-  }
-  seccion = {
-    seccion_id: ''
-  }
 
   horario = {
-    seccion_id: '',
-    curso_id: '',
-    docente_id: '',
     dia_semana: '',
     hora_inicio: '',
-    hora_fin: ''
+    hora_fin: '',
+    seccion_id: '',
+    grado_id: '',
+    curso_id: '',
+    docente_id: ''
   }
 
   constructor(
     private periodoService: PeriodoService,
     private seccionService: SeccionService,
     private gradoService: GradoService,
-    private cursoService: CursoService,
-    private docenteService: DocenteService,
+    private cdService: CursoDocenteService,
     private sgpService: SeccionGradoPeriodoService,
+    private gchService: GradoCursosHorasService,
     private horarioService: HorarioService,
     private snack: MatSnackBar
   ){}
@@ -97,7 +100,7 @@ export class GestionarHorariosComponent {
   listarSeccionesPorPeriodoGrado() {
     this.loading = true
     this.sgpService.listarSeccionesPorGradoPeriodo(
-      this.grado.grado_id, 
+      this.horario.grado_id, 
       this.periodo.periodo_id
     ).subscribe(
       (data: any) => {
@@ -109,24 +112,79 @@ export class GestionarHorariosComponent {
           this.snack.open('No se encontraron secciones', 'Cerrar', {
             duration: 3000,
           })
+          this.seccionLoaded = false
         }
       }
     )
   }
 
   listarHorariosPorGradoSeccion() {
+    this.loading = true
+
+    if(this.horario.grado_id === '') {
+      this.snack.open('Debe seleccionar un grado.', 'Cerrar', {
+        duration: 3000,
+      })
+      this.loading = false
+      return
+    }
+
+    if(this.horario.seccion_id === '') {
+      this.snack.open('Debe seleccionar una seccion.', 'Cerrar', {
+        duration: 3000,
+      })
+      this.loading = false
+      return
+    }
+
     this.horarioService.listarHorariosPorSeccionGrado(
-      this.seccion.seccion_id,
-      this.grado.grado_id
+      this.horario.seccion_id,
+      this.horario.grado_id
     ).subscribe(
       (data: any) => {
         this.horarios = data
+        this.loading = false
+        this.horarioLoaded = true
         console.log(data)
       }
     )
   }
 
-  days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+  listarCursosPorGrado() {
+    this.loading = true
+    this.gchService.listarGradoCursosHorasPorGrado(this.horario.grado_id).subscribe(
+      (data: any) => {
+        this.cursos = data
+        this.loading = false
+        this.cursosLoaded = true
+      },
+      (error) => {
+        this.snack.open('No se encontraron cursos', 'Cerrar', {
+          duration: 3000,
+        })
+      }
+    )
+  }
+
+  listarDocentesPorCurso() {
+    this.loading = true
+    this.cdService.listarDocentesPorCurso(this.horario.curso_id).subscribe(
+      (data: any) => {
+        this.docentes = data
+        this.loading = false
+        this.docentesLoaded = true
+      },
+      (error) => {
+        this.loading = false
+        this.docentes = []
+        this.snack.open('No se encontraron docentes', 'Cerrar', {
+          duration: 3000,
+        })
+      }
+    )
+  }
+
+  days = listaDias
   times = listaHoras
   selectedCells: { [key: string]: boolean } = {};
 

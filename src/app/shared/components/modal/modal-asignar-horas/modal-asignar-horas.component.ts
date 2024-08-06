@@ -103,6 +103,14 @@ export class ModalAsignarHorasComponent {
       return
     }
 
+    if(this.gchData.grado_id === '') {
+      this.snack.open('Debe seleccionar un grado.', 'Cerrar', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+
     this.gchService.modificarHorasPorGradoCurso(this.gchData.grado_id, this.cursoId, dataGCH).subscribe(
       (data: any) => {
         this.loading = false

@@ -7,7 +7,6 @@
   <form>
     <p class="pl-0.5 pb-4 font-medium">Grados existentes en {{ data.curso.nombre }}:</p>
       <div class="grid grid-cols-2 gap-x-4">
-
         <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
           <mat-label>Grados</mat-label>
           <mat-select 
@@ -35,8 +34,6 @@
             [ngModelOptions]="{standalone: true}"
           >
         </mat-form-field>
-
-        
       </div>
  
       <div class="col-span-2 flex justify-end w-full">
@@ -52,10 +49,8 @@
             mat-dialog-close 
             color="custom-color"
           >Cerrar</button>
-          
         </div>
       </div>
-      
   </form>
 </div>
 @if(loading) {

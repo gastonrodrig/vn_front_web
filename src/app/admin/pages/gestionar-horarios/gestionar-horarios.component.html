@@ -3,17 +3,18 @@
 }
 <div class="mx-5 mt-2">
   <p class="text-xl font-medium mb-4">Gestionar Horarios</p>
-  <div class="flex gap-x-5">
-    <div class="w-3/5">
+  <div class="grid grid-cols-5 gap-x-5">
+    <div class="col-span-5 lg:col-span-3">
       <p class="font-normal text-sm mb-3">Seleccione las opciones para buscar el horario de un salón en específico:</p>
       <div class="bg-gray-50 p-2 rounded-xl ring-1 ring-gray-300">
-        <div class="flex justify-center gap-x-3 pt-1 -mb-3">
-          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <div class="grid grid-cols-3 justify-center gap-x-3 pt-1 -mb-3 mx-1">
+          <mat-form-field appearance="fill" class="col-span-3 md:col-span-1">
             <mat-label>Periodo Escolar</mat-label>
             <mat-select 
               [(ngModel)]="periodo.periodo_id"
               [ngModelOptions]="{standalone: true}"
               (ngModelChange)="listarGrados()"
+              [disabled]="periodoBlocked"
             >
               <mat-option 
                 *ngFor="let e of periodos" 
@@ -24,7 +25,7 @@
             </mat-select>
           </mat-form-field>
     
-          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+          <mat-form-field appearance="fill" class="col-span-3 md:col-span-1">
             <mat-label>Grado</mat-label>
             <mat-select 
               [(ngModel)]="horario.grado_id"
@@ -42,7 +43,7 @@
             </mat-select>
           </mat-form-field>
     
-          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+          <mat-form-field appearance="fill" class="col-span-3 md:col-span-1">
             <mat-label>Seccion</mat-label>
             <mat-select 
               [(ngModel)]="horario.seccion_id"
@@ -60,17 +61,18 @@
         </div>
       </div>
     </div>
-    <div class="w-2/5">
-      <p class="font-normal text-sm mb-3">Seleccione el curso y docente:</p>
+    <div class="col-span-5 lg:col-span-2">
+      <p class="font-normal text-sm mb-3 mt-3 lg:mt-0">Seleccione las opciones para asignar un curso y docente:</p>
       <div class="bg-gray-50 p-2 rounded-xl ring-1 ring-gray-300">
-        <div class="flex justify-center gap-x-3 pt-1 -mb-3">
-          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <div class="grid grid-cols-2 justify-center gap-x-3 pt-1 -mb-3 mx-1">
+          <mat-form-field appearance="fill" class="col-span-2 min-[548px]:col-span-1">
             <mat-label>Cursos</mat-label>
             <mat-select 
               [(ngModel)]="horario.curso_id"
               [ngModelOptions]="{standalone: true}"
               [disabled]="!cursosLoaded"
               (ngModelChange)="listarDocentesPorCurso()"
+              (ngModelChange)="obtenerHoras()"
             >
               <mat-option 
                 *ngFor="let e of cursos" 
@@ -81,7 +83,7 @@
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+          <mat-form-field appearance="fill" class="col-span-2 min-[548px]:col-span-1">
             <mat-label>Docentes</mat-label>
             <mat-select 
               [(ngModel)]="horario.docente_id"
@@ -101,9 +103,10 @@
     </div>
   </div>
   
-  <div class="flex mt-4 gap-x-2">
-    <div class="flex flex-col w-[170px] gap-y-3 ps-2 pt-2">
+  <div class="grid mt-4 gap-x-2 lg:flex">
+    <div class="flex lg:flex-col lg:w-[170px] lg:gap-y-3 gap-x-3 ps-2 pt-2 mb-5">
 
+      <div [ngClass]="{ 'hidden' : horarioLoaded }">
         <button 
           (click)="listarHorariosPorGradoSeccion()"
           mat-flat-button 
@@ -111,16 +114,24 @@
         >
           <i class="fa-solid fa-magnifying-glass me-1.5"></i>Buscar Horario 
         </button>
+      </div>
 
-        @if(horarioLoaded) {
-          <button 
-            (click)="listarHorariosPorGradoSeccion()"
-            mat-flat-button 
-            color="custom-color" 
-          >
-            <i class="fa-solid fa-file-excel me-1.5"></i>Descargar .xlsx
-          </button>
-        }
+      @if(horarioLoaded) {
+        <button 
+          (click)="cambiarHorario()"
+          mat-flat-button 
+          color="custom-color" 
+        >
+        <i class="fa-solid fa-arrows-rotate me-1.5"></i>Cambiar Horario 
+        </button>
+
+        <button 
+          mat-flat-button 
+          color="custom-color" 
+        >
+          <i class="fa-solid fa-file-excel me-1.5"></i>Descargar .xlsx
+        </button>
+      }
     </div>
 
     <div class="overflow-x-auto w-full">
@@ -129,31 +140,48 @@
           class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg bg-gray-50"
           [ngClass]="{ 'h-10' : !horarioLoaded }"
         >
-        @if(!horarioLoaded) {
-          <p class="flex justify-center pt-2.5 text-sm font-normal uppercase">Sección del horario</p>
-        }
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hora</th>
-                <th *ngFor="let day of days" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ day }}</th>
+                <th class="text-center px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Hora
+                </th>
+                @for(day of days; track day.id) {
+                  <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 tracking-wider uppercase">
+                    {{ day.nombre }}
+                  </th>
+                }
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <tr *ngFor="let time of times">
-                <td class="px-6 py-3 whitespace-nowrap text-sm text-gray-500">{{ time }}</td>
-                <td *ngFor="let day of days"
-                    (click)="selectCell(day, time)"
-                    [ngClass]="{'bg-blue-200': isSelected(day, time)}"
-                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 cursor-pointer"
-                    [attr.data-day]="day"
-                    [attr.data-time]="time">
-                </td>
+                <td class="px-4 py-3 whitespace-nowrap text-sm text-center text-gray-500 font-normal">{{ time }}</td>
+                <ng-container *ngIf="time === '09:30:00 - 10:00:00'; else defaultRow">
+                  <td 
+                    class="px-6 py-3 whitespace-nowrap text-sm text-gray-500 text-center bg-gray-200 font-normal uppercase" 
+                    [attr.colspan]="days.length + 1"
+                  >Recreo</td>
+                </ng-container>
+                <ng-template #defaultRow>
+                  <td *ngFor="let day of days"
+                      (click)="selectCell(day.nombre, time)"
+                      [ngClass]="{'bg-cyan-500 border-l border-r border-gray-200': isSelected(day.nombre, time)}"
+                      class="px-6 py-1 whitespace-nowrap text-sm text-white cursor-pointer font-normal"
+                      [attr.data-day]="day"
+                      [attr.data-time]="time">
+                    <div class="text-center" *ngIf="isSelected(day.nombre, time)">
+                      {{ getCellInfo(day.nombre, time)?.curso }}
+                      <br class="font-light">
+                      {{ getCellInfo(day.nombre, time)?.docente }}
+                    </div>
+                  </td>
+                </ng-template>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-    </div>  
+    </div>
+
   </div>
 </div>

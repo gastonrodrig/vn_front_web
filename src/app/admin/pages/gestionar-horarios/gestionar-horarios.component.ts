@@ -8,8 +8,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { SeccionService } from '../../../core/services/seccion.service';
-import { DocenteService } from '../../../core/services/docente.service';
-import { CursoService } from '../../../core/services/curso.service';
 import { CommonModule } from '@angular/common';
 import { PeriodoService } from '../../../core/services/periodo.service';
 import { GradoService } from '../../../core/services/grado.service';
@@ -52,6 +50,8 @@ export class GestionarHorariosComponent {
   cursosLoaded = false
   docentesLoaded = false
   horarioLoaded = false
+  periodoBlocked = false
+  horas: any
 
   periodo = {
     periodo_id: ''
@@ -118,38 +118,6 @@ export class GestionarHorariosComponent {
     )
   }
 
-  listarHorariosPorGradoSeccion() {
-    this.loading = true
-
-    if(this.horario.grado_id === '') {
-      this.snack.open('Debe seleccionar un grado.', 'Cerrar', {
-        duration: 3000,
-      })
-      this.loading = false
-      return
-    }
-
-    if(this.horario.seccion_id === '') {
-      this.snack.open('Debe seleccionar una seccion.', 'Cerrar', {
-        duration: 3000,
-      })
-      this.loading = false
-      return
-    }
-
-    this.horarioService.listarHorariosPorSeccionGrado(
-      this.horario.seccion_id,
-      this.horario.grado_id
-    ).subscribe(
-      (data: any) => {
-        this.horarios = data
-        this.loading = false
-        this.horarioLoaded = true
-        console.log(data)
-      }
-    )
-  }
-
   listarCursosPorGrado() {
     this.loading = true
     this.gchService.listarGradoCursosHorasPorGrado(this.horario.grado_id).subscribe(
@@ -177,6 +145,7 @@ export class GestionarHorariosComponent {
       (error) => {
         this.loading = false
         this.docentes = []
+        this.docentesLoaded = false
         this.snack.open('No se encontraron docentes', 'Cerrar', {
           duration: 3000,
         })
@@ -184,16 +153,110 @@ export class GestionarHorariosComponent {
     )
   }
 
+  obtenerHoras() {
+    this.gchService.obtenerHorasPorGradoYCurso(this.horario.curso_id, this.horario.grado_id).subscribe(
+      (data: any) => {
+        this.horas = data
+        this.docentesLoaded = true
+      },
+      (error) => {
+        console.log(error)
+        this.snack.open(`No se han fijado horas para el curso`, 'Cerrar', {
+          duration: 3000 
+        })
+        this.docentesLoaded = false
+      }
+    )  
+  }
+
+  listarHorariosPorGradoSeccion() {
+    this.loading = true;
+
+    if (this.horario.grado_id === '') {
+      this.snack.open('Debe seleccionar un grado.', 'Cerrar', {
+        duration: 3000,
+      });
+      this.loading = false;
+      return;
+    }
+  
+    if (this.horario.seccion_id === '') {
+      this.snack.open('Debe seleccionar una seccion.', 'Cerrar', {
+        duration: 3000,
+      });
+      this.loading = false;
+      return;
+    }
+
+    this.periodoBlocked = true
+    this.gradosLoaded = false
+    this.seccionLoaded = false
+  
+    this.horarioService.listarHorariosPorSeccionGrado(
+      this.horario.seccion_id,
+      this.horario.grado_id
+    ).subscribe(
+      (data: any) => {
+        this.horarios = data;
+        this.loading = false;
+        this.horarioLoaded = true;
+        this.actualizarCeldas(this.horarios);
+      }
+    );
+  }
+
+  actualizarCeldas(data: any) {
+    this.selectedCells = {};
+    this.cellInfo = {};
+    data.forEach((horario: any) => {
+      const day = horario.dia_semana;
+      const startTime = horario.hora_inicio;
+      const endTime = horario.hora_fin;
+      const key = day + '-' + startTime + ' - ' + endTime;
+      this.selectedCells[key] = true;
+      this.cellInfo[key] = {
+        curso: horario.curso.nombre,
+        docente: horario.docente.apellido,
+        horario_id: horario.horario_id
+      };
+    });
+  }
+  
+  getCellInfo(day: string, time: string) {
+    const key = `${day}-${time}`;
+    return this.cellInfo[key];
+  }
+
   days = listaDias
   times = listaHoras
   selectedCells: { [key: string]: boolean } = {};
+  cellInfo: { [key: string]: any } = {};
 
   selectCell(day: string, time: string) {
     const key = `${day}-${time}`;
-    this.selectedCells[key] = !this.selectedCells[key];
-
     if (this.selectedCells[key]) {
-      this.assignValue(day, time);
+      this.selectedCells[key] = false;
+      this.eliminar(key);
+    } else {
+      this.selectedCells[key] = true;
+
+      if(this.horario.curso_id === '') {
+        this.snack.open('Debe seleccionar un curso.', 'Cerrar', { 
+          duration: 3000 
+        })
+        this.selectedCells[key] = false
+        return
+      }
+  
+      if(this.horario.docente_id === '') {
+        this.snack.open('Debe seleccionar un docente.', 'Cerrar', { 
+          duration: 3000 
+        })
+        this.selectedCells[key] = false
+        return
+      }
+
+      this.asignarValor(day, time);
     }
   }
 
@@ -202,15 +265,75 @@ export class GestionarHorariosComponent {
     return !!this.selectedCells[key];
   }
 
-  assignValue(day: string, time: string) {
-    const snackBarRef = this.snack.open(`Asignar valor a ${day} ${time}`, 'Asignar', {
-      duration: 3000,
-    });
+  asignarValor(day: string, time: string) {
+    this.loading = true;
+    this.horario.dia_semana = day;
+    this.horario.hora_inicio = time.split(' - ')[0];
+    this.horario.hora_fin = time.split(' - ')[1];
+    const key = `${day}-${time}`;
 
-    snackBarRef.onAction().subscribe(() => {
-      // Aquí puedes asignar el valor que desees.
-      // Por ejemplo, mostrar un modal para seleccionar curso y docente
-      console.log(`Asignando valor a ${day} ${time}`);
-    });
+    // Validación de límite de horas
+    if (this.horas <= Object.keys(this.selectedCells).length) {
+      this.snack.open(`Ha llegado al límite de horas del curso`, 'Cerrar', {
+        duration: 3000 
+      })
+      this.loading = false
+      this.selectedCells[key] = false
+      return
+    }
+    
+    // Guardar información
+    this.horarioService.agregarHorario(this.horario).subscribe(
+      (data: any) => {
+        this.cellInfo[`${day}-${time}`] = {
+          curso: this.cursos.find((c: any) => c.curso_id === this.horario.curso_id).nombre,
+          docente: this.docentes.find((d: any) => d.docente_id === this.horario.docente_id).apellido,
+          horario_id: data.horario_id
+        }
+        this.snack.open('Horario guardado', 'Cerrar', { 
+          duration: 3000 
+        })
+        this.loading = false
+        console.log(data)
+      },
+      (error) => {
+        console.log(error)
+        this.snack.open('Error al guardar información', 'Cerrar', {
+          duration: 3000 
+        })
+        this.loading = false
+      }
+    );
+
+  }
+
+  eliminar(key: string) {
+    this.loading = true
+    this.horarioService.eliminarHorario(this.cellInfo[key].horario_id).subscribe(
+      (data: any) => {
+        delete this.cellInfo[key];
+        this.loading = false
+        this.snack.open('Horario eliminado', 'Cerrar', { 
+          duration: 3000 
+        });
+      },
+      (error) => {
+        this.snack.open('Error al eliminar el horario', 'Cerrar', { 
+          duration: 3000 
+        });
+      }
+    );
+  }
+
+  cambiarHorario() {
+    this.horarioLoaded = false
+    this.periodoBlocked = false
+    this.gradosLoaded = true
+    this.seccionLoaded = true
+    this.periodo.periodo_id = ''
+    this.horario.grado_id = ''
+    this.horario.seccion_id = ''
+    this.horario.curso_id = ''
+    this.horario.docente_id = ''
   }
 }

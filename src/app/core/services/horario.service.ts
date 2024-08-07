@@ -26,4 +26,10 @@ export class HorarioService {
   listarHorariosPorSeccionGrado(seccionId: string, gradoId: string) {
     return this.http.get(`${baseUrl}/horario/seccion/${seccionId}/grado/${gradoId}`);
   }
+  obtenerCantidadRegistros(seccionId: string, gradoId: string, cursoId: string) {
+    return this.http.get(`${baseUrl}/horario/${seccionId}/${gradoId}/${cursoId}`);
+  }
+  // verificarConflictoHorario(horario: any) {
+  //   return this.http.post(`${baseUrl}/horario/verificar-conflicto`, horario);
+  // }
 }

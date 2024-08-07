@@ -67,9 +67,13 @@ export class GestionarHorariosComponent {
     docente_id: ''
   }
 
+  days = listaDias
+  times = listaHoras
+  selectedCells: { [key: string]: boolean } = {};
+  cellInfo: { [key: string]: any } = {};
+
   constructor(
     private periodoService: PeriodoService,
-    private seccionService: SeccionService,
     private gradoService: GradoService,
     private cdService: CursoDocenteService,
     private sgpService: SeccionGradoPeriodoService,
@@ -227,11 +231,6 @@ export class GestionarHorariosComponent {
     return this.cellInfo[key];
   }
 
-  days = listaDias
-  times = listaHoras
-  selectedCells: { [key: string]: boolean } = {};
-  cellInfo: { [key: string]: any } = {};
-
   selectCell(day: string, time: string) {
     const key = `${day}-${time}`;
     if (this.selectedCells[key]) {
@@ -271,40 +270,56 @@ export class GestionarHorariosComponent {
     this.horario.hora_inicio = time.split(' - ')[0];
     this.horario.hora_fin = time.split(' - ')[1];
     const key = `${day}-${time}`;
-
-    // Validación de límite de horas
-    if (this.horas <= Object.keys(this.selectedCells).length) {
-      this.snack.open(`Ha llegado al límite de horas del curso`, 'Cerrar', {
-        duration: 3000 
-      })
-      this.loading = false
-      this.selectedCells[key] = false
-      return
-    }
-    
-    // Guardar información
-    this.horarioService.agregarHorario(this.horario).subscribe(
+  
+    // Obtener la cantidad de registros existentes
+    this.horarioService.obtenerCantidadRegistros(
+      this.horario.seccion_id,
+      this.horario.grado_id,
+      this.horario.curso_id
+    ).subscribe(
       (data: any) => {
-        this.cellInfo[`${day}-${time}`] = {
-          curso: this.cursos.find((c: any) => c.curso_id === this.horario.curso_id).nombre,
-          docente: this.docentes.find((d: any) => d.docente_id === this.horario.docente_id).apellido,
-          horario_id: data.horario_id
+  
+        // Comparar y validar antes de agregar el horario
+        if (this.horas <= data) {
+          this.snack.open(`Ha llegado al límite de horas del curso por grado.`, 'Cerrar', {
+            duration: 3000
+          });
+          this.loading = false;
+          this.selectedCells[key] = false;
+          return;
         }
-        this.snack.open('Horario guardado', 'Cerrar', { 
-          duration: 3000 
-        })
-        this.loading = false
-        console.log(data)
+  
+        // Si pasa la validación, proceder a guardar la información
+        this.horarioService.agregarHorario(this.horario).subscribe(
+          (data: any) => {
+            this.cellInfo[`${day}-${time}`] = {
+              curso: this.cursos.find((c: any) => c.curso_id === this.horario.curso_id).nombre,
+              docente: this.docentes.find((d: any) => d.docente_id === this.horario.docente_id).apellido,
+              horario_id: data.horario_id
+            };
+            this.snack.open('Horario guardado.', 'Cerrar', {
+              duration: 3000
+            });
+            this.loading = false;
+          },
+          (error) => {
+            const mensaje = error.error.message
+            this.snack.open(mensaje, 'Cerrar', {
+              duration: 3000
+            });
+            this.selectedCells[key] = false;
+            this.loading = false;
+          }
+        );
       },
       (error) => {
-        console.log(error)
-        this.snack.open('Error al guardar información', 'Cerrar', {
-          duration: 3000 
-        })
-        this.loading = false
+        console.log(error);
+        this.snack.open('Error al obtener cantidad de registros.', 'Cerrar', {
+          duration: 3000
+        });
+        this.loading = false;
       }
     );
-
   }
 
   eliminar(key: string) {
@@ -313,12 +328,12 @@ export class GestionarHorariosComponent {
       (data: any) => {
         delete this.cellInfo[key];
         this.loading = false
-        this.snack.open('Horario eliminado', 'Cerrar', { 
+        this.snack.open('Horario eliminado.', 'Cerrar', { 
           duration: 3000 
         });
       },
       (error) => {
-        this.snack.open('Error al eliminar el horario', 'Cerrar', { 
+        this.snack.open('Error al eliminar el horario.', 'Cerrar', { 
           duration: 3000 
         });
       }

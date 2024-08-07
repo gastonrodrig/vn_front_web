@@ -15,17 +15,17 @@
   </div>
 
   <!-- Titulo -->
-  <div class="flex justify-center items-center cursor-pointer" routerLink="/admin">
-    <i class="fa-solid fa-school text-white text-xl" 
-      [ngClass]="{ 'me-0' : !open, 'me-2' : open }">
-    </i>
-    <p 
-      class="text-white font-thin text-2xl " 
-      [ngClass]="{ 'scale-0 hidden' : !open }"
-      (click)="clearSelection()"
-    >
-      Colegio
-    </p>
+  <div class="flex justify-center items-center cursor-pointer h-7" routerLink="/admin">
+    <div class="text-center">
+      <p 
+        class="text-sm text-green-100 mt-2 font-normal uppercase" 
+        [ngClass]="{ 'scale-0 hidden' : !open }"
+        (click)="clearSelection()"
+      >
+        Virgen de la 
+        <span class="text-cyan-400 font-medium">Natividad</span>
+      </p>
+    </div>
   </div>
 
   <!-- Buscador -->

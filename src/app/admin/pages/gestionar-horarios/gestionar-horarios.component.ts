@@ -7,7 +7,6 @@ import { InputComponent } from '../../../shared/components/UI/input/input.compon
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { SeccionService } from '../../../core/services/seccion.service';
 import { CommonModule } from '@angular/common';
 import { PeriodoService } from '../../../core/services/periodo.service';
 import { GradoService } from '../../../core/services/grado.service';
@@ -81,6 +80,8 @@ export class GestionarHorariosComponent {
     private horarioService: HorarioService,
     private snack: MatSnackBar
   ){}
+
+
 
   ngOnInit() {
     this.periodoService.listarPeriodos().subscribe(
@@ -271,7 +272,6 @@ export class GestionarHorariosComponent {
     this.horario.hora_fin = time.split(' - ')[1];
     const key = `${day}-${time}`;
   
-    // Obtener la cantidad de registros existentes
     this.horarioService.obtenerCantidadRegistros(
       this.horario.seccion_id,
       this.horario.grado_id,
@@ -343,8 +343,10 @@ export class GestionarHorariosComponent {
   cambiarHorario() {
     this.horarioLoaded = false
     this.periodoBlocked = false
-    this.gradosLoaded = true
-    this.seccionLoaded = true
+    this.gradosLoaded = false
+    this.seccionLoaded = false
+    this.cursosLoaded = false
+    this.docentesLoaded = false
     this.periodo.periodo_id = ''
     this.horario.grado_id = ''
     this.horario.seccion_id = ''

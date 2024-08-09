@@ -23,8 +23,8 @@
         <div>
           <app-input 
             [type]="'text'" 
-            [(model)]="email_usuario" 
-            [placeholder]="'Ingresar correo'"
+            [(model)]="identificador" 
+            [placeholder]="'Ingresar usuario o correo'"
             [icon]="'circle-user'" 
             [widthFont]="'w-[500px] font-normal bg-gray-1'"
           ></app-input>
@@ -34,7 +34,7 @@
           <app-input 
             [type]="'text'" 
             [type]="'password'" 
-            [(model)]="contrasena_usuario" 
+            [(model)]="contrasena" 
             [placeholder]="'Ingresar contraseña'"
             [icon]="'lock'" 
             [widthFont]="'w-[500px] font-normal bg-gray-1'"

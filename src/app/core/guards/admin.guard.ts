@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { CanActivate, Router} from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({
@@ -13,15 +12,19 @@ export class adminGuard implements CanActivate {
     private router: Router
   ) {}
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    const user = this.authService.getUser();
-    if (user && user.rol === 'admin' && this.authService.isAuthenticated()) {
-      return true;
+  canActivate() {
+    if (this.authService.isTokenExpired()) {
+      this.authService.logout()
+      this.router.navigate(['/login'])
+      return false
     }
-    this.router.navigate(['']);
-    return false;
+
+    const user = this.authService.getUser()
+    if (user && user.rol === 'admin') {
+      return true
+    } else {
+      this.router.navigate([''])
+      return false
+    }
   }
 }

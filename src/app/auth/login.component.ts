@@ -14,8 +14,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  email_usuario: string = '';
-  contrasena_usuario: string = '';
+  identificador: string = '';
+  contrasena: string = '';
   loading: boolean = false;
 
   constructor(
@@ -26,13 +26,12 @@ export class LoginComponent {
 
   login() {
     this.loading = true;
-    this.authService.login(this.email_usuario, this.contrasena_usuario).subscribe(
+    this.authService.login(this.identificador, this.contrasena).subscribe(
       (response) => {
         this.loading = false;
         this.navigateToRole();
       },
       (error) => {
-        console.error('Login error:', error);
         this.loading = false;
         this.snack.open('Credenciales Incorrectas', 'Cerrar', {
           duration: 3000 

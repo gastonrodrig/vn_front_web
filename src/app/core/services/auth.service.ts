@@ -1,51 +1,70 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import { baseUrl } from '../helpers/baseUrl';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private tokenKey = 'auth-token';
-  private userKey = 'auth-user';
+  private tokenKey = 'auth-token'
+  private userKey = 'auth-user'
 
   constructor(private http: HttpClient) {}
 
-  login(email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${baseUrl}/auth/login`, { email_usuario: email, contrasena_usuario: password })
+  login(identificador: string, contrasena: string) {
+    return this.http.post<any>(`${baseUrl}/auth/login`, { identificador: identificador, contrasena: contrasena })
       .pipe(
-        tap(response => {
-          if (response.token) {
-            localStorage.setItem(this.tokenKey, response.token);
-            const user = {
-              email: response.email,
-              rol: response.rol,
-              nombres: response.nombres
-            };
-            localStorage.setItem(this.userKey, JSON.stringify(user));
+        tap(data => {
+          if (data.token) {
+
+            const expirationTime = new Date().getTime() + 60 * 60 * 1000 // tiempo de expiracion del token (1 hora)
+            localStorage.setItem(this.tokenKey, data.token)
+            localStorage.setItem('auth_expiration', expirationTime.toString())
+
+            const user: any = {
+              email: data.email,
+              rol: data.rol,
+              usuario: data.usuario
+            }
+
+            if (data.rol === 'docente') {
+              user.docente = data.docente
+            } else if (data.rol === 'estudiante') {
+              user.estudiante = data.estudiante
+            } else if (data.rol === 'apoderado') {
+              user.apoderado = data.apoderado
+            }
+  
+            localStorage.setItem(this.userKey, JSON.stringify(user))
           }
         })
-      );
+      )
   }
 
-  getUser(): { email: string; rol: string; nombres: string } | null {
+  getUser() {
     if (typeof localStorage !== 'undefined') {
-      const user = localStorage.getItem(this.userKey);
-      return user ? JSON.parse(user) : null;
+      const user = localStorage.getItem(this.userKey)
+      return user ? JSON.parse(user) : null
     }
-    return null;
+    return null
   }
   
-  getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+  getToken() {
+    return localStorage.getItem(this.tokenKey)
+  }
+
+  isTokenExpired() {
+    const expiration = localStorage.getItem('auth_expiration')
+    if (!expiration) return true
+  
+    const currentTime = new Date().getTime()
+    return currentTime > parseInt(expiration, 10)
   }
   
-  isAuthenticated(): boolean {
-    return !!this.getToken();
-  }
-  logout() : void {
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem(this.userKey);
+  logout() {
+    localStorage.removeItem(this.tokenKey)
+    localStorage.removeItem(this.userKey)
+    localStorage.removeItem('auth_expiration')
   }
 }

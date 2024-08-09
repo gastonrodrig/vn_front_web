@@ -26,4 +26,10 @@ export class ApoderadoService {
   listarApoderadosPorEstudiante(id: string) {
     return this.http.get(`${baseUrl}/apoderado/estudiante/${id}`)
   }
+  asignarUsuario(id: string, usuario: any) {
+    return this.http.patch(`${baseUrl}/apoderado/assign-user/${id}`, usuario);
+  }
+  eliminarUsuario(id: string) {
+    return this.http.put(`${baseUrl}/apoderado/remove-user/${id}`, null);
+  }
 }

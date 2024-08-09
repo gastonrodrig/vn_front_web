@@ -14,17 +14,17 @@ export class adminGuard implements CanActivate {
 
   canActivate() {
     if (this.authService.isTokenExpired()) {
-      this.authService.logout()
-      this.router.navigate(['/login'])
-      return false
+      this.authService.logout();
+      this.router.navigate(['/login']);
+      return false;
     }
-
-    const user = this.authService.getUser()
+  
+    const user = this.authService.getUser();
     if (user && user.rol === 'admin') {
-      return true
+      return true;
     } else {
-      this.router.navigate([''])
-      return false
+      this.router.navigate(['']);
+      return false;
     }
   }
 }

@@ -2,10 +2,15 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './auth/login.component';
 import { adminGuard } from './core/guards/admin.guard';
 import { docenteGuard } from './core/guards/docente.guard';
+import { HomeComponent } from './home/home.component';
 
 export const routes: Routes = [
     {
         path: '',
+        component: HomeComponent
+    },
+    {
+        path: 'login',
         component: LoginComponent
     },
     {

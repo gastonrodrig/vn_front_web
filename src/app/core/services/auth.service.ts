@@ -17,33 +17,34 @@ export class AuthService {
       .pipe(
         tap(data => {
           if (data.token) {
+            if (this.isLocalStorageAvailable()) {
+              const expirationTime = new Date().getTime() + 60 * 60 * 1000 // tiempo de expiracion del token (1 hora)
+              localStorage.setItem(this.tokenKey, data.token)
+              localStorage.setItem('auth-expiration', expirationTime.toString())
 
-            const expirationTime = new Date().getTime() + 60 * 60 * 1000 // tiempo de expiracion del token (1 hora)
-            localStorage.setItem(this.tokenKey, data.token)
-            localStorage.setItem('auth_expiration', expirationTime.toString())
+              const user: any = {
+                email: data.email,
+                rol: data.rol,
+                usuario: data.usuario
+              }
 
-            const user: any = {
-              email: data.email,
-              rol: data.rol,
-              usuario: data.usuario
-            }
-
-            if (data.rol === 'docente') {
-              user.docente = data.docente
-            } else if (data.rol === 'estudiante') {
-              user.estudiante = data.estudiante
-            } else if (data.rol === 'apoderado') {
-              user.apoderado = data.apoderado
-            }
-  
-            localStorage.setItem(this.userKey, JSON.stringify(user))
+              if (data.rol === 'docente') {
+                user.docente = data.docente
+              } else if (data.rol === 'estudiante') {
+                user.estudiante = data.estudiante
+              } else if (data.rol === 'apoderado') {
+                user.apoderado = data.apoderado
+              }
+    
+              localStorage.setItem(this.userKey, JSON.stringify(user))
+            } 
           }
         })
       )
   }
 
   getUser() {
-    if (typeof localStorage !== 'undefined') {
+    if (this.isLocalStorageAvailable()) {
       const user = localStorage.getItem(this.userKey)
       return user ? JSON.parse(user) : null
     }
@@ -51,20 +52,35 @@ export class AuthService {
   }
   
   getToken() {
-    return localStorage.getItem(this.tokenKey)
+    if (this.isLocalStorageAvailable()) {
+      return localStorage.getItem(this.tokenKey)
+    }
+    return null;
   }
 
   isTokenExpired() {
-    const expiration = localStorage.getItem('auth_expiration')
-    if (!expiration) return true
-  
-    const currentTime = new Date().getTime()
-    return currentTime > parseInt(expiration, 10)
+    if (this.isLocalStorageAvailable()) {
+      const expiration = localStorage.getItem('auth-expiration');
+      if (!expiration) return true;
+      
+      const expirationTime = parseInt(expiration, 10);
+      if (isNaN(expirationTime)) return true;
+      
+      const currentTime = new Date().getTime();
+      return currentTime > expirationTime;
+    }
+    return true;
   }
   
   logout() {
-    localStorage.removeItem(this.tokenKey)
-    localStorage.removeItem(this.userKey)
-    localStorage.removeItem('auth_expiration')
+    if (this.isLocalStorageAvailable()) {
+      localStorage.removeItem(this.tokenKey);
+      localStorage.removeItem(this.userKey);
+      localStorage.removeItem('auth-expiration');
+    }
+  }
+
+  isLocalStorageAvailable() {
+    return typeof localStorage !== 'undefined'
   }
 }

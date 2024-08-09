@@ -40,5 +40,11 @@ export const listaModulos = [
         route: 'gestionar-matricula',
         titulo: 'Matricula',
         icon: 'file-invoice'
+    },
+    {
+        id: 9,
+        route: 'gestionar-usuarios',
+        titulo: 'Usuarios',
+        icon: 'user-pen'
     }
 ]

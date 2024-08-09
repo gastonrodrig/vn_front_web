@@ -23,4 +23,10 @@ export class DocenteService {
   obtenerDocente(id: string) {
     return this.http.get(`${baseUrl}/docente/${id}`);
   }
+  asignarUsuario(id: string, usuario: any) {
+    return this.http.patch(`${baseUrl}/docente/assign-user/${id}`, usuario);
+  }
+  eliminarUsuario(id: string) {
+    return this.http.put(`${baseUrl}/docente/remove-user/${id}`, null);
+  }
 }

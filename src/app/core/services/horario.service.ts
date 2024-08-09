@@ -29,7 +29,4 @@ export class HorarioService {
   obtenerCantidadRegistros(seccionId: string, gradoId: string, cursoId: string) {
     return this.http.get(`${baseUrl}/horario/${seccionId}/${gradoId}/${cursoId}`);
   }
-  // verificarConflictoHorario(horario: any) {
-  //   return this.http.post(`${baseUrl}/horario/verificar-conflicto`, horario);
-  // }
 }

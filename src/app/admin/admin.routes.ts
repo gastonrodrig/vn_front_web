@@ -8,6 +8,7 @@ import { GestionarMatriculaComponent } from './pages/gestionar-matricula/gestion
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
 import { InicioComponent } from './pages/inicio/inicio.component';
 import { AsignarSeccionComponent } from './pages/asignar-seccion/asignar-seccion.component';
+import { GestionarUsuariosComponent } from './pages/gestionar-usuarios/gestionar-usuarios.component';
 
 export const ADMIN_ROUTES: Routes = [
     { 
@@ -45,6 +46,10 @@ export const ADMIN_ROUTES: Routes = [
             {
                 path: 'gestionar-matricula',
                 component: GestionarMatriculaComponent
+            },
+            {
+                path: 'gestionar-usuarios',
+                component: GestionarUsuariosComponent
             }
         ]
     },

@@ -1,1 +1,1 @@
-export const baseUrl = 'http://localhost:3000'
+export const baseUrl = 'http://localhost:3000' || 'https://backend-virgen-natividad.vercel.app'

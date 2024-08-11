@@ -5,7 +5,7 @@ import { baseUrl } from '../helpers/baseUrl';
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class UserService {
   constructor(private http:HttpClient) {}
 
   listarUsuarios() {
@@ -25,5 +25,14 @@ export class LoginService {
   }
   modificarContrasenia(id: string, password: any) {
     return this.http.patch(`${baseUrl}/user/${id}/change-password`, password)
+  }
+  eliminarEstudianteDeUsuario(id: string) {
+    return this.http.put(`${baseUrl}/user/remove-estudiante/${id}`, null);
+  }
+  eliminarApoderadoDeUsuario(id: string) {
+    return this.http.put(`${baseUrl}/user/remove-apoderado/${id}`, null);
+  }
+  eliminarDocenteDeUsuario(id: string) {
+    return this.http.put(`${baseUrl}/user/remove-docente/${id}`, null);
   }
 }

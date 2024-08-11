@@ -109,7 +109,7 @@ export class GestionarEstudiantesComponent {
               estudiante: this.estudiante,
               isEdit: isEdit
             },
-            width: '70%'
+            width: '70%',
           });
 
           dialogRef.afterClosed().subscribe(

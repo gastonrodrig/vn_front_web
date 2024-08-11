@@ -81,8 +81,6 @@ export class GestionarHorariosComponent {
     private snack: MatSnackBar
   ){}
 
-
-
   ngOnInit() {
     this.periodoService.listarPeriodos().subscribe(
       (data: any) => {

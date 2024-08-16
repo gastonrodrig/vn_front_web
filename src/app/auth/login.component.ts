@@ -41,16 +41,20 @@ export class LoginComponent {
   }
 
   navigateToRole() {
-    const user = this.authService.getUser();
-    if (user) {
-      const roleRoutes: { [key: string]: string } = {
-        'admin': '/admin',
-        'docente': '/docente'
-      };
-      const route = roleRoutes[user.rol] || '';
-      this.router.navigate([route]);
+    const usuario = this.authService.getUser()
+    const rolesNoPermitidos = ['Estudiante', 'Apoderado']
+    const rutasPorRol: { [clave: string]: string } = {
+      'Admin': '/admin',
+      'Docente': '/docente'
+    }
+
+    if (rolesNoPermitidos.includes(usuario.rol)) {
+      this.snack.open(`No está permitido ingresar con el rol ${usuario.rol}`, 'Cerrar', {
+        duration: 3000
+      })
     } else {
-      this.router.navigate(['']);
+      const ruta = rutasPorRol[usuario.rol]
+      this.router.navigate([ruta])
     }
   }
 }

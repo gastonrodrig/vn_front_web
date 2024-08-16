@@ -65,19 +65,19 @@
 
     <p 
       class="pl-0.5 font-medium"  
-      [ngClass]="{ 'mt-2.5 pb-4' : usuario.rol === 'estudiante' || usuario.rol === 'docente' || usuario.rol === 'apoderado' }"
+      [ngClass]="{ 'mt-2.5 pb-4' : usuario.rol === 'Estudiante' || usuario.rol === 'Docente' || usuario.rol === 'Apoderado' }"
     >
-      @if(usuario.rol === 'estudiante') {
+      @if(usuario.rol === 'Estudiante') {
         Estudiante:
       }
-      @if(usuario.rol === 'docente') {
+      @if(usuario.rol === 'Docente') {
         Docente:
       }
-      @if(usuario.rol === 'apoderado') {
+      @if(usuario.rol === 'Apoderado') {
         Apoderado:
       }
     </p>
-    @if(usuario.rol === 'estudiante' || usuario.rol === 'docente' || usuario.rol === 'apoderado') {
+    @if(usuario.rol === 'Estudiante' || usuario.rol === 'Docente' || usuario.rol === 'Apoderado') {
       <div class="relative">
         <input 
           type="text"
@@ -97,7 +97,7 @@
         ></div>
         @if(showResults && inputText()) {
           <ul class="absolute rounded-sm bg-[#e2e2e2] w-full max-h-32 top-14 overflow-y-auto">
-            @if(usuario.rol === 'estudiante') {
+            @if(usuario.rol === 'Estudiante') {
               @if(displayedByRol(estudiantes).length === 0) {
                 <li class="p-2 ps-4">
                   No se han encontrado estudiantes.
@@ -113,7 +113,7 @@
               }
             }
 
-            @if(usuario.rol === 'docente') {
+            @if(usuario.rol === 'Docente') {
               @if(displayedByRol(docentes).length === 0) {
                 <li class="p-2 ps-4">
                   No se han encontrado docentes.
@@ -129,7 +129,7 @@
               }
             }
 
-            @if(usuario.rol === 'apoderado') {
+            @if(usuario.rol === 'Apoderado') {
               @if(displayedByRol(apoderados).length === 0) {
                 <li class="p-2 ps-4">
                   No se han encontrado apoderados.
@@ -171,7 +171,7 @@
             color="custom-color"
           >
             <i class="fa-solid fa-pen text-white me-1"></i>
-            {{ usuario.rol === 'estudiante' ? 'Estudiante' : usuario.rol === 'apoderado' ? 'Apoderado' : 'Docente' }}
+            {{ usuario.rol === 'Estudiante' ? 'Estudiante' : usuario.rol === 'Apoderado' ? 'Apoderado' : 'Docente' }}
           </button>
         </div>
       </div>  

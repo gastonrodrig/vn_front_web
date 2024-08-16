@@ -20,7 +20,7 @@ export class docenteGuard implements CanActivate {
     }
 
     const user = this.authService.getUser()
-    if (user && user.rol === 'docente') {
+    if (user && user.rol === 'Docente') {
       return true
     } else {
       this.router.navigate([''])

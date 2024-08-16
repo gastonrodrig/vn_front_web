@@ -1,14 +1,14 @@
 export const listaRoles = [
   {
-    nombre: 'admin'
+    nombre: 'Admin'
   },
   {
-    nombre: 'estudiante'
+    nombre: 'Estudiante'
   },
   {
-    nombre: 'docente'
+    nombre: 'Docente'
   },
   {
-    nombre: 'apoderado'
+    nombre: 'Apoderado'
   }
 ]

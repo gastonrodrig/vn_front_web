@@ -9,18 +9,23 @@ import { baseUrl } from '../helpers/baseUrl';
 export class AuthService {
   private tokenKey = 'auth-token'
   private userKey = 'auth-user'
+  private usuarioActual: any = null;
 
   constructor(private http: HttpClient) {}
-
+  
   login(identificador: string, contrasena: string) {
-    return this.http.post<any>(`${baseUrl}/auth/login`, { identificador: identificador, contrasena: contrasena })
+    const rolesPermitidos = ['Docente', 'Admin', 'Temporal']
+    
+    return this.http.post<any>(`${baseUrl}/auth/login`, { identificador, contrasena })
       .pipe(
         tap(data => {
           if (data.token) {
             if (this.isLocalStorageAvailable()) {
-              const expirationTime = new Date().getTime() + 60 * 60 * 1000 // tiempo de expiracion del token (1 hora)
-              localStorage.setItem(this.tokenKey, data.token)
-              localStorage.setItem('auth-expiration', expirationTime.toString())
+              if (rolesPermitidos.includes(data.rol)) {
+                const expirationTime = new Date().getTime() + 60 * 60 * 1000; // tiempo de expiración del token (1 hora)
+                localStorage.setItem(this.tokenKey, data.token)
+                localStorage.setItem('auth-expiration', expirationTime.toString())
+              }
 
               const user: any = {
                 email: data.email,
@@ -28,22 +33,24 @@ export class AuthService {
                 usuario: data.usuario
               }
 
-              if (data.rol === 'docente') {
+              if (data.rol === 'Docente') {
                 user.docente = data.docente
-              } else if (data.rol === 'estudiante') {
-                user.estudiante = data.estudiante
-              } else if (data.rol === 'apoderado') {
-                user.apoderado = data.apoderado
               }
-    
-              localStorage.setItem(this.userKey, JSON.stringify(user))
-            } 
-          }
+
+              this.usuarioActual = user
+              if (rolesPermitidos.includes(data.rol)) {
+                localStorage.setItem(this.userKey, JSON.stringify(user))
+              }
+            }
+          } 
         })
       )
   }
 
   getUser() {
+    if (this.usuarioActual) {
+      return this.usuarioActual
+    }
     if (this.isLocalStorageAvailable()) {
       const user = localStorage.getItem(this.userKey)
       return user ? JSON.parse(user) : null
@@ -55,28 +62,28 @@ export class AuthService {
     if (this.isLocalStorageAvailable()) {
       return localStorage.getItem(this.tokenKey)
     }
-    return null;
+    return null
   }
 
   isTokenExpired() {
     if (this.isLocalStorageAvailable()) {
-      const expiration = localStorage.getItem('auth-expiration');
-      if (!expiration) return true;
+      const expiration = localStorage.getItem('auth-expiration')
+      if (!expiration) return true
       
-      const expirationTime = parseInt(expiration, 10);
-      if (isNaN(expirationTime)) return true;
+      const expirationTime = parseInt(expiration, 10)
+      if (isNaN(expirationTime)) return true
       
-      const currentTime = new Date().getTime();
-      return currentTime > expirationTime;
+      const currentTime = new Date().getTime()
+      return currentTime > expirationTime
     }
-    return true;
+    return true
   }
   
   logout() {
     if (this.isLocalStorageAvailable()) {
-      localStorage.removeItem(this.tokenKey);
-      localStorage.removeItem(this.userKey);
-      localStorage.removeItem('auth-expiration');
+      localStorage.removeItem(this.tokenKey)
+      localStorage.removeItem(this.userKey)
+      localStorage.removeItem('auth-expiration')
     }
   }
 

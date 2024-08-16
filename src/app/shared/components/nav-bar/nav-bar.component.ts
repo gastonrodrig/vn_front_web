@@ -13,7 +13,9 @@ import { Router } from '@angular/router';
 })
 export class NavBarComponent {
   @Input() sidebarShowed : any
-  @Output() sidebar = new EventEmitter<Boolean>();
+  @Output() sidebar = new EventEmitter<Boolean>()
+
+  user: any
 
   dropdownVisible = false;
   constructor(private authService: AuthService, private router: Router) {}
@@ -23,10 +25,29 @@ export class NavBarComponent {
   }
 
   toggleDropdown() {
-    this.dropdownVisible = !this.dropdownVisible;
+    this.dropdownVisible = !this.dropdownVisible
   }
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['']);
-}
+
+  logout() {
+    this.authService.logout()
+    this.router.navigate(['/login'])
+  }
+
+  ngOnInit() {
+    this.user = this.authService.getUser()
+  }
+
+  nombreUsuario() {
+    switch (this.user.rol) {
+      case 'Admin':
+        return 'Gabriel Ventura'
+      case 'Docente':
+        return this.user.docente ? `${this.user.docente.nombre}, ${this.user.docente.apellido}` : 'Nombre desconocido'
+      case 'Temporal':
+        return 'Usuario Temporal'
+      default:
+        return ''
+    }
+  }
+
 }

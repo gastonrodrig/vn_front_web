@@ -1,30 +1,30 @@
 <div class="flex justify-between md:justify-end items-center p-2">
-    <div (click)="mostrarSideBar()" class="md:hidden cursor-pointer p-[9px] py-1 rounded-full hover:bg-gray-400">
-        <i class="fa-solid fa-bars"></i>
+  <div (click)="mostrarSideBar()" class="md:hidden cursor-pointer p-[9px] py-1 rounded-full hover:bg-gray-400">
+    <i class="fa-solid fa-bars"></i>
+  </div>
+  <div class="mx-auto hidden md:block">
+    <p>{{ user.rol }} Dashboard</p>
+  </div>
+  <div class="flex items-center relative">
+    <div class="flex flex-col text-sm justify-start me-6">
+      <p class="font-medium">{{ nombreUsuario() }}</p>
+      <p class="font-normal">{{ user.rol }}</p>
     </div>
-    <div class="mx-auto hidden md:block">
-        <p>Admin Dashboard</p>
-    </div>
-    <div class="flex items-center relative">
-        <div class="flex flex-col text-sm justify-start me-6">
-            <p class="font-medium">Gabriel Ventura</p>
-            <p class="font-normal">Admin</p>
-        </div>
-        <div class="h-12 border-l border-gray-400 me-4"></div>
-        <div class="p-2 px-4 me-3 duration-200 rounded-[4px] bg-dark-blue-2 hover:bg-dark-blue-1 text-white shadow-md cursor-pointer relative"
-            (click)="toggleDropdown()"
-        >
-            <i class="fa-solid fa-user"></i>
-            <i class="fa-solid fa-sort-down"></i>
+    <div class="h-12 border-l border-gray-400 me-4"></div>
+    <div class="p-2 px-4 me-3 duration-200 rounded-[4px] bg-dark-blue-2 hover:bg-dark-blue-1 text-white shadow-md cursor-pointer relative"
+        (click)="toggleDropdown()"
+    >
+      <i class="fa-solid fa-user"></i>
+      <i class="fa-solid fa-sort-down"></i>
 
-            @if(dropdownVisible) {
-            <div class="absolute -bottom-[44px] -right-0 w-[110px]">
-                <div class="bg-white shadow-md p-3 hover:bg-gray-100 duration-200 rounded-md cursor-pointer text-black"
-                (click)="logout()">
-                    <p class="text-sm">Cerrar Sesión</p>
-                </div>
-            </div>
-            }
+      @if(dropdownVisible) {
+        <div class="absolute -bottom-[44px] -right-0 w-[110px]">
+          <div class="bg-white shadow-md p-3 hover:bg-gray-100 duration-200 rounded-md cursor-pointer text-black"
+          (click)="logout()">
+            <p class="text-sm">Cerrar Sesión</p>
+          </div>
         </div>
+      }
     </div>
+  </div>
 </div>

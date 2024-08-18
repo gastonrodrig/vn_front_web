@@ -50,7 +50,7 @@
           <li 
             (click)="toggleClick(modulo)"
             class="p-2 ps-4 hover:font-semibold hover:cursor-pointer"
-            [routerLink]="'/admin/' + modulo.route"
+            [routerLink]="getFullRoute(modulo.route)"
           >
             {{ modulo.titulo }}
           </li>
@@ -68,7 +68,7 @@
         [class]="moduleBgColorHover"
         [ngClass]="changeColorTexts(modulo)"
         [ngClass]="{ 'px-0' : !open, 'px-6' : open,  }"
-        [routerLink]="'/admin/' + modulo.route"
+        [routerLink]="getFullRoute(modulo.route)"
         >
         <div class="grid grid-cols-12 items-center">
           <div [ngClass]="{ 'col-span-12': !open, 'col-span-3 me-3': open }">

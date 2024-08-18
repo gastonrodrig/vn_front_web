@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MainContentComponent } from './main-content.component';
+import { TemporalLayoutComponent } from './temporal-layout.component';
 
-describe('MainContentComponent', () => {
-  let component: MainContentComponent;
-  let fixture: ComponentFixture<MainContentComponent>;
+describe('TemporalLayoutComponent', () => {
+  let component: TemporalLayoutComponent;
+  let fixture: ComponentFixture<TemporalLayoutComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MainContentComponent]
+      imports: [TemporalLayoutComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MainContentComponent);
+    fixture = TestBed.createComponent(TemporalLayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

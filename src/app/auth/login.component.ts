@@ -45,7 +45,8 @@ export class LoginComponent {
     const rolesNoPermitidos = ['Estudiante', 'Apoderado']
     const rutasPorRol: { [clave: string]: string } = {
       'Admin': '/admin',
-      'Docente': '/docente'
+      'Docente': '/docente',
+      'Temporal': '/temporal'
     }
 
     if (rolesNoPermitidos.includes(usuario.rol)) {

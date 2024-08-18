@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class NavBarComponent {
   @Input() sidebarShowed : any
+  @Input() ButtonBgColor = ''
   @Output() sidebar = new EventEmitter<Boolean>()
 
   user: any
@@ -35,6 +36,19 @@ export class NavBarComponent {
 
   ngOnInit() {
     this.user = this.authService.getUser()
+  }
+
+  titulo() {
+    switch(this.user.rol) {
+      case 'Admin':
+        return 'Admin Dashboard'
+      case 'Docente':
+        return 'Docente Dashboard'
+      case 'Temporal':
+        return 'Modulo para Usuarios Temporales'
+      default: 
+        return ''
+    }
   }
 
   nombreUsuario() {

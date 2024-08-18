@@ -4,13 +4,13 @@ import { InicioComponent } from "./pages/inicio/inicio.component";
 
 export const DOCENTE_ROUTES: Routes = [
   { 
-      path: '', 
-      component: DocenteLayoutComponent,
-      children: [
-          {
-              path: '',
-              component: InicioComponent
-          },
-      ]
+    path: '', 
+    component: DocenteLayoutComponent,
+    children: [
+      {
+        path: '',
+        component: InicioComponent
+      },
+    ]
   },
 ]

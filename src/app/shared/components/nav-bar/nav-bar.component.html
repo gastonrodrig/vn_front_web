@@ -3,7 +3,7 @@
     <i class="fa-solid fa-bars"></i>
   </div>
   <div class="mx-auto hidden md:block">
-    <p>{{ user.rol }} Dashboard</p>
+    <p>{{ titulo() }}</p>
   </div>
   <div class="flex items-center relative">
     <div class="flex flex-col text-sm justify-start me-6">
@@ -11,8 +11,9 @@
       <p class="font-normal">{{ user.rol }}</p>
     </div>
     <div class="h-12 border-l border-gray-400 me-4"></div>
-    <div class="p-2 px-4 me-3 duration-200 rounded-[4px] bg-dark-blue-2 hover:bg-dark-blue-1 text-white shadow-md cursor-pointer relative"
-        (click)="toggleDropdown()"
+    <div class="p-2 px-4 me-3 duration-200 rounded-[4px] text-white shadow-md cursor-pointer relative"
+      [class]="ButtonBgColor"
+      (click)="toggleDropdown()"
     >
       <i class="fa-solid fa-user"></i>
       <i class="fa-solid fa-sort-down"></i>

@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { MainContentComponent } from '../../../admin/main-content/main-content.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-side-bar',
   standalone: true,
-  imports: [CommonModule, RouterModule, MainContentComponent, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './side-bar.component.html',
   styleUrl: './side-bar.component.css'
 })
@@ -24,6 +23,7 @@ export class SideBarComponent {
   @Input() searchBgColorIcon: string = ''
   @Input() moduleBgColorHover: string = ''
   @Input() moduleTextColor: string = ''
+  @Input() baseRoute: string = '';
 
   toggleOpen() {
     this.open = !this.open
@@ -56,5 +56,9 @@ export class SideBarComponent {
 
   changeColorTexts(modulo: any) {
     return { [this.moduleTextColor]: modulo.id === this.selectedModule }
+  }
+
+  getFullRoute(route: string): string {
+    return `/${this.baseRoute}/${route}`;
   }
 }

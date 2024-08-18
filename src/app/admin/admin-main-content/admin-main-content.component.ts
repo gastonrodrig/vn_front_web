@@ -3,13 +3,13 @@ import { RouterOutlet } from '@angular/router';
 import { NavBarComponent } from '../../shared/components/nav-bar/nav-bar.component';
 
 @Component({
-  selector: 'app-main-content',
+  selector: 'app-admin-main-content',
   standalone: true,
   imports: [RouterOutlet, NavBarComponent],
-  templateUrl: './main-content.component.html',
-  styleUrl: './main-content.component.css'
+  templateUrl: './admin-main-content.component.html',
+  styleUrl: './admin-main-content.component.css'
 })
-export class MainContentComponent {
+export class AdminMainContentComponent {
   @Input() sidebarShowed : any
   @Output() sidebarMostrado = new EventEmitter<Boolean>();
 

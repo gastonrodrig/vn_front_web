@@ -1,24 +1,24 @@
 import { Component } from '@angular/core';
 import { SideBarComponent } from '../../shared/components/side-bar/side-bar.component';
-import { AdminMainContentComponent } from '../admin-main-content/admin-main-content.component';
+import { TemporalMainContentComponent } from '../temporal-main-content/temporal-main-content.component';
 import { CommonModule } from '@angular/common';
 import { NavBarComponent } from '../../shared/components/nav-bar/nav-bar.component';
-import { listaModulosAdmin } from '../../shared/constants/itemsSidebarAdmin';
+import { listaModulosTemporal } from '../../shared/constants/itemsSidebarTemporal';
 
 @Component({
-  selector: 'app-admin-layout',
+  selector: 'app-temporal-layout',
   standalone: true,
-  imports: [SideBarComponent, AdminMainContentComponent, CommonModule, NavBarComponent],
-  templateUrl: './admin-layout.component.html',
-  styleUrl: './admin-layout.component.css'
+  imports: [SideBarComponent, TemporalMainContentComponent, CommonModule, NavBarComponent],
+  templateUrl: './temporal-layout.component.html',
+  styleUrl: './temporal-layout.component.css'
 })
-export class AdminLayoutComponent {
+export class TemporalLayoutComponent {
   listaModulos: any
   modulo = []
   sidebarMostrado: boolean = false
 
   ngOnInit() {
-    this.listaModulos = listaModulosAdmin
+    this.listaModulos = listaModulosTemporal
   }
 
   obtenerModulo(modulo: any) {

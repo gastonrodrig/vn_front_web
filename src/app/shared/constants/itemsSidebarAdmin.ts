@@ -1,4 +1,4 @@
-export const listaModulos = [
+export const listaModulosAdmin = [
     {
         id: 1,
         route: '',

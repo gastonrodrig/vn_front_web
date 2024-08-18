@@ -1,21 +1,22 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DocenteService } from '../../../core/services/admin/docente.service';
+import { DocenteService } from '../../../core/services/docente.service';
 import { ModalDocenteComponent } from '../../../shared/components/modal/modal-docente/modal-docente.component';
 import { FormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TableComponent } from '../../../shared/components/table/table.component';
+import { InputComponent } from '../../../shared/components/UI/input/input.component';
+import { MatButtonModule } from '@angular/material/button';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestionar-docentes',
   standalone: true,
-  imports: [TableComponent, MatProgressBarModule, FormsModule],
+  imports: [TableComponent, MatProgressBarModule, FormsModule, InputComponent, MatButtonModule],
   templateUrl: './gestionar-docentes.component.html',
   styleUrl: './gestionar-docentes.component.css'
 })
 export class GestionarDocentesComponent {
-  @Input() sidebarShowed: any
   docentes = []
   docente = []
   trackByField = 'docente_id'
@@ -24,11 +25,10 @@ export class GestionarDocentesComponent {
   searchTerm: string = '';
 
   columns = [
-    { header: 'Nombre', field: 'nombre' },
-    { header: 'Apellido', field: 'apellido' },
+    { header: 'Nombre(s)', field: 'nombre' },
+    { header: 'Apellido(s)', field: 'apellido' },
     { header: 'Documento', field: 'numero_documento' },
-    { header: 'telefono', field: 'telefono' },
-    { header: 'dirección', field: 'direccion' },
+    { header: 'Telefono', field: 'telefono' }
   ];
 
   constructor(
@@ -40,7 +40,6 @@ export class GestionarDocentesComponent {
     this.loading = true
     this.docenteService.listarDocentes().subscribe(
       (data: any) => {
-        console.log(data)
         this.docentes = data.sort((a: any, b: any) => {
           if (a.apellido.toLowerCase() < b.apellido.toLowerCase()) {
             return -1;
@@ -54,6 +53,8 @@ export class GestionarDocentesComponent {
         this.loadedComplete = true
       },
       (error) => {
+        this.loading = false
+        Swal.fire('Error', 'Error al cargar los datos', 'error')
         console.log(error)
       }
     )

@@ -1,0 +1,18 @@
+.mat-mdc-row .mat-mdc-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    cursor: pointer;
+}
+
+.mat-column-select {
+    width: 12px;
+    border-right: 1px solid rgb(193, 193, 193);
+    padding-right: 16px;
+    text-align: center;
+}
+
+.mat-mdc-row {
+    height: 0px;
+    overflow: hidden;
+    white-space: nowrap;
+}

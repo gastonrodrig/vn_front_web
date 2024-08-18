@@ -6,15 +6,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DocumentoService } from '../../../../core/services/admin/documento.service';
+import { DocumentoService } from '../../../../core/services/documento.service';
 import { SoloNumerosDirective } from '../../../directives/solo-numeros.directive';
-import { ApoderadoService } from '../../../../core/services/admin/apoderado.service';
-import { SeccionService } from '../../../../core/services/admin/seccion.service';
+import { ApoderadoService } from '../../../../core/services/apoderado.service';
 import { CommonModule } from '@angular/common';
-import { EstudianteService } from '../../../../core/services/admin/estudiante.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import Swal from 'sweetalert2';
+import { MatIconModule } from '@angular/material/icon';
+import { EstudianteService } from '../../../../core/services/estudiante.service';
 import { ModalApoderadoComponent } from '../modal-apoderado/modal-apoderado.component';
+import { PeriodoService } from '../../../../core/services/periodo.service';
+import Swal from 'sweetalert2';
+import { GradoService } from '../../../../core/services/grado.service';
 
 @Component({
   selector: 'app-modal-estudiante',
@@ -28,7 +30,8 @@ import { ModalApoderadoComponent } from '../modal-apoderado/modal-apoderado.comp
     MatSelectModule, 
     MatButtonModule, 
     CommonModule, 
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatIconModule
   ],
   templateUrl: './modal-estudiante.component.html',
   styleUrl: './modal-estudiante.component.css'
@@ -36,6 +39,9 @@ import { ModalApoderadoComponent } from '../modal-apoderado/modal-apoderado.comp
 export class ModalEstudianteComponent {
   tipoDocumento: any[] = []
   seccion: any[] = []
+  periodo: any[] = []
+  grado: any[] = []
+  periodoId: any
   estudiante: any
   estudianteId: any
   apoderadoList: any[] = []
@@ -48,19 +54,24 @@ export class ModalEstudianteComponent {
     private snack: MatSnackBar,
     private tipoDocumentService: DocumentoService,
     private apoderadoService: ApoderadoService,
-    private seccionService: SeccionService,
-    private estudianteService: EstudianteService
+    private periodoService: PeriodoService,
+    private estudianteService: EstudianteService,
+    private gradoService: GradoService
   ) {
     dialogRef.disableClose = true
   }
 
   ngOnInit() {
     if (this.data.isEdit) {
-      this.estudiante = this.data.estudiante;
+      this.estudiante = this.data.estudiante
       this.estudianteId = this.data.estudiante.estudiante_id
-
+      if(this.estudiante.seccion === null) {
+        this.estudiante.seccion = {}
+      }
+      this.loading = true
       this.apoderadoService.listarApoderadosPorEstudiante(this.estudianteId).subscribe(
         (data: any) => {
+          this.loading = false
           this.apoderadoList = data
         },
         (error) => {
@@ -76,6 +87,12 @@ export class ModalEstudianteComponent {
         documento: {
           documento_id: ''
         },
+        periodo: {
+          periodo_id: ''
+        },
+        grado: {
+          grado_id: ''
+        },
         seccion: {
           seccion_id: ''
         }
@@ -89,9 +106,17 @@ export class ModalEstudianteComponent {
         console.log(error)
       },
     )
-    this.seccionService.listarSecciones().subscribe(
+    this.periodoService.listarPeriodos().subscribe(
       (data: any) => {
-        this.seccion = data
+        this.periodo = data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    this.gradoService.listarGrados().subscribe(
+      (data: any) => {
+        this.grado = data
       },
       (error) => {
         console.log(error)
@@ -107,7 +132,9 @@ export class ModalEstudianteComponent {
       direccion : this.estudiante.direccion,
       numero_documento : this.estudiante.numero_documento,
       documento_id : this.estudiante.documento.documento_id,
-      seccion_id : this.estudiante.seccion.seccion_id
+      periodo_id: this.estudiante.periodo.periodo_id,
+      grado_id: this.estudiante.grado.grado_id,
+      seccion_id : null
     }
 
     if(dataEstudiante.nombre === '') {
@@ -135,6 +162,7 @@ export class ModalEstudianteComponent {
           );
         },
         (error) => {
+          this.loading = false
           console.log(error)
         }
       )
@@ -234,6 +262,22 @@ export class ModalEstudianteComponent {
 
   closeModel() {
     this.dialogRef.close()
+  }
+
+  get seccionCompleta() {
+    const aula = this.estudiante.seccion.aula;
+    const nombre = this.estudiante.seccion.nombre;
+    if (!aula && !nombre) {
+      return 'Sin salón';
+    } else {
+      return `${aula}, ${nombre}`;
+    }
+  }
+
+  set seccionCompleta(value: string) {
+    const [aula, nombre] = value.split(', ');
+    this.estudiante.seccion.aula = aula.trim();
+    this.estudiante.seccion.nombre = nombre.trim();
   }
   
 }

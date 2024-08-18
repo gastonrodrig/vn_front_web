@@ -1,22 +1,22 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { EstudianteService } from '../../../core/services/admin/estudiante.service';
+import { EstudianteService } from '../../../core/services/estudiante.service';
 import { TableComponent } from '../../../shared/components/table/table.component';
 import { ModalEstudianteComponent } from '../../../shared/components/modal/modal-estudiante/modal-estudiante.component';
 import { FormsModule } from '@angular/forms';
+import { InputComponent } from '../../../shared/components/UI/input/input.component';
+import { MatButtonModule } from '@angular/material/button';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestionar-estudiantes',
   standalone: true,
-  imports: [TableComponent, MatProgressBarModule, FormsModule],
+  imports: [TableComponent, MatProgressBarModule, FormsModule, InputComponent, MatButtonModule],
   templateUrl: './gestionar-estudiantes.component.html',
   styleUrl: './gestionar-estudiantes.component.css'
 })
 export class GestionarEstudiantesComponent {
-  @Input() sidebarShowed: any
-
   estudiantes = []
   estudiante = []
   trackByField = 'estudiante_id'
@@ -25,12 +25,11 @@ export class GestionarEstudiantesComponent {
   searchTerm: string = '';
 
   columns = [
-    { header: 'Nombre', field: 'nombre' },
-    { header: 'Apellido', field: 'apellido' },
+    { header: 'Apellido(s)', field: 'apellido' },
+    { header: 'Nombre(s)', field: 'nombre' },
     { header: 'Documento', field: 'numero_documento' },
-    { header: 'Grado', field: 'seccion.grado.nombre' },
-    { header: 'Seccion', field: 'seccion.nombre' },
-    { header: 'Periodo', field: 'seccion.periodo.anio' }
+    { header: 'Grado', field: 'grado.nombre' },
+    { header: 'Periodo', field: 'periodo.anio' }
   ];
 
   constructor(
@@ -55,6 +54,8 @@ export class GestionarEstudiantesComponent {
         this.loadedComplete = true
       },
       (error) => {
+        this.loading = false
+        Swal.fire('Error', 'Error al cargar los datos', 'error')
         console.log(error)
       }
     )
@@ -108,7 +109,7 @@ export class GestionarEstudiantesComponent {
               estudiante: this.estudiante,
               isEdit: isEdit
             },
-            width: '70%'
+            width: '70%',
           });
 
           dialogRef.afterClosed().subscribe(
@@ -187,8 +188,5 @@ export class GestionarEstudiantesComponent {
       });
     }
   }
-
-  
-
 
 }

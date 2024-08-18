@@ -1,0 +1,58 @@
+<div class="p-4">
+  <div class="flex flex-col items-center">
+    <div class="text-base mt-2 mb-6 font-medium">
+      Asignar Horas por Curso y Grado 
+    </div> 
+  </div>
+  <form>
+    <p class="pl-0.5 pb-4 font-medium">Grados existentes en {{ data.curso.nombre }}:</p>
+      <div class="grid grid-cols-2 gap-x-4">
+        <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+          <mat-label>Grados</mat-label>
+          <mat-select 
+            [(ngModel)]="gchData.grado_id"
+            [ngModelOptions]="{standalone: true}"
+            (ngModelChange)="obtenerHorasAsignadas()"
+          >
+            <mat-option 
+                *ngFor="let e of gradosXCurso" 
+                [value]="e.grado.grado_id"
+            >
+                {{ e.grado.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <mat-label>Horas</mat-label>
+          <input
+            [(ngModel)]="gchData.horas"
+            type="text"
+            placeholder="Ingrese las horas del curso"
+            matInput
+            appSoloNumeros
+            [ngModelOptions]="{standalone: true}"
+          >
+        </mat-form-field>
+      </div>
+ 
+      <div class="col-span-2 flex justify-end w-full">
+        <div class="p-2">
+          <button 
+            mat-flat-button 
+            color="custom-color" 
+            (click)="guardarInformacion()" 
+            class="me-2"
+          >Guardar</button>
+          <button 
+            mat-button 
+            mat-dialog-close 
+            color="custom-color"
+          >Cerrar</button>
+        </div>
+      </div>
+  </form>
+</div>
+@if(loading) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}

@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DocumentoService } from '../../../../core/services/admin/documento.service';
+import { DocumentoService } from '../../../../core/services/documento.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,8 +9,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
 import { SoloNumerosDirective } from '../../../directives/solo-numeros.directive';
-import { ApoderadoService } from '../../../../core/services/admin/apoderado.service';
+import { ApoderadoService } from '../../../../core/services/apoderado.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -25,7 +26,8 @@ import Swal from 'sweetalert2';
     MatSelectModule, 
     MatButtonModule, 
     CommonModule, 
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatIconModule
   ],
   templateUrl: './modal-apoderado.component.html',
   styleUrl: './modal-apoderado.component.css'
@@ -47,7 +49,8 @@ export class ModalApoderadoComponent {
     documento: {
       documento_id: ''
     },
-    estudiante_id: ''
+    estudiante_id: '',
+    correo: ''
   }
 
   constructor(
@@ -106,7 +109,8 @@ export class ModalApoderadoComponent {
       documento: {
         documento_id: ''
       },
-      estudiante_id: this.estudiante.estudiante_id
+      estudiante_id: this.estudiante.estudiante_id,
+      correo: ''
     };
   }
 
@@ -132,7 +136,8 @@ export class ModalApoderadoComponent {
           direccion: e.direccion,
           numero_documento: e.numero_documento,
           documento_id: e.documento.documento_id,
-          estudiante_id: e.estudiante_id
+          estudiante_id: e.estudiante_id,
+          correo: e.correo
         }
     
         this.apoderadoService.agregarApoderado(apoderado).subscribe(
@@ -164,7 +169,8 @@ export class ModalApoderadoComponent {
         direccion: this.apoderado.direccion,
         numero_documento: this.apoderado.numero_documento,
         documento_id: this.apoderado.documento.documento_id,
-        estudiante_id: this.apoderado.estudiante_id
+        estudiante_id: this.apoderado.estudiante_id,
+        correo: this.apoderado.correo
       }
       this.loading = true
       this.apoderadoService.agregarApoderado(apoderado).subscribe(
@@ -188,9 +194,9 @@ export class ModalApoderadoComponent {
         direccion: this.apoderado.direccion,
         numero_documento: this.apoderado.numero_documento,
         documento_id: this.apoderado.documento.documento_id,
-        estudiante_id: this.data.estudiante_id
+        estudiante_id: this.data.estudiante_id,
+        correo: this.apoderado.correo
       }
-      console.log(apoderado)
       this.loading = true
       this.apoderadoService.modificarApoderado(this.apoderadoId, apoderado).subscribe(
         (data) => {

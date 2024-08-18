@@ -1,0 +1,16 @@
+<div class="flex items-center text-gray-400 focus-whitin:text-gray-600 text-sm">
+    <i 
+        [class]="'fa-solid fa-' + icon"
+        class="absolute ml-3 pointer-events-none"
+    ></i>
+    <input 
+        [type]="type"
+        [placeholder]="placeholder"
+        autocomplete="off"
+        [(ngModel)]="model"
+        (ngModelChange)="onModelChange($event)"
+        class="px-3 py-2 placeholder-gray-500 text-black rounded-2xl border-none
+        ring-1 ring-gray-300 focus:ring-gray-500 focus:ring-2 pr-3 pl-10"
+        [class]="widthFont"
+    >
+</div>

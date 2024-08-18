@@ -1,14 +1,14 @@
 import { Routes } from '@angular/router';
 import { GestionarEstudiantesComponent } from './pages/gestionar-estudiantes/gestionar-estudiantes.component';
-import { GestionarApoderadosComponent } from './pages/gestionar-apoderados/gestionar-apoderados.component';
 import { GestionarDocentesComponent } from './pages/gestionar-docentes/gestionar-docentes.component';
 import { GestionarSeccionesComponent } from './pages/gestionar-secciones/gestionar-secciones.component';
 import { GestionarCursosComponent } from './pages/gestionar-cursos/gestionar-cursos.component';
 import { GestionarHorariosComponent } from './pages/gestionar-horarios/gestionar-horarios.component';
 import { GestionarMatriculaComponent } from './pages/gestionar-matricula/gestionar-matricula.component';
-import { GestionarGradoComponent } from './pages/gestionar-grado/gestionar-grado.component';
-import { GestionarSalonesComponent } from './pages/gestionar-salones/gestionar-salones.component';
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
+import { AdminInicioComponent } from './pages/admin-inicio/admin-inicio.component';
+import { AsignarSeccionComponent } from './pages/asignar-seccion/asignar-seccion.component';
+import { GestionarUsuariosComponent } from './pages/gestionar-usuarios/gestionar-usuarios.component';
 
 export const ADMIN_ROUTES: Routes = [
     { 
@@ -16,8 +16,8 @@ export const ADMIN_ROUTES: Routes = [
         component: AdminLayoutComponent,
         children: [
             {
-                path: 'gestionar-apoderados',
-                component: GestionarApoderadosComponent
+                path: '',
+                component: AdminInicioComponent
             },
             {
                 path: 'gestionar-estudiantes',
@@ -32,6 +32,10 @@ export const ADMIN_ROUTES: Routes = [
                 component: GestionarSeccionesComponent
             },
             {
+                path: 'gestionar-secciones/:id',
+                component: AsignarSeccionComponent
+            },
+            {
                 path: 'gestionar-cursos',
                 component: GestionarCursosComponent
             },
@@ -44,13 +48,9 @@ export const ADMIN_ROUTES: Routes = [
                 component: GestionarMatriculaComponent
             },
             {
-                path: 'gestionar-grado',
-                component: GestionarGradoComponent
-            },
-            {
-                path: 'gestionar-salones',
-                component: GestionarSalonesComponent
-            },
+                path: 'gestionar-usuarios',
+                component: GestionarUsuariosComponent
+            }
         ]
     },
 ]

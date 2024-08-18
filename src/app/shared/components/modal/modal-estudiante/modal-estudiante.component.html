@@ -56,32 +56,64 @@
                 >
             </mat-form-field>
 
-            <mat-form-field appearance="fill" class="col-span-2">
-                <mat-label>Seccion</mat-label>
+            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+                <mat-label>Periodo</mat-label>
                 <mat-select 
-                    [(ngModel)]="estudiante.seccion.seccion_id"
+                    [(ngModel)]="estudiante.periodo.periodo_id"
                     [ngModelOptions]="{standalone: true}"
                 >
                     <mat-option 
-                        *ngFor="let e of seccion" 
-                        [value]="e.seccion_id"
+                        *ngFor="let e of periodo" 
+                        [value]="e.periodo_id"
                     >
-                        {{ e.nombre + ', ' + e.grado.nombre + ', ' + e.periodo.anio }}
+                        {{ e.anio }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
+            @if(data.isEdit) {
+                <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+                    <mat-label>Seccion</mat-label>
+                    <input
+                        [(ngModel)]="seccionCompleta"
+                        type="text"
+                        placeholder="Ingrese el Numero del Documento"
+                        matInput
+                        appSoloNumeros
+                        [ngModelOptions]="{standalone: true}"
+                        disabled
+                    >
+                </mat-form-field>
+            }
+
+            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+                <mat-label>Grado</mat-label>
+                <mat-select 
+                    [(ngModel)]="estudiante.grado.grado_id"
+                    [ngModelOptions]="{standalone: true}"
+                >
+                    <mat-option 
+                        *ngFor="let e of grado" 
+                        [value]="e.grado_id"
+                    >
+                        {{ e.nombre }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="col-span-2" [ngClass]="{ 'sm:col-span-1' : data.isEdit }">
+                <mat-label>Direccion</mat-label>
+                <input
+                    [(ngModel)]="estudiante.direccion"
+                    type="text"
+                    placeholder="Ingrese su Direccion"
+                    matInput
+                    [ngModelOptions]="{standalone: true}"
+                >
+                <mat-icon matSuffix>location_on</mat-icon>
+            </mat-form-field>
+
         </div>
-        <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Direccion</mat-label>
-            <input
-                [(ngModel)]="estudiante.direccion"
-                type="text"
-                placeholder="Ingrese su Direccion"
-                matInput
-                [ngModelOptions]="{standalone: true}"
-            >
-        </mat-form-field>
         @if(data.isEdit) {
             <div class="flex justify-between items-center mb-4 mx-0.5 font-normal">
                 <p class="font-normal">Datos del apoderado: {{ data.isCreate ? '(Maximo 2 apoderados)' : '' }}</p>

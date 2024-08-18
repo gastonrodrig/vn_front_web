@@ -1,0 +1,32 @@
+<div class="p-4">
+  <div class="flex flex-col items-center">
+      <div class="text-base mt-2 mb-6 font-medium">
+          <p>Cambiar Contraseña</p> 
+      </div> 
+  </div>
+  <form>
+      <div class="grid grid-cols-2">
+          <mat-form-field appearance="fill" class="col-span-2">
+              <mat-label>Nueva contraseña</mat-label>
+              <input
+                  [(ngModel)]="contra.newPassword"
+                  type="password"
+                  placeholder="Ingrese la nueva contraseña"
+                  matInput
+                  [ngModelOptions]="{standalone: true}"
+                  [type]="hide ? 'password' : 'text'"
+              >
+              <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </mat-form-field>
+      </div>
+      <div class="flex justify-end w-full">
+          <div class="p-2">
+              <button (click)="cambiarContra()" mat-flat-button color="custom-color" class="me-2">Guardar</button>
+              <button (click)="closeModel()" mat-button mat-dialog-close color="custom-color">Cancelar</button>
+          </div>
+      </div>
+  </form>
+</div>
+@if(loading) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}

@@ -1,0 +1,198 @@
+<div class="p-4">
+  <div class="flex flex-col items-center">
+      <div class="text-base mt-2 mb-6 font-medium">
+          <p>{{ data.isEdit ? 'Editar Usuario' : 'Agregar Usuario' }}</p> 
+      </div> 
+  </div>
+  <form>
+    <p class="pl-0.5 pb-4 font-medium">Datos del usuario:</p>
+    <div class="grid grid-cols-2 gap-x-4">
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <mat-label>Nombre de Usuario</mat-label>
+        <input
+          [(ngModel)]="usuario.nombres_usuario"
+          type="text"
+          placeholder="Ingrese el nombre de usuario"
+          matInput
+          [ngModelOptions]="{standalone: true}"
+        >
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <mat-label>Rol</mat-label>
+        <mat-select 
+          [(ngModel)]="usuario.rol"
+          [ngModelOptions]="{standalone: true}"
+          (ngModelChange)="listar()"
+          [disabled]="usuarioSinReferencia()"
+        >
+          <mat-option 
+            *ngFor="let e of roles" 
+            [value]="e.nombre"
+          >
+            {{ e.nombre }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="col-span-2" [ngClass]="{ 'sm:col-span-1' : data.isCreate }">
+        <mat-label>Correo</mat-label>
+        <input
+          [(ngModel)]="usuario.email_usuario"
+          type="text"
+          placeholder="Ingrese el correo"
+          matInput
+          [ngModelOptions]="{standalone: true}"
+        >
+        <mat-icon matSuffix>email</mat-icon>
+      </mat-form-field>
+
+      @if(data.isCreate) {
+        <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+          <mat-label>Contraseña</mat-label>
+          <input
+            [(ngModel)]="usuario.contrasena_usuario"
+            type="password"
+            placeholder="Ingrese la contraseña"
+            matInput
+            [ngModelOptions]="{ standalone: true }"
+            [type]="hide ? 'password' : 'text'"
+          >
+          <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </mat-form-field>
+      }
+    </div>
+
+    <p 
+      class="pl-0.5 font-medium"  
+      [ngClass]="{ 'mt-2.5 pb-4' : usuario.rol === 'Estudiante' || usuario.rol === 'Docente' || usuario.rol === 'Apoderado' }"
+    >
+      @if(usuario.rol === 'Estudiante') {
+        Estudiante:
+      }
+      @if(usuario.rol === 'Docente') {
+        Docente:
+      }
+      @if(usuario.rol === 'Apoderado') {
+        Apoderado:
+      }
+    </p>
+    @if(usuario.rol === 'Estudiante' || usuario.rol === 'Docente' || usuario.rol === 'Apoderado') {
+      <div class="relative">
+        <input 
+          type="text"
+          class="rounded-ss-md rounded-se-md w-full py-[14px] px-4 ring-inset outline-none cursor-text 
+          bg-gray-1 placeholder:text-gray-3 hover:bg-gray-2 
+          disabled:bg-[#F4F2F6] disabled:hover:bg-[#F4F2F6] disabled:placeholder:opacity-40 disabled:text-gray-400"
+          [placeholder]="placeholderText()" 
+          [(ngModel)]="searchTerm"
+          (change)="inputText()"
+          [ngModelOptions]="{standalone: true}"
+          [disabled]="usuarioSinReferencia()"
+          (focus)="showResults = true"   
+        >
+        <div 
+          class="w-full border-b border-gray-800" 
+          [ngClass]="{ 'opacity-55' : usuarioSinReferencia() }"
+        ></div>
+        @if(showResults && inputText()) {
+          <ul class="absolute rounded-sm bg-[#e2e2e2] w-full max-h-32 top-14 overflow-y-auto">
+            @if(usuario.rol === 'Estudiante') {
+              @if(displayedByRol(estudiantes).length === 0) {
+                <li class="p-2 ps-4">
+                  No se han encontrado estudiantes.
+                </li>
+              }
+              @for(e of displayedByRol(estudiantes); track e.estudiante_id) {
+                <li 
+                  (click)="asignarUsuarioData(e.estudiante_id)"
+                  class="p-2 ps-4 hover:font-semibold hover:cursor-pointer"
+                >
+                  {{ e.nombre + ' ' + e.apellido + ' (Nro.Documento: ' + e.numero_documento + ')' }} 
+                </li>
+              }
+            }
+
+            @if(usuario.rol === 'Docente') {
+              @if(displayedByRol(docentes).length === 0) {
+                <li class="p-2 ps-4">
+                  No se han encontrado docentes.
+                </li>
+              }
+              @for(e of displayedByRol(docentes); track e.docente_id) {
+                <li 
+                  (click)="asignarUsuarioData(e.docente_id)"
+                  class="p-2 ps-4 hover:font-semibold hover:cursor-pointer"
+                >
+                  {{ e.nombre + ' ' + e.apellido + ' (Nro.Documento: ' + e.numero_documento + ')' }} 
+                </li>
+              }
+            }
+
+            @if(usuario.rol === 'Apoderado') {
+              @if(displayedByRol(apoderados).length === 0) {
+                <li class="p-2 ps-4">
+                  No se han encontrado apoderados.
+                </li>
+              }
+              @for(e of displayedByRol(apoderados); track e.apoderado_id) {
+                <li 
+                  (click)="asignarUsuarioData(e.apoderado_id)"
+                  class="p-2 ps-4 hover:font-semibold hover:cursor-pointer"
+                >
+                  {{ e.nombre + ' ' + e.apellido + ' (Nro.Documento: ' + e.numero_documento + ')' }} 
+                </li>
+              }
+            }
+          </ul>
+        }
+      </div>
+    }
+
+    <div [ngClass]="{ 'h-32' : showResults && inputText(), 'mt-5' : listLoaded && usuario.rol !== 'admin' }"></div>
+    <div [ngClass]="{ 'mt-5' : data.isEdit && usuario.rol !== 'admin' }"></div>
+    <div class="col-span-2 sm:flex sm:justify-between sm:w-full p-2 grid grid-cols-2"  [ngClass]="{ 'hidden' : showResults && inputText() }">
+      <div class="col-span-2 flex justify-start">
+        @if(data.isEdit) {
+          <button 
+            mat-flat-button 
+            (click)="cambiarContrasenia()"
+            color="custom-color"
+            class="me-2"
+          >
+            <i class="fa-solid fa-pen text-white me-1"></i>
+            Contraseña
+          </button>
+        }
+        <div [ngClass]="{ 'scale-100' : personSelected && usuario.rol !== '' && searchTerm === '', 'scale-0' : !usuarioSinReferencia() }">
+          <button 
+            mat-flat-button 
+            (click)="quitarPersona()"
+            color="custom-color"
+          >
+            <i class="fa-solid fa-pen text-white me-1"></i>
+            {{ usuario.rol === 'Estudiante' ? 'Estudiante' : usuario.rol === 'Apoderado' ? 'Apoderado' : 'Docente' }}
+          </button>
+        </div>
+      </div>  
+      <div class="mt-3 sm:mt-0 flex justify-end col-span-2">
+        <button 
+          mat-flat-button 
+          color="custom-color" 
+          (click)="guardarInformacion()" 
+          class="me-2"
+        >{{ data.isEdit ? 'Guardar' : '+ Agregar Usuario' }}</button>
+        @if(data.isCreate || (data.isEdit && changeOnEdit)) {
+          <button 
+            mat-button 
+            mat-dialog-close 
+            color="custom-color"
+          >Cancelar</button>
+        }
+      </div>
+    </div>
+  </form>
+</div>
+@if(loading) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}

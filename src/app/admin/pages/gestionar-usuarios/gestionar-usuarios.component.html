@@ -1,0 +1,30 @@
+@if(loading){
+  <mat-progress-bar mode="indeterminate" class="-mt-7 mb-8"></mat-progress-bar>
+}
+<div class="mx-5 mt-2">
+  <p class="text-xl font-medium mb-4">Gestionar Usuarios</p>
+  <div class="flex justify-between">
+      <app-input 
+          [(model)]="searchTerm" 
+          [placeholder]="'Buscar'" 
+          [icon]="'magnifying-glass'"
+          [widthFont]="'font-normal bg-gray-50'"
+      ></app-input>
+      <button 
+          (click)="agregarUsuario()"
+          mat-flat-button 
+          color="custom-color" 
+      > + Agregar </button>
+  </div>
+</div>
+<app-table 
+  [columns]="columns" 
+  [data]="displayedUsuarios()"
+  [trackByField]="trackByField"
+  [loadedComplete]="loadedComplete"
+  [editActive]="true"
+  [deleteActive]="true"
+  [asignActive]="false"
+  (editAction)="editarUsuario($event.isEdit, $event.id)"
+  (deleteAction)="eliminarUsuarioDeUsuarioYEstudiante($event.isDeleted, $event.id)"
+></app-table>

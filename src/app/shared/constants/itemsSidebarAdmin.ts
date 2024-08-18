@@ -1,15 +1,15 @@
-export const listaModulos = [
+export const listaModulosAdmin = [
     {
         id: 1,
-        route: 'gestionar-apoderados',
-        titulo: 'Apoderados',
-        icon: 'people-line'
+        route: '',
+        titulo: 'Inicio',
+        icon: 'house'
     },
     {
         id: 2,
         route: 'gestionar-estudiantes',
         titulo: 'Estudiantes',
-        icon: 'user-graduate'
+        icon: 'graduation-cap'
     },
     {
         id: 3,
@@ -24,33 +24,27 @@ export const listaModulos = [
         icon: 'font'
     },
     {
-        id: 5,
-                route: 'gestionar-cursos',
+        id: 6,
+        route: 'gestionar-cursos',
         titulo: 'Cursos',
         icon: 'book'
     },
     {
-        id: 6,
+        id: 7,
         route: 'gestionar-horarios',
         titulo: 'Horarios',
         icon: 'calendar-days'
     },
     {
-        id: 7,
+        id: 8,
         route: 'gestionar-matricula',
         titulo: 'Matricula',
         icon: 'file-invoice'
     },
     {
-        id: 8,
-        route: 'gestionar-grado',
-        titulo: 'Grado',
-        icon: 'graduation-cap'
-    },
-    {
         id: 9,
-        route: 'gestionar-salones',
-        titulo: 'Salones',
-        icon: 'chalkboard-user'
-    },
+        route: 'gestionar-usuarios',
+        titulo: 'Usuarios',
+        icon: 'user-pen'
+    }
 ]

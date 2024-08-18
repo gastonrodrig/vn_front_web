@@ -1,0 +1,25 @@
+<div class="flex min-w-screen">
+  <app-side-bar 
+    [listaModulos]="listaModulos"
+    (modulo)="obtenerModulo($event)" 
+    bgColor="bg-[#0f4848]" 
+    paddingXOpen="w-[230px]"
+    paddingXClosed="w-[80px]"
+    searchBgColorInput="bg-[#156060]"
+    searchBgColorIcon="bg-[#177d63]"
+    moduleBgColorHover="hover:bg-[#156060]"
+    moduleTextColor="text-cyan-500 hover:text-cyan-500"
+    baseRoute="temporal"
+    [ngClass]="{ 'fixed inset-y-0 left-0 w-64 z-50' : sidebarMostrado, 'hidden md:block' : !sidebarMostrado }"
+  ></app-side-bar>
+  <div 
+    class="overlay"
+    *ngIf="sidebarMostrado"
+    (click)="cerrarSidebar()"
+  ></div>
+  <app-temporal-main-content 
+    [sidebarShowed]="sidebarMostrado"
+    (sidebarMostrado)="mostrarSidebar($event)"
+    class="w-full shadow-xl"
+  ></app-temporal-main-content>
+</div>

@@ -1,28 +1,32 @@
 import { Routes } from '@angular/router';
-import { loggedGuard } from './core/guards/logged.guard';
-import { LoginComponent } from './auth/login/login.component';
+import { LoginComponent } from './auth/login.component';
+import { adminGuard } from './core/guards/admin.guard';
+import { docenteGuard } from './core/guards/docente.guard';
+import { HomeComponent } from './home/home.component';
+import { temporalGuard } from './core/guards/temporal.guard';
 
 export const routes: Routes = [
     {
         path: '',
+        component: HomeComponent
+    },
+    {
+        path: 'login',
         component: LoginComponent
     },
     {
         path: 'admin',
-        loadChildren: () => import ('./admin/admin.routes').then(m => m.ADMIN_ROUTES)
+        canActivate: [adminGuard],
+        loadChildren: () => import ('./admin/admin.routes').then(m =>m.ADMIN_ROUTES)
     },
-    // {
-    //     path: 'gestionar-alumnos',
-    //     component: GestionarAlumnosComponent
-    // },
-    // {
-    //     path: '',
-    //     // loadChildren: () => import('./auth/auth.routes').then(m => m.AUTH_ROUTES),
-    //     canActivate: [loggedGuard]
-    // },
-    // {
-    //     path: '',
-    //     // loadChildren: () => import('./auth/auth.routes').then(m => m.AUTH_ROUTES),
-    //     canActivate: [loggedGuard]
-    // }
+    {
+        path: 'docente',
+        canActivate: [docenteGuard],
+        loadChildren:() => import ('./docente/docente.routes').then(m =>m.DOCENTE_ROUTES)
+    },
+    {
+        path: 'temporal',
+        canActivate: [temporalGuard],
+        loadChildren:() => import ('./temporal/temporal.routes').then(m =>m.TEMPORAL_ROUTES)
+    }
 ];

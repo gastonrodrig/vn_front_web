@@ -1,0 +1,184 @@
+@if(loading) {
+    <mat-progress-bar mode="indeterminate" class="-mt-7 mb-8"></mat-progress-bar>
+}
+<div class="flex flex-col m-4 mt-0">
+    <div class="flex items-center justify-start font-normal text-lg gap-x-1 text-black hover:cursor-pointer hover:font-medium max-w-20">
+        <i class="fa-regular fa-circle-left"></i>
+        <p (click)="volverSecciones()">  Volver</p>
+    </div>
+    <div class="grid grid-cols-2 gap-x-10 md:gap-x-0">
+        <div class="col-span-2 md:col-span-1 p-3">
+            <div class="flex justify-center text-sm text-center mb-4 mt-2 mx-5">
+                <p class="font-normal text-md uppercase">Listado de Estudiantes de 
+                    <span class="font-semibold">{{ grado.nombre }}</span> del
+                    <span class="font-semibold">{{ periodo.anio }}</span>
+                </p>
+            </div>
+            <div class="bg-gray-50 p-3 mx-5 rounded-xl ring-1 ring-gray-300">
+                <div class="flex justify-between max-[1366px]:grid max-[1366px]:gap-y-2 max-[1366px]:justify-center max-md:flex max-md:justify-between">
+                    <app-input 
+                        [(model)]="searchTermSinSalon" 
+                        [placeholder]="'Buscar'" 
+                        [icon]="'magnifying-glass'"
+                        [widthFont]="'max-[923px]:w-32 min-md:w-36 font-normal'"
+                    ></app-input>
+                    <div class="flex gap-x-2 items-center max-[1366px]:justify-center">
+                        <div class="relative group">
+                            <i class="fa-solid fa-circle-info text-base text-gray-500 hover:text-gray-400"></i>
+                            <div class="absolute hidden group-hover:block bg-black shadow-lg text-center
+                            rounded-lg mt-2 p-2 text-white text-sm opacity-55 -ms-20 w-48 font-light">
+                                Seleccione los Estudiantes para asignarles un salon
+                            </div>
+                        </div>
+                        <button 
+                            (click)="desplazarEstudiantesSinSalon()"
+                            mat-flat-button 
+                            color="custom-color" 
+                            [disabled]="displayedEstudiantesXGradoPeriodo().length === 0 || this.selectionSinSalon.selected.length === 0"
+                        ><i class="fa-solid fa-circle-right"></i> Desplazar</button>
+                    </div>
+                </div>
+            </div>   
+            
+
+            <div class="flex flex-col m-3 md:h-[370px]">
+                <div class="overflow-y-auto">
+                    <div class="inline-block min-w-full align-middle p-2">
+                        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
+                            
+                            <!-- Estudiantes de una promocion sin salón -->
+                            <table mat-table [dataSource]="displayedEstudiantesXGradoPeriodo()" class="mat-elevation-z1">
+                                <ng-container matColumnDef="select">
+                                  <th mat-header-cell *matHeaderCellDef>
+                                    <mat-checkbox
+                                        (change)="$event ? toggleAllRows(dataSource, selectionSinSalon) : null"
+                                        [checked]="selectionSinSalon.hasValue() && isAllSelected(dataSource, selectionSinSalon)"
+                                        [indeterminate]="selectionSinSalon.hasValue() && !isAllSelected(dataSource, selectionSinSalon)"
+                                        [aria-label]="checkboxLabel(dataSource, selectionSinSalon)">
+                                    </mat-checkbox>
+                                  </th>
+                                  <td mat-cell *matCellDef="let row">
+                                    <mat-checkbox 
+                                        (click)="$event.stopPropagation()"
+                                        (change)="$event ? toggleRowSelection(row, selectionSinSalon) : null"
+                                        [checked]="selectionSinSalon.isSelected(row)"
+                                        [aria-label]="checkboxLabel(dataSource, selectionSinSalon, row)">
+                                    </mat-checkbox>
+                                  </td>
+                                </ng-container>
+                            
+                                <ng-container matColumnDef="student">
+                                  <th mat-header-cell *matHeaderCellDef> Estudiante </th>
+                                  <td mat-cell *matCellDef="let element"> {{element.apellido + ', ' + element.nombre}} </td>
+                                </ng-container>
+                              
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                (click)="toggleRowSelection(row, selectionSinSalon)">
+                                </tr>
+                            </table>
+                            @if(displayedEstudiantesXGradoPeriodo().length === 0 && loading === false) {
+                                <p class="flex justify-center text-sm my-4 font-medium">No se han encontrado registros.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+                @if(displayedEstudiantesXGradoPeriodo().length > 0 && loading === false) {
+                    <div class="flex justify-end mt-3">
+                        <p class="text-sm font-normal">Mostrando {{ displayedEstudiantesXGradoPeriodo().length }} 
+                            {{ displayedEstudiantesXGradoPeriodo().length === 1 ? 'resultado' : 'resultados' }}</p>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-span-2 md:col-span-1 p-3">
+            <div class="flex justify-center text-sm text-center mb-4 mt-2 mx-5">
+                <p class="font-normal text-md uppercase">Listado de Estudiantes de la sección  
+                    <span class="font-semibold">{{ seccion.aula }}</span>
+                </p>
+            </div>
+            <div class="bg-gray-50 p-3 mx-5 rounded-xl ring-1 ring-gray-300">
+                <div class="flex justify-between max-[1366px]:grid max-[1366px]:gap-y-2 max-[1366px]:justify-center 
+                max-md:flex max-md:justify-between max-[546px]:grid max-[546px]:gap-y-2 max-[546px]:justify-center">
+                    <app-input 
+                        [(model)]="searchTermConSalon" 
+                        [placeholder]="'Buscar'" 
+                        [icon]="'magnifying-glass'"
+                        [widthFont]="'max-[923px]:w-32 min-md:w-36 font-normal'"
+                    ></app-input>
+                    <div class="flex gap-x-2 items-center max-[1366px]:justify-center">
+                        <div class="relative group">
+                            <i class="fa-solid fa-circle-info text-base text-gray-500 hover:text-gray-400"></i>
+                            <div class="absolute hidden group-hover:block bg-black shadow-lg text-center
+                            rounded-lg mt-2 p-2 text-white text-sm opacity-55 -ms-20 w-48 font-light">
+                                Seleccione los Estudiantes para remover su seccion perteneciente
+                            </div>
+                        </div>
+                        <button 
+                            (click)="desplazarEstudiantesConSalon()"
+                            mat-flat-button 
+                            color="custom-color" 
+                            [disabled]="displayedEstudiantesXSeccion().length === 0 || this.selectionAsignados.selected.length === 0"
+                        ><i class="fa-solid fa-circle-left"></i> Desplazar</button>
+                        <button 
+                            (click)="desplazarEstudiantesConSalon()"
+                            mat-flat-button 
+                            color="custom-color" 
+                            [disabled]="displayedEstudiantesXSeccion().length === 0"
+                        ><i class="fa-solid fa-trash"></i> Eliminar</button>
+                    </div>
+                </div>
+            </div>   
+
+            <div class="flex flex-col m-3 md:h-[370px]">
+                <div class="overflow-y-auto">
+                    <div class="inline-block min-w-full align-middle p-2">
+                        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
+                            <!-- Estudiantes de una promocion con un salón -->
+                            <table mat-table [dataSource]="displayedEstudiantesXSeccion()" class="mat-elevation-z1">
+                                <ng-container matColumnDef="select">
+                                  <th mat-header-cell *matHeaderCellDef>
+                                    <mat-checkbox
+                                        (change)="$event ? toggleAllRows(dataSourceAsignados, selectionAsignados) : null"
+                                        [checked]="selectionAsignados.hasValue() && isAllSelected(dataSourceAsignados, selectionAsignados)"
+                                        [indeterminate]="selectionAsignados.hasValue() && !isAllSelected(dataSourceAsignados, selectionAsignados)"
+                                        [aria-label]="checkboxLabel(dataSourceAsignados, selectionAsignados)">
+                                    </mat-checkbox>
+                                  </th>
+                                  <td mat-cell *matCellDef="let row">
+                                    <mat-checkbox 
+                                        (click)="$event.stopPropagation()"
+                                        (change)="$event ? toggleRowSelection(row, selectionAsignados) : null"
+                                        [checked]="selectionAsignados.isSelected(row)"
+                                        [aria-label]="checkboxLabel(dataSourceAsignados, selectionAsignados, row)">
+                                    </mat-checkbox>
+                                  </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="student">
+                                    <th mat-header-cell *matHeaderCellDef> Estudiante </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.apellido + ', ' + element.nombre}} </td>
+                                </ng-container>
+                              
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                    (click)="toggleRowSelection(row, selectionAsignados)">
+                                </tr>
+                            </table>
+                            @if(displayedEstudiantesXSeccion().length === 0 && loading === false) {
+                                <p class="flex justify-center text-sm my-4 font-medium">No se han encontrado registros.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+                @if(displayedEstudiantesXSeccion().length > 0 && loading === false) {
+                    <div class="flex justify-end mt-3">
+                        <p class="text-sm font-normal">Mostrando {{ displayedEstudiantesXSeccion().length }} 
+                            {{ displayedEstudiantesXSeccion().length === 1 ? 'resultado' : 'resultados' }}</p>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>

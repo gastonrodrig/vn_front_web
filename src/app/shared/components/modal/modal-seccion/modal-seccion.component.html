@@ -1,0 +1,110 @@
+<div class="p-4">
+    <div class="flex flex-col items-center">
+        <div class="text-base mt-2 mb-6 font-medium">
+            <p>{{ data.isEdit ? 'Editar Seccion' : 'Agregar Seccion' }}</p> 
+        </div> 
+    </div>
+    <form>
+        <p class="pl-0.5 pb-4 font-medium">Datos de la seccion:</p>
+        <div class="grid grid-cols-2 gap-x-4">
+            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+                <mat-label>Nombre</mat-label>
+                <input
+                    [(ngModel)]="seccion.nombre"
+                    type="text"
+                    placeholder="Ingrese el nombre"
+                    matInput
+                    [ngModelOptions]="{standalone: true}"
+                    [disabled]="seccionCreated"
+                >
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+                <mat-label>Aula</mat-label>
+                <input
+                    [(ngModel)]="seccion.aula"
+                    type="text"
+                    placeholder="Ingrese el aula"
+                    matInput
+                    [ngModelOptions]="{standalone: true}"
+                    [disabled]="seccionCreated"
+                >
+            </mat-form-field>
+
+            @if(data.isCreate) {
+                <div class="col-span-2" [ngClass]="{ 'hidden' : seccionCreated }">
+                    <div class="flex justify-end w-full">
+                        <div class="p-2">
+                            <button 
+                                mat-flat-button 
+                                color="custom-color" 
+                                (click)="crearSeccion()" 
+                                class="me-2"
+                            >+ Añadir Seccion</button>
+                            <button 
+                                mat-button 
+                                mat-dialog-close 
+                                color="custom-color"
+                            >Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if(seccionCreated || data.isEdit) {
+                <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+                    <mat-label>Grado</mat-label>
+                    <mat-select 
+                        [(ngModel)]="seccionGradoPeriodo.grado.grado_id"
+                        [ngModelOptions]="{standalone: true}"
+                        [disabled]="data.isEdit"
+                    >
+                        <mat-option 
+                            *ngFor="let e of grados" 
+                            [value]="e.grado_id"
+                        >
+                            {{ e.nombre }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+                    <mat-label>Periodo</mat-label>
+                    <mat-select 
+                        [(ngModel)]="seccionGradoPeriodo.periodo.periodo_id"
+                        [ngModelOptions]="{standalone: true}"
+                        [disabled]="data.isEdit"
+                    >
+                        <mat-option 
+                            *ngFor="let e of periodos" 
+                            [value]="e.periodo_id"
+                        >
+                            {{ e.anio }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <div class="col-span-2 flex justify-end w-full">
+                    <div class="p-2">
+                        <button 
+                            mat-flat-button 
+                            color="custom-color" 
+                            (click)="guardarInformacion()" 
+                            class="me-2"
+                        >{{ data.isEdit ? 'Editar' : 'Terminar' }}</button>
+                        @if(data.isEdit) {
+                            <button 
+                                mat-button 
+                                mat-dialog-close 
+                                color="custom-color"
+                            >Cancelar</button>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </form>
+</div>
+@if(loading) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}

@@ -7,10 +7,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
 import { SoloNumerosDirective } from '../../../directives/solo-numeros.directive';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DocenteService } from '../../../../core/services/admin/docente.service';
-import { DocumentoService } from '../../../../core/services/admin/documento.service';
+import { DocenteService } from '../../../../core/services/docente.service';
+import { DocumentoService } from '../../../../core/services/documento.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -25,7 +26,8 @@ import Swal from 'sweetalert2';
     MatSelectModule, 
     MatButtonModule, 
     CommonModule, 
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatIconModule
   ],
   templateUrl: './modal-docente.component.html',
   styleUrl: './modal-docente.component.css'

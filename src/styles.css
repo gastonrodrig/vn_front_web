@@ -5,6 +5,18 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+/* sidebar */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+}
+.sidebar {
+    background-color: #1F2937;
+    z-index: 50;
+}
+
 /* mat-basic-button (angular material) */
 body .mat-mdc-button.mat-custom-color {
     color: #1f2329;
@@ -40,6 +52,11 @@ body .mdc-button--unelevated.mat-custom-color:disabled {
 /* progress bar (angular material) */
 .mat-mdc-progress-bar {
     --mdc-linear-progress-active-indicator-color: #06b6d4;
+}
+
+/* spinner (angular material) */
+.mat-mdc-progress-spinner {
+    --mdc-circular-progress-active-indicator-color: #06b6d4;
 }
 
 /* pagination (ngx-pagination) */
@@ -118,4 +135,17 @@ body .ngx-pagination button:hover {
 
 body .ngx-pagination .current {
     background: #06b6d4 !important;
+}
+
+/* checkbox (Angular Material) */
+body .mat-accent.mat-mdc-checkbox {
+    --mdc-checkbox-selected-checkmark-color: #ffffff;
+    --mdc-checkbox-selected-focus-icon-color: #4b5563;
+    --mdc-checkbox-selected-hover-icon-color: #4b5563;
+    --mdc-checkbox-selected-icon-color: #4b5563;
+    --mdc-checkbox-selected-focus-state-layer-color: #4b5563;
+    --mdc-checkbox-selected-hover-state-layer-color: #4b5563;
+    --mdc-checkbox-unselected-pressed-state-layer-color: #4b5563;
+    --mat-checkbox-disabled-label-color: rgba(26, 27, 31, 0.38);
+    --mat-checkbox-label-text-color: #1a1b1f;
 }

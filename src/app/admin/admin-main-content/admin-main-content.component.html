@@ -1,0 +1,12 @@
+<div class="bg-gray-200 shadow-md">
+  <app-nav-bar 
+      (sidebar)="menuClicked($event)" 
+      [ButtonBgColor]="'bg-dark-blue-2 hover:bg-dark-blue-1'"
+      [sidebarShowed]="sidebarShowed"
+  ></app-nav-bar>
+</div>
+<div class="p-7">
+  <h1 class="text-2xl font-semibold">
+      <router-outlet></router-outlet>
+  </h1>
+</div>

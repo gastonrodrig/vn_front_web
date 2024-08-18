@@ -1,16 +1,25 @@
 <div class="flex min-w-screen">
   <app-side-bar 
+    [listaModulos]="listaModulos"
     (modulo)="obtenerModulo($event)" 
+    bgColor="bg-dark-blue-1" 
+    paddingXOpen="w-[220px]"
+    paddingXClosed="w-[75px]"
+    searchBgColorInput="bg-dark-blue-2"
+    searchBgColorIcon="bg-dark-blue-3"
+    moduleBgColorHover="hover:bg-dark-blue-2"
+    moduleTextColor="text-cyan-300 hover:text-cyan-300"
+    baseRoute="admin"
     [ngClass]="{ 'fixed inset-y-0 left-0 w-64 z-50' : sidebarMostrado, 'hidden md:block' : !sidebarMostrado }"
   ></app-side-bar>
   <div 
-    class="fixed inset-0 bg-black opacity-50"
+    class="overlay"
     *ngIf="sidebarMostrado"
     (click)="cerrarSidebar()"
   ></div>
-  <app-main-content 
+  <app-admin-main-content 
     [sidebarShowed]="sidebarMostrado"
     (sidebarMostrado)="mostrarSidebar($event)"
     class="w-full shadow-xl"
-  ></app-main-content>
+  ></app-admin-main-content>
 </div>

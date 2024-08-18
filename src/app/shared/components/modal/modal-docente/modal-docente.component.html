@@ -55,7 +55,7 @@
                     [ngModelOptions]="{standalone: true}"
                 >
             </mat-form-field>
-            <mat-form-field appearance="fill" class="w-full">
+            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Direccion</mat-label>
                 <input
                     [(ngModel)]="docente.direccion"
@@ -64,9 +64,10 @@
                     matInput
                     [ngModelOptions]="{standalone: true}"
                 >
+                <mat-icon matSuffix>location_on</mat-icon>
             </mat-form-field>
 
-            <mat-form-field appearance="fill" class="w-full">
+            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Telefono</mat-label>
                 <input
                     [(ngModel)]="docente.telefono"
@@ -75,6 +76,7 @@
                     matInput
                     [ngModelOptions]="{standalone: true}"
                 >
+                <mat-icon matSuffix>phone</mat-icon>
             </mat-form-field>
         </div>
 

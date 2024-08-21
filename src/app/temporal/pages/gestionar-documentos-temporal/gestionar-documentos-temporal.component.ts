@@ -80,17 +80,7 @@ export class GestionarDocumentosTemporalComponent {
     this.estudianteId = this.estudiante.estudiante_id;
     this.docsEstudianteService.obtenerDocumentosPorEstudiante(this.estudianteId.toString()).subscribe(
       async (data: any) => {
-        // Transformar los datos para ajustarse a la estructura esperada
-
-        // this.files = data.flatMap((item: any) => 
-        //   item.multimedia.map((file: any) => ({
-        //     multimedia_id: file.multimedia_id,
-        //     name: file.nombre,
-        //     size: file.tamanio,
-        //     url: file.url
-        //   }))
-        // )
-        
+        // Transformar urls de los objetos de multimedia a blob's y luego a File c/u
         const filesPromises = data.flatMap((item: any) => 
           item.multimedia.map(async (file: any) => {
             const response = await fetch(file.url);
@@ -100,7 +90,6 @@ export class GestionarDocumentosTemporalComponent {
         );
         
         this.files = await Promise.all(filesPromises);
-        console.log(this.files)
 
         this.loading = false
         this.isDisabled = false
@@ -201,6 +190,7 @@ export class GestionarDocumentosTemporalComponent {
 
   borrarArchivo(file: any) {
     this.files = this.files.filter(f => f !== file);
+    console.log(this.files)
   }
 
   guardarArchivos() {
@@ -217,7 +207,7 @@ export class GestionarDocumentosTemporalComponent {
 
       this.docsEstudianteService.agregarDocumentos(formData).subscribe(
         (data: any) => {
-          this.mostrarMensaje('Los documentos han sido agregados con éxito.', 10000);
+          this.mostrarMensaje('Los documentos han sido agregados con éxito, para poder pagar la matrícula, un encargado debe aprobar sus documentos.', 10000);
           this.files = [];
           this.isDisabled = true;
           console.log(data)
@@ -242,7 +232,7 @@ export class GestionarDocumentosTemporalComponent {
 
       this.docsEstudianteService.actualizarDocumentos(this.estudianteId, formData).subscribe(
         (data: any) => {
-          this.mostrarMensaje('Los documentos han sido agregados con éxito.', 10000);
+          this.mostrarMensaje('Los documentos han sido guardados con éxito, para poder pagar la matrícula, un encargado debe aprobar sus documentos.', 10000);
           this.files = [];
           this.isDisabled = true;
           console.log(data)

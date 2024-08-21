@@ -3,37 +3,161 @@
 }
 <div class="mx-5 mt-2">
   <p class="text-xl font-medium mb-4">Registro de Documentos del Estudiante</p>
-  <p class="font-normal text-sm mb-3">Ingrese el DNI de su hijo:</p>
-  <div class="min-[430px]:w-[350px]">
+  <p class="font-normal text-sm mb-3">Ingrese el DNI de su hijo y el código de acceso:</p>
+  <div class="min-[1100px]:w-[760px] max-[1100px]:w-[630px] max-[950px]:w-auto">
     <div class="bg-gray-50 p-2 rounded-xl ring-1 ring-gray-300">
-      <div class="pt-1 mb-1 mx-1">
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Dni del hijo</mat-label>
-          <input
-              [(ngModel)]="dni"
-              type="text"
-              placeholder="Ingrese el DNI"
-              matInput
-              [ngModelOptions]="{standalone: true}"
-          >
-        </mat-form-field>
-        <div class="flex justify-end gap-x-2">
-          <div class="-mt-2.5 relative group">
-            <i class="fa-solid fa-circle-info text-base text-gray-500 hover:text-gray-400"></i>
-            <div class="absolute hidden group-hover:block bg-black shadow-lg text-center
-            rounded-lg mt-3 p-2 text-white text-sm opacity-55 -ms-20 w-44 font-light">
-                Ingrese el DNI para desbloquear el acceso a la subida de archivos
+      <div class="min-[1100px]:flex pt-1 mb-1 mx-1 min-[1100px]:-mb-4">
+        <div class="min-[480px]:flex gap-x-3 max-[480px]:grid max-[480px]:grid-cols-2">
+          <mat-form-field appearance="fill" class="min-[480px]:w-[300px] max-[480px]:col-span-2">
+            <mat-label>Dni del hijo</mat-label>
+            <input
+                [(ngModel)]="dni"
+                type="text"
+                placeholder="Ingrese el DNI"
+                matInput
+                [ngModelOptions]="{standalone: true}"
+            >
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill" class="min-[480px]:w-[300px] max-[480px]:col-span-2">
+            <mat-label>Nombre de usuario</mat-label>
+            <input
+                [(ngModel)]="nombreUsuario"
+                type="text"
+                placeholder="Ingrese el Nombre de usuario"
+                matInput
+                [ngModelOptions]="{standalone: true}"
+            >
+          </mat-form-field>
+        </div>
+        <div class="min-[1100px]:grid min-[1100px]:items-center min-[1100px]:ms-3 min-[1100px]:-mt-2.5">
+          <div class="flex justify-end gap-x-2">
+            <div class="-mt-2.5 relative group">
+              <i class="fa-solid fa-circle-info text-base text-gray-500 hover:text-gray-400"></i>
+              <div class="absolute hidden group-hover:block bg-black shadow-lg text-center
+              rounded-lg mt-4 p-2 text-white text-sm opacity-55 -ms-24 w-52 font-light bottom-[52px]">
+                  Ingrese el DNI y el nombre de usuario temporal para desbloquear el acceso a la subida de archivos
+              </div>
+            </div>
+            <button 
+              mat-flat-button 
+              color="custom-color" 
+              class="-mt-3"
+              (click)="desbloquear()"
+            >
+              <i class="fa-solid fa-magnifying-glass me-1"></i>
+              Buscar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid mt-4 gap-x-2 lg:flex">
+    <div class="flex flex-col lg:w-[480px] lg:gap-y-3 gap-x-3 ps-2 pt-2 mb-5 -ms-2">
+      <div class="flex flex-row items-center gap-x-2 mt-3 text-xl font-[400] text-cyan-500 mb-5 min-[1024px]:mb-2">
+        <i class="fa-solid fa-check-to-slot"></i>
+         Requisitos (En archivos PDF)
+      </div>
+      <div class="text-base font-normal gap-y-4 grid">
+        <p>• 
+          <span> Foto nítida por ambos lados del DNI del alumno.</span>
+        </p>
+        <p>• 
+          <span> Foto nítida por ambos lados del DNI del P.F. y/o apoderado.</span>
+        </p>
+        <p>• 
+          <span> Libreta de notas del 2024.</span>
+        </p>
+        <p>• 
+          <span> Cartilla de vacunación.</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="w-full relative" [ngClass]="{'pointer-events-none opacity-50': isDisabled}">
+      <div
+        class="inline-block min-w-full align-middle p-2"
+        (dragenter)="arrastrarAlEntrar($event)"
+        (dragleave)="arrastrarAlSalir($event)"
+        (dragover)="arrastrarEncima($event)"
+        (drop)="alSoltarArchivos($event)"
+      >
+        <div class="relative overflow-hidden shadow-lg ring-1 ring-black ring-opacity-5 rounded-lg p-3 bg-gray-50">
+          @if(isDragging) {
+            <div class="absolute inset-0 bg-gray-200 bg-opacity-75 flex flex-col justify-center items-center z-10">
+              <i class="fa-solid fa-cloud-upload-alt text-6xl text-blue-500 mb-4"></i>
+              <p class="text-xl font-medium text-blue-500">Suelta aquí los archivos</p>
+            </div>
+          }
+          <div class="border-2 border-dashed border-gray-500 p-4 rounded-xl bg-gray-200">
+            <div class="flex flex-col items-center justify-center my-2 text-gray-600">
+              <i class="fa-regular fa-circle-down text-4xl mb-4"></i>
+              <p class="text-base font-normal">Arrastrar y soltar archivos aquí</p>
+              <p
+                class="text-base font-normal px-4 py-1 rounded-md border border-gray-400 bg-gray-50
+                hover:bg-gray-200 active:bg-gray-400 cursor-pointer mt-3"
+                (click)="fileInput.click()"
+              >
+                Subir archivos
+              </p>
+              <input
+                #fileInput
+                type="file"
+                multiple
+                accept=".pdf"
+                (change)="onFileSelect($event)"
+                hidden
+              />
             </div>
           </div>
-          <button 
-            mat-flat-button 
-            color="custom-color" 
-            class="-mt-3"
-          >
-            <i class="fa-solid fa-magnifying-glass me-1"></i>
-            Buscar
-          </button>
+  
+          <div class="border-[1px] border-solid border-gray-400 p-4 rounded-xl bg-gray-100 mt-2 h-auto">
+            @if(files.length === 0) {
+              <div class="flex justify-center items-center h-full">
+                <p class="text-base font-normal text-gray-800">No ha subido ningún archivo.</p>
+              </div>
+            }
+            @else {
+              <div class="grid md:grid-cols-4 gap-x-2 grid-cols-2">
+                <li 
+                  *ngFor="let file of files" 
+                  class="col-span-1 flex flex-col justify-between mb-2 w-auto p-2 bg-gray-200 rounded-xl text-sm font-[400] h-24 hover:bg-gray-300 hover:cursor-pointer"
+                >
+                  <div class="text-gray-700 w-full">{{ file.name }}</div>
+                  <div class="flex justify-between w-full mt-auto">
+                    <p>{{ formatFileSize(file.size) }}</p>
+                    <div class="flex gap-x-2">
+                      <div 
+                        class="hover:text-blue-500 hover:cursor-pointer hover:scale-125 duration-200"
+                        (click)="descargarArchivo(file)"
+                      >
+                        <i class="fa-solid fa-download"></i>
+                      </div>
+                      <div 
+                        class="hover:text-red-500 hover:cursor-pointer hover:scale-125 duration-200"
+                        (click)="borrarArchivo(file)"
+                      >
+                        <i class="fa-solid fa-trash"></i>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </div>
+            }
+          </div>
         </div>
+      </div>
+      <div class="flex justify-end">
+        <button 
+          mat-flat-button 
+          color="custom-color" 
+          class="mt-3 me-2"
+          (click)="guardarArchivos()"
+        >
+          Guardar Archivos
+        </button>
       </div>
     </div>
   </div>

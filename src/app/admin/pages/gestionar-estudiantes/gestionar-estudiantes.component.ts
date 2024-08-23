@@ -7,6 +7,7 @@ import { ModalEstudianteComponent } from '../../../shared/components/modal/modal
 import { FormsModule } from '@angular/forms';
 import { InputComponent } from '../../../shared/components/UI/input/input.component';
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -29,12 +30,14 @@ export class GestionarEstudiantesComponent {
     { header: 'Nombre(s)', field: 'nombre' },
     { header: 'Documento', field: 'numero_documento' },
     { header: 'Grado', field: 'grado.nombre' },
-    { header: 'Periodo', field: 'periodo.anio' }
+    { header: 'Periodo', field: 'periodo.anio' },
+    { header: 'Estado', field: 'estado' }
   ];
 
   constructor(
     private estudianteService: EstudianteService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router: Router
   ){}
 
   ngOnInit() {
@@ -189,4 +192,17 @@ export class GestionarEstudiantesComponent {
     }
   }
 
+  editarPFP(isPfp: any, id: any) {
+    this.loading = true
+    if(isPfp) {
+      this.router.navigate([`/admin/gestionar-perfil-estudiante/${id}`])
+    }
+  }
+
+  editarArchivos(isFiles: any, id: any) {
+    this.loading = true
+    if(isFiles) {
+      this.router.navigate([`/admin/gestionar-documentos/${id}`])
+    }
+  }
 }

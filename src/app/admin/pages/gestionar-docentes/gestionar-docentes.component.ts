@@ -8,6 +8,7 @@ import { TableComponent } from '../../../shared/components/table/table.component
 import { InputComponent } from '../../../shared/components/UI/input/input.component';
 import { MatButtonModule } from '@angular/material/button';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-gestionar-docentes',
@@ -33,7 +34,8 @@ export class GestionarDocentesComponent {
 
   constructor(
     private docenteService: DocenteService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router: Router
   ){}
 
   ngOnInit() {
@@ -185,6 +187,13 @@ export class GestionarDocentesComponent {
           );
         }
       });
+    }
+  }
+
+  editarPFP(isPfp: any, id: any) {
+    this.loading = true
+    if(isPfp) {
+      this.router.navigate([`/admin/gestionar-perfil-docente/${id}`])
     }
   }
 

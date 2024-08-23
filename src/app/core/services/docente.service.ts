@@ -29,4 +29,10 @@ export class DocenteService {
   eliminarUsuario(id: string) {
     return this.http.put(`${baseUrl}/docente/remove-user/${id}`, null);
   }
+  modificarPerfilDocente(id: string, data: FormData) {
+    return this.http.patch(`${baseUrl}/docente/${id}/profile-picture/`, data);
+  }
+  obtenerPerfilDocente(id: string) {
+    return this.http.get(`${baseUrl}/docente/${id}/profile-picture/`);
+  }
 }

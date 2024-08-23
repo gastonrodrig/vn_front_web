@@ -41,6 +41,22 @@
                           <i class="fa-solid fa-clock"></i>
                         </div>
                       }
+                      @if(pfpActive) {
+                        <div
+                          class="hover:text-lime-500 hover:cursor-pointer hover:scale-125 duration-200"
+                          (click)="pfp(row[trackByField])"
+                        >
+                          <i class="fa-solid fa-id-badge"></i>
+                        </div>
+                      }
+                      @if(filesActive) {
+                        <div
+                          class="hover:text-orange-500 hover:cursor-pointer hover:scale-125 duration-200"
+                          (click)="files(row[trackByField])"
+                        >
+                          <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                      }
                       @if(editActive) {
                         <div 
                           class="hover:text-blue-500 hover:cursor-pointer hover:scale-125 duration-200"

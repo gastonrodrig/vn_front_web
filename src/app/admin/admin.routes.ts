@@ -9,6 +9,9 @@ import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
 import { AdminInicioComponent } from './pages/admin-inicio/admin-inicio.component';
 import { AsignarSeccionComponent } from './pages/asignar-seccion/asignar-seccion.component';
 import { GestionarUsuariosComponent } from './pages/gestionar-usuarios/gestionar-usuarios.component';
+import { GestionarPerfilEstudianteComponent } from './pages/gestionar-perfil-estudiante/gestionar-perfil-estudiante.component';
+import { GestionarDocumentosComponent } from './pages/gestionar-documentos/gestionar-documentos.component';
+import { GestionarPerfilDocenteComponent } from './pages/gestionar-perfil-docente/gestionar-perfil-docente.component';
 
 export const ADMIN_ROUTES: Routes = [
     { 
@@ -24,8 +27,20 @@ export const ADMIN_ROUTES: Routes = [
                 component: GestionarEstudiantesComponent
             },
             {
+                path: 'gestionar-perfil-estudiante/:id',
+                component: GestionarPerfilEstudianteComponent
+            },
+            {
+                path: 'gestionar-documentos/:id',
+                component: GestionarDocumentosComponent
+            },
+            {
                 path: 'gestionar-docentes',
                 component: GestionarDocentesComponent
+            },
+            {
+                path: 'gestionar-perfil-docente/:id',
+                component: GestionarPerfilDocenteComponent
             },
             {
                 path: 'gestionar-secciones',

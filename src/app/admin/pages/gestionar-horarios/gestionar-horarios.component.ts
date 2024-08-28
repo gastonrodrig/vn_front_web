@@ -53,7 +53,7 @@ export class GestionarHorariosComponent {
   horas: any
 
   periodo = {
-    periodo_id: ''
+    _id: ''
   }
 
   horario = {
@@ -104,7 +104,7 @@ export class GestionarHorariosComponent {
     this.loading = true
     this.sgpService.listarSeccionesPorGradoPeriodo(
       this.horario.grado_id, 
-      this.periodo.periodo_id
+      this.periodo._id
     ).subscribe(
       (data: any) => {
         this.secciones = data
@@ -143,7 +143,6 @@ export class GestionarHorariosComponent {
       (data: any) => {
         this.docentes = data
         this.loading = false
-        this.docentesLoaded = true
       },
       (error) => {
         this.loading = false
@@ -164,10 +163,10 @@ export class GestionarHorariosComponent {
       },
       (error) => {
         console.log(error)
+        this.docentesLoaded = false
         this.snack.open(`No se han fijado horas para el curso`, 'Cerrar', {
           duration: 3000 
         })
-        this.docentesLoaded = false
       }
     )  
   }
@@ -220,7 +219,7 @@ export class GestionarHorariosComponent {
       this.cellInfo[key] = {
         curso: horario.curso.nombre,
         docente: horario.docente.apellido,
-        horario_id: horario.horario_id
+        _id: horario._id
       };
     });
   }
@@ -276,7 +275,6 @@ export class GestionarHorariosComponent {
       this.horario.curso_id
     ).subscribe(
       (data: any) => {
-  
         // Comparar y validar antes de agregar el horario
         if (this.horas <= data) {
           this.snack.open(`Ha llegado al límite de horas del curso por grado.`, 'Cerrar', {
@@ -291,9 +289,9 @@ export class GestionarHorariosComponent {
         this.horarioService.agregarHorario(this.horario).subscribe(
           (data: any) => {
             this.cellInfo[`${day}-${time}`] = {
-              curso: this.cursos.find((c: any) => c.curso_id === this.horario.curso_id).nombre,
-              docente: this.docentes.find((d: any) => d.docente_id === this.horario.docente_id).apellido,
-              horario_id: data.horario_id
+              curso: data.curso.nombre,
+              docente: data.docente.apellido,
+              _id: data._id
             };
             this.snack.open('Horario guardado.', 'Cerrar', {
               duration: 3000
@@ -322,7 +320,7 @@ export class GestionarHorariosComponent {
 
   eliminar(key: string) {
     this.loading = true
-    this.horarioService.eliminarHorario(this.cellInfo[key].horario_id).subscribe(
+    this.horarioService.eliminarHorario(this.cellInfo[key]._id).subscribe(
       (data: any) => {
         delete this.cellInfo[key];
         this.loading = false
@@ -345,7 +343,7 @@ export class GestionarHorariosComponent {
     this.seccionLoaded = false
     this.cursosLoaded = false
     this.docentesLoaded = false
-    this.periodo.periodo_id = ''
+    this.periodo._id = ''
     this.horario.grado_id = ''
     this.horario.seccion_id = ''
     this.horario.curso_id = ''

@@ -32,12 +32,12 @@
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Tipo de Documento</mat-label>
                 <mat-select 
-                    [(ngModel)]="estudiante.documento.documento_id"
+                    [(ngModel)]="estudiante.documento._id"
                     [ngModelOptions]="{standalone: true}"
                 >
                     <mat-option 
                         *ngFor="let e of tipoDocumento" 
-                        [value]="e.documento_id"
+                        [value]="e._id"
                     >
                         {{ e.type }}
                     </mat-option>
@@ -59,12 +59,12 @@
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Periodo</mat-label>
                 <mat-select 
-                    [(ngModel)]="estudiante.periodo.periodo_id"
+                    [(ngModel)]="estudiante.periodo._id"
                     [ngModelOptions]="{standalone: true}"
                 >
                     <mat-option 
                         *ngFor="let e of periodo" 
-                        [value]="e.periodo_id"
+                        [value]="e._id"
                     >
                         {{ e.anio }}
                     </mat-option>
@@ -89,12 +89,12 @@
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Grado</mat-label>
                 <mat-select 
-                    [(ngModel)]="estudiante.grado.grado_id"
+                    [(ngModel)]="estudiante.grado._id"
                     [ngModelOptions]="{standalone: true}"
                 >
                     <mat-option 
                         *ngFor="let e of grado" 
-                        [value]="e.grado_id"
+                        [value]="e._id"
                     >
                         {{ e.nombre }}
                     </mat-option>
@@ -132,15 +132,15 @@
                     <div class="flex text-sm">
                         <p class="font-medium uppercase me-2">Apoderados: </p>
                         <div class="flex-col justify-start items-center -mt-0.5">
-                            @for(apoderado of apoderadoList; track apoderado.apoderado_id) {
+                            @for(apoderado of apoderadoList; track apoderado._id) {
                                 <div class="flex justify-between max-w-72 px-2 py-1 mb-2 bg-gray-400 
                                 text-black duration-300 rounded-lg shadow-md">
                                     <p>
                                         {{ apoderado.nombre + ' ' + apoderado.apellido + ' (Nro.Documento: ' + apoderado.numero_documento + ')'  }}
                                     </p>
                                     <div class="flex flex-col items-center justify-center gap-y-2.5">
-                                        <i class="fa-solid fa-pen hover:cursor-pointer" (click)="editarApoderado(apoderado.apoderado_id)"></i>
-                                        <i class="fa-solid fa-trash hover:cursor-pointer" (click)="eliminarApoderado(apoderado.apoderado_id)"></i>
+                                        <i class="fa-solid fa-pen hover:cursor-pointer" (click)="editarApoderado(apoderado._id)"></i>
+                                        <i class="fa-solid fa-trash hover:cursor-pointer" (click)="eliminarApoderado(apoderado._id)"></i>
                                     </div>
                                 </div>
                             }

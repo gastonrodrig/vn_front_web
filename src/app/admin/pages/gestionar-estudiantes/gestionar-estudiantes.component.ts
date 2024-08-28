@@ -9,6 +9,7 @@ import { InputComponent } from '../../../shared/components/UI/input/input.compon
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { ApoderadoService } from '../../../core/services/apoderado.service';
 
 @Component({
   selector: 'app-gestionar-estudiantes',
@@ -20,7 +21,7 @@ import Swal from 'sweetalert2';
 export class GestionarEstudiantesComponent {
   estudiantes = []
   estudiante = []
-  trackByField = 'estudiante_id'
+  trackByField = '_id'
   loading = false
   loadedComplete: any
   searchTerm: string = '';
@@ -36,6 +37,7 @@ export class GestionarEstudiantesComponent {
 
   constructor(
     private estudianteService: EstudianteService,
+    private apoderadoService: ApoderadoService,
     public dialog: MatDialog,
     private router: Router
   ){}
@@ -158,35 +160,39 @@ export class GestionarEstudiantesComponent {
       }).then((result) => {
         if (result.isConfirmed) {
           this.loading = true
-          this.estudianteService.eliminarEstudiante(id).subscribe(
+          this.apoderadoService.eliminarApoderadosPorEstudiante(id).subscribe(
             (data) => {
-              this.loading = false
-              Swal.fire('Estudiante eliminado', 'El estudiante ha sido eliminado de la base de datos', 'success').then(
-                (e)=> {
-                  this.estudianteService.listarEstudiantes().subscribe(
-                    (data: any) => {
-                      this.estudiantes = data.sort((a: any, b: any) => {
-                        if (a.apellido.toLowerCase() < b.apellido.toLowerCase()) {
-                          return -1;
+              this.estudianteService.eliminarEstudiante(id).subscribe(
+                (data) => {
+                  this.loading = false
+                  Swal.fire('Estudiante eliminado', 'El estudiante ha sido eliminado de la base de datos', 'success').then(
+                    (e)=> {
+                      this.estudianteService.listarEstudiantes().subscribe(
+                        (data: any) => {
+                          this.estudiantes = data.sort((a: any, b: any) => {
+                            if (a.apellido.toLowerCase() < b.apellido.toLowerCase()) {
+                              return -1;
+                            }
+                            if (a.apellido.toLowerCase() > b.apellido.toLowerCase()) {
+                              return 1;
+                            }
+                            return 0;
+                          });
+                        },
+                        (error) => {
+                          console.log(error)
                         }
-                        if (a.apellido.toLowerCase() > b.apellido.toLowerCase()) {
-                          return 1;
-                        }
-                        return 0;
-                      });
-                    },
-                    (error) => {
-                      console.log(error)
+                      )
                     }
-                  )
+                  );
+                },
+                (error) => {
+                  this.loading = false
+                  Swal.fire('Error', 'Error al eliminar el estudiante de la base de datos', 'error');
                 }
               );
-            },
-            (error) => {
-              this.loading = false
-              Swal.fire('Error', 'Error al eliminar el estudiante de la base de datos', 'error');
             }
-          );
+          )
         }
       });
     }

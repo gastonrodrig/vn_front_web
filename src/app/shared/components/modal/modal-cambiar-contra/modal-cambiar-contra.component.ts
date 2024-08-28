@@ -40,7 +40,7 @@ export class ModalCambiarContraComponent {
   ) {}
 
   ngOnInit() {
-    this.usuarioId = this.data.user.usuario.usuario_id
+    this.usuarioId = this.data.user.usuario._id
   }
 
   cambiarContra() {

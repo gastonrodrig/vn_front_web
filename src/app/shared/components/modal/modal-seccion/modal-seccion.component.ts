@@ -12,8 +12,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
-import Swal from 'sweetalert2';
 import { SeccionGradoPeriodoService } from '../../../../core/services/seccion-grado-periodo.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal-seccion',
@@ -37,7 +37,7 @@ export class ModalSeccionComponent {
   periodos: any[] = []
   seccion: any
   seccionGradoPeriodo: any
-  seccionGradoPeriodo_id: any
+  seccionId: any
   seccionCreated = false
   loading = false
 
@@ -58,7 +58,7 @@ export class ModalSeccionComponent {
       console.log(this.data)
       this.seccionGradoPeriodo = this.data
       this.seccion = this.data.seccion
-      this.seccionGradoPeriodo_id = this.data.sgp_id
+      this.seccionId = this.data.seccion._id
     } else {
       this.seccion = {
         aula: '',
@@ -66,13 +66,13 @@ export class ModalSeccionComponent {
       }
       this.seccionGradoPeriodo = {
         seccion: {
-          seccion_id: '',
+          _id: '',
         },
         grado: {
-          grado_id: ''
+          _id: ''
         },
         periodo: {
-          periodo_id: ''
+          _id: ''
         }
       }
     }
@@ -113,7 +113,7 @@ export class ModalSeccionComponent {
       (data: any) => {
         this.loading = false
         this.seccionCreated = true
-        this.seccionGradoPeriodo.seccion.seccion_id = data.seccion_id
+        this.seccionGradoPeriodo.seccion._id = data._id
       },
       (error) => {
         console.log(error)
@@ -126,9 +126,9 @@ export class ModalSeccionComponent {
 
     if(this.data.isCreate) {
       const dataSGP = {
-        seccion_id: this.seccionGradoPeriodo.seccion.seccion_id,
-        grado_id : this.seccionGradoPeriodo.grado.grado_id,
-        periodo_id : this.seccionGradoPeriodo.periodo.periodo_id
+        seccion_id: this.seccionGradoPeriodo.seccion._id,
+        grado_id : this.seccionGradoPeriodo.grado._id,
+        periodo_id : this.seccionGradoPeriodo.periodo._id
       }
   
       // VALIDACIONES
@@ -155,7 +155,7 @@ export class ModalSeccionComponent {
   
       // VALIDACIONES
 
-      this.sgpService.modificarSeccion(this.seccionGradoPeriodo_id, data).subscribe(
+      this.seccionService.modificarSeccion(this.seccionId, data).subscribe(
         (data: any) => {
           this.loading = false
           Swal.fire('Seccion modificada', 'La seccion ha sido modificado con éxito', 'success').then(

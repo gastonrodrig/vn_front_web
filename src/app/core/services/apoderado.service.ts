@@ -23,6 +23,9 @@ export class ApoderadoService {
   obtenerApoderado(id: string) {
     return this.http.get(`${baseUrl}/apoderado/${id}`);
   }
+  eliminarApoderadosPorEstudiante(id: string) {
+    return this.http.delete(`${baseUrl}/apoderado/estudiante/${id}`)
+  }
   listarApoderadosPorEstudiante(id: string) {
     return this.http.get(`${baseUrl}/apoderado/estudiante/${id}`)
   }

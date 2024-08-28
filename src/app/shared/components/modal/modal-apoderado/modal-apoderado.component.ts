@@ -47,7 +47,7 @@ export class ModalApoderadoComponent {
     direccion: '',
     numero_documento: '',
     documento: {
-      documento_id: ''
+      _id: ''
     },
     estudiante_id: '',
     correo: ''
@@ -87,7 +87,7 @@ export class ModalApoderadoComponent {
       )
     } else {
       this.estudiante = this.data.estudiante
-      this.apoderado.estudiante_id = this.estudiante.estudiante_id
+      this.apoderado.estudiante_id = this.estudiante._id
     }
   }
 
@@ -96,7 +96,7 @@ export class ModalApoderadoComponent {
 
     const nuevoApoderado = { 
       ...this.apoderado, 
-      apoderado_id: this.generarIdUnico()
+      _id: this.generarIdUnico()
     };
     this.apoderadoList.push(nuevoApoderado)
     this.saveToLocalStorage()
@@ -107,9 +107,9 @@ export class ModalApoderadoComponent {
       direccion: '',
       numero_documento: '',
       documento: {
-        documento_id: ''
+        _id: ''
       },
-      estudiante_id: this.estudiante.estudiante_id,
+      estudiante_id: this.estudiante._id,
       correo: ''
     };
   }
@@ -135,7 +135,7 @@ export class ModalApoderadoComponent {
           numero: e.numero,
           direccion: e.direccion,
           numero_documento: e.numero_documento,
-          documento_id: e.documento.documento_id,
+          documento_id: e.documento._id,
           estudiante_id: e.estudiante_id,
           correo: e.correo
         }
@@ -168,7 +168,7 @@ export class ModalApoderadoComponent {
         numero: this.apoderado.numero,
         direccion: this.apoderado.direccion,
         numero_documento: this.apoderado.numero_documento,
-        documento_id: this.apoderado.documento.documento_id,
+        documento_id: this.apoderado.documento._id,
         estudiante_id: this.apoderado.estudiante_id,
         correo: this.apoderado.correo
       }
@@ -193,7 +193,7 @@ export class ModalApoderadoComponent {
         numero: this.apoderado.numero,
         direccion: this.apoderado.direccion,
         numero_documento: this.apoderado.numero_documento,
-        documento_id: this.apoderado.documento.documento_id,
+        documento_id: this.apoderado.documento._id,
         estudiante_id: this.data.estudiante_id,
         correo: this.apoderado.correo
       }
@@ -215,7 +215,7 @@ export class ModalApoderadoComponent {
   }
 
   eliminarApoderado(apoderado_id: any) {
-    this.apoderadoList = this.apoderadoList.filter(a => a.apoderado_id !== apoderado_id)
+    this.apoderadoList = this.apoderadoList.filter(a => a._id !== apoderado_id)
     this.saveToLocalStorage()
     this.snack.open('Apoderado eliminado', 'Cerrar', {
        duration: 3000 

@@ -69,7 +69,7 @@ export class ModalCursoComponent {
     if (this.data.isEdit) {
       this.loading = true
       this.curso = this.data.curso
-      this.cursoId = this.data.curso.curso_id
+      this.cursoId = this.data.curso._id
       this.listarGrados()
       this.listarDocentesPorCurso()
     } else {
@@ -99,7 +99,7 @@ export class ModalCursoComponent {
         this.cursoCreated = true
         this.listarGrados()
         this.loading = false
-        this.cursoId = data.curso_id
+        this.cursoId = data._id
       },
       (error) => {
         console.log(error)
@@ -128,16 +128,19 @@ export class ModalCursoComponent {
     this.gchService.listarGradosCursosHorasPorCurso(this.cursoId).subscribe(
       (data: any) => {
         this.loading = false
-        this.gradosSeleccionados = data.map((e: any) => e.grado.grado_id)
+        this.gradosSeleccionados = data.map((e: any) => e.grado._id)
         this.grados.forEach((grado: any) => {
-          this.checkedItems[grado.grado_id] = this.gradosSeleccionados.includes(grado.grado_id)
+          this.checkedItems[grado._id] = this.gradosSeleccionados.includes(grado._id)
         })
+      },
+      (error) => {
+        console.log(error)
       }
     ) 
   }
 
   obtenerGradosSeleccionados() {
-    return this.grados.filter(e => this.checkedItems[e.grado_id])
+    return this.grados.filter(e => this.checkedItems[e._id])
   }
 
   onCheckboxChange(gradoId: number, isChecked: boolean) {
@@ -156,8 +159,7 @@ export class ModalCursoComponent {
       if (this.gradosSeleccionados[gradoId]) {
         const dataGCH = {
           grado_id: gradoId,
-          curso_id: this.cursoId,
-          horas: null
+          curso_id: this.cursoId
         }
         this.gchService.agregarGradoCursosHoras(dataGCH).subscribe(
           (data: any) => {
@@ -211,7 +213,8 @@ export class ModalCursoComponent {
   listarDocentesPorCurso() {
     this.cdService.listarDocentesPorCurso(this.cursoId).subscribe(
       (data: any) => {
-        this.docentesXCurso = data.sort((a: any, b: any) => {
+        this.docentesXCurso = data.map((item: any) => item.docente);
+        this.docentesXCurso.sort((a: any, b: any) => {
           if (a.apellido.toLowerCase() < b.apellido.toLowerCase()) {
             return -1;
           }
@@ -244,7 +247,7 @@ export class ModalCursoComponent {
   agregarDocente(docente: any) {
     if(this.data.isCreate) {
       const storedItems = JSON.parse(localStorage.getItem('docentes') || '[]')
-      const exists = storedItems.some((e: any) => e.docente_id === docente.docente_id)
+      const exists = storedItems.some((e: any) => e._id === docente._id)
       
       if (exists) {
         this.snack.open('El docente ya está en la lista.', 'Cerrar', {
@@ -260,12 +263,12 @@ export class ModalCursoComponent {
     if(this.data.isEdit) {
       this.loading = true
       const dataCD = {
-        docente_id: docente.docente_id,
+        docente_id: docente._id,
         curso_id: this.cursoId
       }
 
       const exists = this.docentesXCurso.some(
-        (doc: any) => doc.docente_id === dataCD.docente_id && this.cursoId === dataCD.curso_id
+        (doc: any) => doc._id === dataCD.docente_id && this.cursoId === dataCD.curso_id
       );
 
       if (exists) {
@@ -292,7 +295,7 @@ export class ModalCursoComponent {
 
   eliminarDocente(id: any) {
     if(this.data.isCreate) {
-      this.docenteList = this.docenteList.filter((e: any) =>  e.docente_id !== id )
+      this.docenteList = this.docenteList.filter((e: any) =>  e._id !== id )
       this.saveToLocalStorage()
     }
     if(this.data.isEdit) {
@@ -346,16 +349,15 @@ export class ModalCursoComponent {
     if(this.data.isCreate) {
       const gradoPromesas = this.gradosSeleccionados.map(e => {
         const dataGC = {
-          grado_id: e.grado_id,
+          grado_id: e._id,
           curso_id: this.cursoId,
-          horas: null
         }
         return this.gchService.agregarGradoCursosHoras(dataGC).toPromise()
       })
   
       const docentePromesas = this.docenteList.map(e => {
         const dataCD = {
-          docente_id: e.docente_id,
+          docente_id: e._id,
           curso_id: this.cursoId
         }
         return this.cdService.agregarCursoDocente(dataCD).toPromise()

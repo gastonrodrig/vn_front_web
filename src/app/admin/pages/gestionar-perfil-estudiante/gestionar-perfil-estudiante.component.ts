@@ -43,7 +43,8 @@ export class GestionarPerfilEstudianteComponent {
       anio: ''
     },
     multimedia: {
-      url: ''
+      url: '',
+      nombre: ''
     }
   }
 
@@ -56,28 +57,9 @@ export class GestionarPerfilEstudianteComponent {
   ) {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => this.estudianteId = params.get('id'));
+    this.route.paramMap.subscribe(params => this.estudianteId = params.get('id'))
     this.loading = true
     this.obtenerEstudiante()
-    this.estudianteService.obtenerPerfilEstudiante(this.estudianteId).subscribe(
-      (data: any) => {
-        if (data.multimedia && data.multimedia.url !== 'no existe') {
-          fetch(data.multimedia.url)
-            .then(response => response.blob())
-            .then(blob => new File([blob], data.multimedia.nombre, { type: blob.type }))
-            .then(file => {
-              this.files = [file]
-              this.loading = false
-            });
-        } else {
-          this.files = []
-          this.loading = false
-        }
-      },
-      (error) => {
-        this.mostrarMensaje('Error al obtener la imagen.', 3000)
-      }
-    )
   }
 
   obtenerEstudiante() {
@@ -85,6 +67,23 @@ export class GestionarPerfilEstudianteComponent {
       (data: any) => {
         this.estudiante = data
         console.log(this.estudiante)
+  
+        if (this.estudiante.multimedia && this.estudiante.multimedia.url !== 'no existe') {
+          fetch(this.estudiante.multimedia.url)
+            .then(response => response.blob())
+            .then(blob => new File([blob], this.estudiante.multimedia.nombre, { type: blob.type }))
+            .then(file => {
+              this.files = [file]
+              this.loading = false
+            })
+        } else {
+          this.files = []
+          this.loading = false
+        }
+      },
+      (error) => {
+        this.mostrarMensaje('Error al obtener los datos del estudiante.', 3000)
+        this.loading = false
       }
     )
   }
@@ -96,8 +95,9 @@ export class GestionarPerfilEstudianteComponent {
       return
     }
 
+    console.log(this.files)
     const formData = new FormData()
-    formData.append('imageFile', this.files[0]);
+    formData.append('imageFile', this.files[0])
     this.estudianteService.modificarPerfilEstudiante(this.estudianteId, formData).subscribe(
       (data: any) => {
         this.mostrarMensaje('La foto de perfil ha sido agregada con éxito.', 10000)
@@ -121,13 +121,12 @@ export class GestionarPerfilEstudianteComponent {
         this.mostrarMensaje('Máximo de 1 archivo permitido.', 3000)
         return
       }
-
+  
       for (const file of Array.from(input.files)) {
-        if (file.type !== 'image/jpeg') {
-          this.mostrarMensaje('Solo se permiten archivos JPG.', 3000)
+        if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+          this.mostrarMensaje('Solo se permiten archivos JPG o PNG.', 3000)
           return
-        }
-        else {
+        } else {
           this.files.push(file)
         }
       }
@@ -156,20 +155,19 @@ export class GestionarPerfilEstudianteComponent {
   alSoltarArchivos(event: DragEvent) {
     event.preventDefault()
     this.resetEstadoArrastrado()
-
+  
     if (event.dataTransfer?.files) {
       if (this.files.length + event.dataTransfer.files.length > 1) {
         this.mostrarMensaje('Máximo de 1 archivo permitido.', 3000)
         return
       }
-
+  
       const droppedFiles = Array.from(event.dataTransfer.files)
       droppedFiles.forEach((file) => {
-        if (file.type !== 'image/jpeg') {
-          this.mostrarMensaje('Solo se permiten archivos JPG.', 3000)
+        if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+          this.mostrarMensaje('Solo se permiten archivos JPG o PNG.', 3000)
           return
-        }
-        else {
+        } else {
           this.files.push(file)
         }
       })

@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { DocumentosEstudianteService } from '../../../core/services/documentos-estudiante.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -35,7 +34,8 @@ export class GestionarDocumentosComponent {
     },
     multimedia: {
       url: ''
-    }
+    },
+    archivo: []
   }
 
   constructor(
@@ -43,95 +43,55 @@ export class GestionarDocumentosComponent {
     private router: Router,
     private cdr: ChangeDetectorRef,
     private snack: MatSnackBar,
-    private docsEstudianteService: DocumentosEstudianteService,
     private estudianteService: EstudianteService
   ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => this.estudianteId = params.get('id'));
     this.loading = true
+    this.obtenerArchivos()
+  }
 
+  obtenerArchivos() {
     this.estudianteService.obtenerEstudiante(this.estudianteId).subscribe(
-      (data: any) => {
+      async (data: any) => {
         this.estudiante = data
         console.log(this.estudiante)
-      }
-    )
-
-    this.docsEstudianteService.obtenerDocumentosPorEstudiante(this.estudianteId.toString()).subscribe(
-      async (data: any) => {
-        // Transformar urls de los objetos de multimedia a blob's y luego a File c/u
-        const filesPromises = data.flatMap((item: any) => 
-          item.multimedia.map(async (file: any) => {
-            const response = await fetch(file.url)
-            const blob = await response.blob()
-            return new File([blob], file.nombre, { type: blob.type })
-          })
-        )
-        
-        this.files = await Promise.all(filesPromises)
-
         this.loading = false
-        if(this.files.length === 0 ) {
-          this.isCreate = true
-          this.isEdit = false
-        } else {
-          this.isEdit = true
-          this.isCreate = false
-        }
-      },
-      (error) => {
-        this.mostrarMensaje('Error al obtener los documentos.', 3000)
+        const filesPromises = this.estudiante.archivo.map(async (file: any) => {
+          const response = await fetch(file.url);
+          const blob = await response.blob();
+          return new File([blob], file.nombre, { type: blob.type });
+        });
+  
+        this.files = await Promise.all(filesPromises);
       }
     )
   }
 
   guardarArchivos() {
-    if(this.isCreate) {
-      this.loading = true
-      if (this.files.length === 0) {
-        this.mostrarMensaje('No se han añadido documentos.', 3000)
-        return
-      }
-
-      const formData = new FormData()
-      this.files.forEach(file => formData.append('files', file))
-      formData.append('estudiante_id', this.estudianteId.toString())
-
-      this.docsEstudianteService.agregarDocumentos(formData).subscribe(
-        (data: any) => {
-          this.mostrarMensaje('Los documentos han sido agregados con éxito.', 3000)
-          this.files = []
-        },
-        (error) => {
-          console.log(error)
-          this.mostrarMensaje('Error al subir los documentos.', 3000)
-        }
-      )
+    this.loading = true
+    if (this.files.length === 0) {
+      this.mostrarMensaje('No se han añadido documentos.', 3000)
+      return
     }
 
-    if(this.isEdit) {
-      this.loading = true
-      if (this.files.length === 0) {
-        this.mostrarMensaje('No se han añadido documentos.', 3000)
-        return
+    const formData = new FormData()
+    this.files.forEach(file => formData.append('files', file))
+    formData.append('estudiante_id', this.estudianteId.toString())
+    console.log(this.files)
+    this.estudianteService.modificarArchivosEstudiante(this.estudianteId, formData).subscribe(
+      (data: any) => {
+        this.mostrarMensaje('Los documentos han sido agregados con éxito.', 3000)
+        this.loading = false
+        this.obtenerArchivos()
+        this.files = []
+      },
+      (error) => {
+        console.log(error)
+        this.mostrarMensaje('Error al subir los documentos.', 3000)
       }
-
-      const formData = new FormData()
-      this.files.forEach(file => formData.append('files', file))
-      formData.append('estudiante_id', this.estudianteId.toString())
-
-      this.docsEstudianteService.actualizarDocumentos(this.estudianteId, formData).subscribe(
-        (data: any) => {
-          this.mostrarMensaje('Los documentos han sido agregados con éxito.', 3000)
-          this.files = []
-        },
-        (error) => {
-          console.log(error)
-          this.mostrarMensaje('Error al subir los documentos.', 3000)
-        }
-      )
-    }
+    )
   }
   
   volverEstudiantes() {

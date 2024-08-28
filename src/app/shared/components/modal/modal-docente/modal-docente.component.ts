@@ -50,7 +50,7 @@ export class ModalDocenteComponent {
     if (this.data.isEdit) {
       console.log(this.data)
       this.docente = this.data.docente;
-      this.docenteId = this.data.docente.docente_id
+      this.docenteId = this.data.docente._id
 
     } else {
       this.docente = {
@@ -59,7 +59,7 @@ export class ModalDocenteComponent {
         direccion: '',
         numero_documento: '',
         documento: {
-          documento_id: ''
+          _id: ''
         }
       }
     }
@@ -81,7 +81,7 @@ export class ModalDocenteComponent {
       direccion : this.docente.direccion,
       telefono : this.docente.telefono,
       numero_documento : this.docente.numero_documento,
-      documento_id : this.docente.documento.documento_id,
+      documento_id : this.docente.documento._id,
       
     }
 

@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
 export class GestionarDocentesComponent {
   docentes = []
   docente = []
-  trackByField = 'docente_id'
+  trackByField = '_id'
   loading = false
   loadedComplete: any
   searchTerm: string = '';
@@ -181,6 +181,7 @@ export class GestionarDocentesComponent {
               );
             },
             (error) => {
+              console.log(error)
               this.loading = false
               Swal.fire('Error', 'Error al eliminar el docente de la base de datos', 'error');
             }

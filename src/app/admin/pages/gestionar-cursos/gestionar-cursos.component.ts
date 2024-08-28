@@ -20,7 +20,7 @@ import { ModalAsignarHorasComponent } from '../../../shared/components/modal/mod
 export class GestionarCursosComponent {
   cursos = []
   curso = []
-  trackByField = 'curso_id'
+  trackByField = '_id'
   loading = false
   loadedComplete: any
   searchTerm: string = '';
@@ -92,13 +92,19 @@ export class GestionarCursosComponent {
         (data: any) => {
           this.curso = data
           this.loading = false
-          this.dialog.open(ModalCursoComponent, {
+          const dialogRef = this.dialog.open(ModalCursoComponent, {
             data: {
               curso: this.curso,
               isEdit: true
             },
             width: '70%'
           });
+
+          dialogRef.afterClosed().subscribe(
+            (data) => {
+              this.listarCursos()
+            }
+          )
         },
         (error) => {
           this.loading = false

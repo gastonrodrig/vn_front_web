@@ -44,10 +44,10 @@ export class EstudianteService {
   modificarPerfilEstudiante(id: string, data: FormData) {
     return this.http.patch(`${baseUrl}/estudiante/${id}/profile-picture/`, data);
   }
-  obtenerPerfilEstudiante(id: string) {
-    return this.http.get(`${baseUrl}/estudiante/${id}/profile-picture/`);
-  }
   cambiarEstadoEstudiante(id: string, data: any) {
     return this.http.patch(`${baseUrl}/estudiante/change-state/${id}`, data);
+  }
+  modificarArchivosEstudiante(id: string, data: FormData) {
+    return this.http.put(`${baseUrl}/estudiante/assign-files/${id}`, data)
   }
 }

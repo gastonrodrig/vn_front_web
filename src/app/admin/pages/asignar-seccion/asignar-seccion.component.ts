@@ -8,7 +8,6 @@ import { SeccionGradoPeriodoService } from '../../../core/services/seccion-grado
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { InputComponent } from '../../../shared/components/UI/input/input.component';
 import { MatButtonModule } from '@angular/material/button';
-import Swal from 'sweetalert2';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -61,7 +60,7 @@ export class AsignarSeccionComponent {
         this.grado.nombre = data.grado.nombre
         this.periodo.anio = data.periodo.anio
         this.seccion.aula = data.seccion.aula
-        this.seccionId = data.seccion.seccion_id
+        this.seccionId = data.seccion._id
         this.listarEstudiantesSinSalon()
         this.listarEstudiantesConSalon()
       },
@@ -74,8 +73,8 @@ export class AsignarSeccionComponent {
 
   listarEstudiantesSinSalon() {
     this.estudianteService.listarEstudiantePorGradoYPeriodo(
-      this.seccionGradoPeriodo.grado.grado_id,
-      this.seccionGradoPeriodo.periodo.periodo_id
+      this.seccionGradoPeriodo.grado._id,
+      this.seccionGradoPeriodo.periodo._id
     ).subscribe(
       (data: any) => {
         this.loading = false
@@ -99,9 +98,9 @@ export class AsignarSeccionComponent {
 
   listarEstudiantesConSalon() {
     this.estudianteService.listarEstudiantePorSeccionGradoYPeriodo(
-      this.seccionGradoPeriodo.seccion.seccion_id,
-      this.seccionGradoPeriodo.grado.grado_id,
-      this.seccionGradoPeriodo.periodo.periodo_id
+      this.seccionGradoPeriodo.seccion._id,
+      this.seccionGradoPeriodo.grado._id,
+      this.seccionGradoPeriodo.periodo._id
     ).subscribe(
       (data: any) => {
         this.loading = false
@@ -161,7 +160,7 @@ export class AsignarSeccionComponent {
     }
     this.estudiantesSinSalon.forEach((e: any) => {
       this.loading = true
-      this.estudianteService.asignarSeccion(e.estudiante_id, data).subscribe(
+      this.estudianteService.asignarSeccion(e._id, data).subscribe(
         (data: any) => {
           this.loading = false
           this.listarEstudiantesSinSalon()
@@ -184,7 +183,7 @@ export class AsignarSeccionComponent {
     console.log(this.estudiantesConSalon)
     this.estudiantesConSalon.forEach((e: any) => {
       this.loading = true
-      this.estudianteService.eliminarSeccion(e.estudiante_id).subscribe(
+      this.estudianteService.eliminarSeccion(e._id).subscribe(
         (data: any) => {
           this.listarEstudiantesSinSalon()
           this.listarEstudiantesConSalon()

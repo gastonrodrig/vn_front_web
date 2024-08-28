@@ -39,7 +39,8 @@ export class GestionarPerfilDocenteComponent {
     telefono: '',
     direccion: '',
     multimedia: {
-      url: ''
+      url: '',
+      nombre: ''
     }
   }
 
@@ -55,31 +56,30 @@ export class GestionarPerfilDocenteComponent {
     this.route.paramMap.subscribe(params => this.docenteId = params.get('id'));
     this.loading = true
     this.obtenerDocente()
-    this.docenteService.obtenerPerfilDocente(this.docenteId).subscribe(
+  }
+
+  obtenerDocente() {
+    this.docenteService.obtenerDocente(this.docenteId).subscribe(
       (data: any) => {
-        if (data.multimedia && data.multimedia.url !== 'no existe') {
-          fetch(data.multimedia.url)
+        this.docente = data;
+        console.log(this.docente);
+  
+        if (this.docente.multimedia && this.docente.multimedia.url !== 'no existe') {
+          fetch(this.docente.multimedia.url)
             .then(response => response.blob())
-            .then(blob => new File([blob], data.multimedia.nombre, { type: blob.type }))
+            .then(blob => new File([blob], this.docente.multimedia.nombre, { type: blob.type }))
             .then(file => {
               this.files = [file]
               this.loading = false
-            });
+            })
         } else {
           this.files = []
           this.loading = false
         }
       },
       (error) => {
-        this.mostrarMensaje('Error al obtener la imagen.', 3000)
-      }
-    )
-  }
-
-  obtenerDocente() {
-    this.docenteService.obtenerDocente(this.docenteId).subscribe(
-      (data: any) => {
-        this.docente = data
+        this.mostrarMensaje('Error al obtener los datos del estudiante.', 3000);
+        this.loading = false
       }
     )
   }
@@ -91,8 +91,9 @@ export class GestionarPerfilDocenteComponent {
       return
     }
 
+    console.log(this.files)
     const formData = new FormData()
-    formData.append('imageFile', this.files[0]);
+    formData.append('imageFile', this.files[0])
     this.docenteService.modificarPerfilDocente(this.docenteId, formData).subscribe(
       (data: any) => {
         this.mostrarMensaje('La foto de perfil ha sido agregada con éxito.', 10000)
@@ -118,8 +119,8 @@ export class GestionarPerfilDocenteComponent {
       }
 
       for (const file of Array.from(input.files)) {
-        if (file.type !== 'image/jpeg') {
-          this.mostrarMensaje('Solo se permiten archivos JPG.', 3000)
+        if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+          this.mostrarMensaje('Solo se permiten archivos JPG o PNG.', 3000)
           return
         }
         else {
@@ -160,8 +161,8 @@ export class GestionarPerfilDocenteComponent {
 
       const droppedFiles = Array.from(event.dataTransfer.files)
       droppedFiles.forEach((file) => {
-        if (file.type !== 'image/jpeg') {
-          this.mostrarMensaje('Solo se permiten archivos JPG.', 3000)
+        if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+          this.mostrarMensaje('Solo se permiten archivos JPG o PNG.', 3000)
           return
         }
         else {

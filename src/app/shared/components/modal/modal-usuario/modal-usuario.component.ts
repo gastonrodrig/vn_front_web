@@ -15,9 +15,9 @@ import { EstudianteService } from '../../../../core/services/estudiante.service'
 import { DocenteService } from '../../../../core/services/docente.service';
 import { ApoderadoService } from '../../../../core/services/apoderado.service';
 import { listaRoles } from '../../../constants/itemsRols';
-import Swal from 'sweetalert2';
 import { Observable } from 'rxjs';
 import { ModalCambiarContraComponent } from '../modal-cambiar-contra/modal-cambiar-contra.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal-usuario',
@@ -71,12 +71,12 @@ export class ModalUsuarioComponent {
   ngOnInit() {
     if (this.data.isEdit) {
       this.usuario = this.data.usuario
-      this.usuarioId = this.data.usuario.usuario_id
-
+      this.usuarioId = this.data.usuario._id
+      console.log(this.usuario)
       const rol = this.data.usuario.rol
       if (rol === 'Estudiante' || rol === 'Docente' || rol === 'Apoderado') {
         const entity = this.data.usuario[rol.toLowerCase()]
-        console.log(entity)
+        // console.log(entity)
         if (entity) {
           this.searchTerm = `${entity.nombre} ${entity.apellido} (Nro.Documento: ${entity.numero_documento})`
         }
@@ -86,18 +86,18 @@ export class ModalUsuarioComponent {
 
     } else {
       this.usuario = {
-        nombres_usuario: '',
-        email_usuario: '',
-        contrasena_usuario: '',
+        usuario: '',
+        email: '',
+        contrasena: '',
         rol: '',
         estudiante: {
-          estudiante_id: ''
+          _id: null
         },
         docente: {
-          docente_id: ''
+          _id: null
         },
         apoderado: {
-          apoderado_id: ''
+          _id: null
         }
       }
     }
@@ -167,9 +167,9 @@ export class ModalUsuarioComponent {
 
 
   usuarioSinReferencia() {
-    return (this.usuario.estudiante?.estudiante_id ?? '') !== '' || 
-           (this.usuario.docente?.docente_id ?? '') !== '' || 
-           (this.usuario.apoderado?.apoderado_id ?? '') !== ''
+    return (this.usuario.estudiante?._id ?? '') !== '' || 
+           (this.usuario.docente?._id ?? '') !== '' || 
+           (this.usuario.apoderado?._id ?? '') !== ''
   }
 
   displayedByRol(rol: any) {
@@ -192,7 +192,7 @@ export class ModalUsuarioComponent {
   asignarUsuarioPorRol(rol: string, id: any) {
     this.loading = true
     const data = {
-      usuario_id: Number(this.usuarioId)
+      user_id: this.usuarioId
     }
   
     let servicio$: Observable<any>
@@ -236,25 +236,27 @@ export class ModalUsuarioComponent {
   asignarUsuarioData(id: any) {
     this.loading = true
     this.usuario = {
-      nombres_usuario: this.usuario.nombres_usuario,
-      email_usuario: this.usuario.email_usuario,
+      usuario: this.usuario.usuario,
+      email: this.usuario.email,
       rol: this.usuario.rol,
-      contrasena_usuario: this.usuario.contrasena_usuario,
+      contrasena: this.usuario.contrasena,
       estudiante: {
-        estudiante_id: ''
+        _id: ''
       },
       docente: {
-        docente_id: ''
+        _id: ''
       },
       apoderado: {
-        apoderado_id: ''
+        _id: ''
       }
     }
     if(this.usuario.rol === 'Estudiante') {
       this.estudianteService.obtenerEstudiante(id).subscribe(
         (data: any) => {
           this.loading = false
-          this.usuario.estudiante.estudiante_id = id
+          this.usuario.estudiante._id = id
+          this.usuario.docente = null
+          this.usuario.apoderado = null
           this.searchTerm = `${data.nombre} ${data.apellido} (Nro.Documento: ${data.numero_documento})`
           this.showResults = false
           this.personSelected = true
@@ -266,7 +268,9 @@ export class ModalUsuarioComponent {
       this.docenteService.obtenerDocente(id).subscribe(
         (data: any) => {
           this.loading = false
-          this.usuario.docente.docente_id = id
+          this.usuario.docente._id = id
+          this.usuario.estudiante = null
+          this.usuario.apoderado = null
           this.searchTerm = `${data.nombre} ${data.apellido} (Nro.Documento: ${data.numero_documento})`
           this.showResults = false
           this.personSelected = true
@@ -277,7 +281,9 @@ export class ModalUsuarioComponent {
       this.apoderadoService.obtenerApoderado(id).subscribe(
         (data: any) => {
           this.loading = false
-          this.usuario.apoderado.apoderado_id = id
+          this.usuario.apoderado._id = id
+          this.usuario.estudiante = null
+          this.usuario.docente = null
           this.searchTerm = `${data.nombre} ${data.apellido} (Nro.Documento: ${data.numero_documento})`
           this.showResults = false
           this.personSelected = true
@@ -289,14 +295,14 @@ export class ModalUsuarioComponent {
   quitarPersona() {
     if(this.data.isCreate) {
       this.searchTerm = ''
-      this.usuario.estudiante.estudiante_id = ''
-      this.usuario.docente.docente_id = ''
-      this.usuario.apoderado.apoderado_id = ''
+      this.usuario.estudiante = null
+      this.usuario.docente = null
+      this.usuario.apoderado = null
       this.personSelected = false
     }
     if(this.data.isEdit) {
       if(this.usuario.rol === 'Estudiante') {
-        const estudianteId = this.usuario.estudiante.estudiante_id
+        const estudianteId = this.usuario.estudiante._id
         this.loading = true
         this.userService.eliminarEstudianteDeUsuario(this.usuarioId).subscribe(
           (data: any) => {
@@ -304,7 +310,7 @@ export class ModalUsuarioComponent {
               (data: any) => {
                 this.loading = false
                 !this.usuarioSinReferencia() 
-                this.usuario.estudiante.estudiante_id = ''
+                this.usuario.estudiante = null
                 this.personSelected = false
                 this.usuario.rol = 'Admin'
                 this.searchTerm = ''
@@ -318,7 +324,7 @@ export class ModalUsuarioComponent {
         )
       }
       if(this.usuario.rol === 'Docente') {
-        const docenteId = this.usuario.docente.docente_id
+        const docenteId = this.usuario.docente._id
         this.loading = true
         this.userService.eliminarDocenteDeUsuario(this.usuarioId).subscribe(
           (data: any) => {
@@ -326,7 +332,7 @@ export class ModalUsuarioComponent {
               (data: any) => {
                 this.loading = false
                 !this.usuarioSinReferencia() 
-                this.usuario.docente.docente_id = ''
+                this.usuario.docente = null
                 this.personSelected = false
                 this.usuario.rol = 'Admin'
                 this.searchTerm = ''
@@ -340,7 +346,7 @@ export class ModalUsuarioComponent {
         )
       }
       if(this.usuario.rol === 'Apoderado') {
-        const apoderadoId = this.usuario.apoderado.apoderado_id
+        const apoderadoId = this.usuario.apoderado._id
         this.loading = true
         this.userService.eliminarApoderadoDeUsuario(this.usuarioId).subscribe(
           (data: any) => {
@@ -348,7 +354,7 @@ export class ModalUsuarioComponent {
               (data: any) => {
                 this.loading = false
                 !this.usuarioSinReferencia() 
-                this.usuario.apoderado.apoderado_id = ''
+                this.usuario.apoderado = null
                 this.personSelected = false
                 this.usuario.rol = 'Admin'
                 this.searchTerm = ''
@@ -366,32 +372,48 @@ export class ModalUsuarioComponent {
 
   guardarInformacion() {
     this.loading = true
-    if(this.data.isCreate) {
-      const userData = {
-        nombres_usuario: this.usuario.nombres_usuario,
-        email_usuario: this.usuario.email_usuario,
-        contrasena_usuario: this.usuario.contrasena_usuario,
+    if (this.data.isCreate) {
+      const userData: any = {
+        usuario: this.usuario.usuario,
+        email: this.usuario.email,
+        contrasena: this.usuario.contrasena,
         rol: this.usuario.rol,
-        estudiante_id: Number(this.usuario?.estudiante?.estudiante_id),
-        docente_id: Number(this.usuario?.docente?.docente_id),
-        apoderado_id: Number(this.usuario?.apoderado?.apoderado_id)
+        estudiante_id: null,
+        docente_id: null,
+        apoderado_id: null
+      };
+
+      switch (this.usuario.rol) {
+        case 'Estudiante':
+          userData.estudiante_id = this.usuario.estudiante._id
+          break
+        case 'Docente':
+          userData.docente_id = this.usuario.docente._id
+          break
+        case 'Apoderado':
+          userData.apoderado_id = this.usuario.apoderado._id
+          break
+        case 'Admin':
+          // No se necesita hacer cambios adicionales para Admin
+          break
+        default:
+          console.error('Rol desconocido:', this.usuario.rol)
+          this.loading = false
+          return
       }
-
+  
       // VALIDACIONES
-
+  
       this.userService.agregarUsuario(userData).subscribe(
         (data: any) => {
-          this.usuarioId = data.usuario_id
-          if(data.rol === 'Admin') {
-            this.loading = false
+          this.usuarioId = data._id
+          if (data.rol === 'Admin') {
+            this.loading = false;
             Swal.fire('Usuario agregado', 'El usuario ha sido agregado con éxito.', 'success').then(
-              () => {
-                this.closeModel()
-              }
+              () => this.closeModel()
             )
-          }
-          else {
-            this.asignarUsuarioPorRol(data.rol, data[`${data.rol.toLowerCase()}`][`${data.rol.toLowerCase()}_id`]);
+          } else {
+            this.asignarUsuarioPorRol(data.rol, data[`${data.rol.toLowerCase()}`]._id)
           }
         }
       )
@@ -400,13 +422,16 @@ export class ModalUsuarioComponent {
     if(this.data.isEdit) {
       if(this.usuario.rol === 'Estudiante') {
         const userData = {
-          nombres_usuario: this.usuario.nombres_usuario,
-          email_usuario: this.usuario.email_usuario,
+          usuario: this.usuario.usuario,
+          email: this.usuario.email,
           rol: this.usuario.rol,
-          estudiante_id: Number(this.usuario.estudiante.estudiante_id),
-          docente_id: 0,
-          apoderado_id: 0
+          estudiante_id: this.usuario.estudiante._id,
+          docente_id: null,
+          apoderado_id: null
         }
+        console.log(this.usuario)
+        console.log(userData)
+        console.log(this.usuarioId)
   
         this.userService.modificarUsuario(this.usuarioId, userData).subscribe(
           (data: any) => {
@@ -419,19 +444,19 @@ export class ModalUsuarioComponent {
               )
             }
             else {
-              this.asignarUsuarioPorRol(data.rol, data[`${data.rol.toLowerCase()}`][`${data.rol.toLowerCase()}_id`]);
+              this.asignarUsuarioPorRol(data.rol, data.estudiante);
             }
           }
         )
       }
       if(this.usuario.rol === 'Docente') {
         const userData = {
-          nombres_usuario: this.usuario.nombres_usuario,
-          email_usuario: this.usuario.email_usuario,
+          usuario: this.usuario.usuario,
+          email: this.usuario.email,
           rol: this.usuario.rol,
-          estudiante_id: 0,
-          docente_id: Number(this.usuario.docente.docente_id),
-          apoderado_id: 0
+          estudiante_id: null,
+          docente_id: this.usuario.docente._id,
+          apoderado_id: null
         }
   
         this.userService.modificarUsuario(this.usuarioId, userData).subscribe(
@@ -445,19 +470,19 @@ export class ModalUsuarioComponent {
               )
             }
             else {
-              this.asignarUsuarioPorRol(data.rol, data[`${data.rol.toLowerCase()}`][`${data.rol.toLowerCase()}_id`]);
+              this.asignarUsuarioPorRol(data.rol, data.docente);
             }
           }
         )
       }
       if(this.usuario.rol === 'Apoderado') {
         const userData = {
-          nombres_usuario: this.usuario.nombres_usuario,
-          email_usuario: this.usuario.email_usuario,
+          usuario: this.usuario.usuario,
+          email: this.usuario.email,
           rol: this.usuario.rol,
-          estudiante_id: 0,
-          docente_id: 0,
-          apoderado_id: Number(this.usuario.apoderado.apoderado_id)
+          estudiante_id: null,
+          docente_id: null,
+          apoderado_id: this.usuario.apoderado._id
         }
   
         this.userService.modificarUsuario(this.usuarioId, userData).subscribe(
@@ -471,19 +496,19 @@ export class ModalUsuarioComponent {
               )
             }
             else {
-              this.asignarUsuarioPorRol(data.rol, data[`${data.rol.toLowerCase()}`][`${data.rol.toLowerCase()}_id`]);
+              this.asignarUsuarioPorRol(data.rol, data.apoderado);
             }
           }
         )
       }
       if(this.usuario.rol === 'Admin') {
         const userData = {
-          nombres_usuario: this.usuario.nombres_usuario,
-          email_usuario: this.usuario.email_usuario,
+          usuario: this.usuario.usuario,
+          email: this.usuario.email,
           rol: this.usuario.rol,
-          estudiante_id: 0,
-          docente_id: 0,
-          apoderado_id: 0
+          estudiante_id: null,
+          docente_id: null,
+          apoderado_id: null
         }
 
         this.userService.modificarUsuario(this.usuarioId, userData).subscribe(

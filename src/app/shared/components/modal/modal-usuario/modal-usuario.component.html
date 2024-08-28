@@ -165,11 +165,11 @@
           </button>
         }
         <div [ngClass]="{ 'scale-100' : personSelected && usuario.rol !== '' && searchTerm === '', 'scale-0' : !usuarioSinReferencia() }">
-          @if(data.isCreate && usuario.rol !== 'Admin') {
+          @if(usuario.rol !== 'Admin') {
             <button 
-            mat-flat-button 
-            (click)="quitarPersona()"
-            color="custom-color"
+              mat-flat-button 
+              (click)="quitarPersona()"
+              color="custom-color"
             >
               <i class="fa-solid fa-pen text-white me-1"></i>
               {{ usuario.rol === 'Estudiante' ? 'Estudiante' : usuario.rol === 'Apoderado' ? 'Apoderado' : 'Docente' }}

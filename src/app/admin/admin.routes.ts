@@ -9,6 +9,7 @@ import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
 import { AdminInicioComponent } from './pages/admin-inicio/admin-inicio.component';
 import { AsignarSeccionComponent } from './pages/asignar-seccion/asignar-seccion.component';
 import { GestionarUsuariosComponent } from './pages/gestionar-usuarios/gestionar-usuarios.component';
+import { GestionarSolicitudComponent } from './pages/gestionar-solicitud/gestionar-solicitud.component';
 
 export const ADMIN_ROUTES: Routes = [
     { 
@@ -50,6 +51,10 @@ export const ADMIN_ROUTES: Routes = [
             {
                 path: 'gestionar-usuarios',
                 component: GestionarUsuariosComponent
+            },
+            {
+                path: 'gestionar-solicitud',
+                component: GestionarSolicitudComponent
             }
         ]
     },

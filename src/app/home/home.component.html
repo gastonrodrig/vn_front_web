@@ -1,68 +1,101 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Colegio Virgen de la Natividad</title>
-    <link rel="stylesheet" href="">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <header>
-        <h1>Colegio Virgen de la Natividad</h1>
-    </header>
-
-    <nav>
-        <a href="#nosotros">Nosotros</a>
-        <a href="#servicios">Servicios</a>
-        <a href="#contacto">Contacto</a>
-        <a href="#ubicacion">Ubicación</a>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-blue-900 text-white p-4 flex justify-between items-center">
+        <div class="text-lg font-bold">LOGO/IMAGEN</div>
+        <div>
+            <a href="#" class="mx-2">Matrícula</a>
+            <a href="#" class="mx-2">Nosotros</a>
+            <a href="#" class="mx-2">Contáctanos</a>
+        </div>
     </nav>
 
-    <section class="hero">
-        <h1>Bienvenidos a Nuestro Colegio</h1>
-    </section>
-
-    <div class="container">
-        <section id="nosotros" class="section">
-            <h2>Sobre Nosotros</h2>
-            <p>El Colegio Virgen de la Natividad es una institución educativa comprometida con la formación integral de nuestros estudiantes, brindando una educación de calidad basada en valores, disciplina y excelencia académica.</p>
-            <p>Desde nuestros inicios, hemos trabajado para desarrollar el potencial de cada uno de nuestros alumnos, preparándolos para enfrentar los retos del futuro con responsabilidad y confianza.</p>
-        </section>
-
-        <section id="servicios" class="section">
-            <h2>Nuestros Servicios</h2>
-            <p>Ofrecemos una amplia gama de servicios educativos que incluyen:</p>
-            <ul>
-                <li>Educación inicial, primaria y secundaria.</li>
-                <li>Actividades extracurriculares y deportivas.</li>
-                <li>Programas de apoyo académico y tutorías.</li>
-                <li>Servicio de biblioteca y recursos digitales.</li>
-            </ul>
-        </section>
-
-        <section id="contacto" class="section">
-            <h2>Contacto</h2>
-            <p>Si deseas más información sobre nuestro colegio o quieres inscribir a tu hijo, no dudes en contactarnos:</p>
-            <p>Email: <a href="mailto:info@colegiovirgendelanatividad.edu.pe">info&#64;colegiovirgendelanatividad.edu.pe</a></p>
-            <p>Teléfono: +51 123 456 789</p>
-        </section>
-
-        <section id="ubicacion" class="section">
-            <h2>Ubicación</h2>
-            <p>Nuestra dirección: Av. Ejemplo 1234, Ciudad, País.</p>
-            <p>Encuéntranos en el mapa:</p>
-            <!-- Inserta un mapa de Google o imagen de ubicación aquí -->
-        </section>
+    <!-- Hero Section -->
+<section class="w-full h-screen flex items-center">
+    <div class="w-full h-screen flex justify-center">
+        <img 
+            src="https://www.telemundo.com/sites/nbcutelemundo/files/images/promo/article/2017/08/24/ninos-en-la-escuela.jpg" 
+            alt="Children" 
+            class="w-full h-full object-cover"
+        >
     </div>
+</section>
 
-    <footer>
-        <p>&copy; 2024 Colegio Virgen de la Natividad. Todos los derechos reservados.</p>
-        <div class="social-icons">
-            <a href="https://www.facebook.com/I.E.80270VIRGENDELANATIVIDAD"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
+   <!-- Info Section -->
+<section class="bg-blue-900 text-white" style="height: 350px;">
+    <div class="container mx-auto h-full grid grid-cols-1 md:grid-cols-3 gap-8 text-center items-center">
+        <div>
+            <img src="assets/images/graduacion.png" alt="Academic" class="mx-auto mb-4 w-16 h-16">
+            <p>Nuestro currículo está diseñado para fomentar el pensamiento crítico, la creatividad y la resolución de problemas, preparando a los estudiantes para los desafíos del futuro.</p>
+        </div>
+        <div>
+            <img src="assets/images/libro-abierto.png" alt="Professors" class="mx-auto mb-4 w-16 h-16">
+            <p>Todos nuestros profesores poseen títulos universitarios y especializaciones en sus áreas de enseñanza, además de una formación continua que les permite estar al día con las últimas metodologías educativas.</p>
+        </div>
+        <div>
+            <img src="assets/images/planeta-tierra.png" alt="Recognition" class="mx-auto mb-4 w-16 h-16">
+            <p>Hemos sido galardonados con varios premios y certificados de calidad educativa, destacando en evaluaciones de rendimiento académico a nivel nacional.</p>
+        </div>
+    </div>
+</section>
+    <!-- Image Section (New Section) -->
+<section class="py-8">
+    <div class="grid grid-cols-4 md:grid-cols-4">
+        <img src="https://img.freepik.com/fotos-premium/grupo-jovenes-estudiantes-felices-universidad_85574-4531.jpg" alt="Students" class="w-full h-auto object-cover">
+        <img src="https://img.freepik.com/foto-gratis/comunicacion-linea_1098-15842.jpg" alt="Classroom" class="w-full h-auto object-cover">
+        <img src="https://i0.wp.com/eltiempolatino.com/wp-content/uploads/2022/08/Estudiantes-universitarios-alquileres-de-vivienda.jpg?fit=1200%2C800&ssl=1" alt="Students" class="w-full h-auto object-cover">
+        <img src="https://media.istockphoto.com/id/1358014313/es/foto/grupo-de-estudiantes-de-primaria-que-tienen-clase-de-computaci%C3%B3n-con-su-maestro-en-el-aula.jpg?s=612x612&w=0&k=20&c=Br0JYIbTxvMufOMXLOru56BgXc4MqZvcDVHgblPLMgM=" alt="Activities" class="w-full h-auto object-cover">
+    </div>
+</section>
+ <!-- Highlights Section -->
+ <section class="py-8" style="height: 450px;">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-left items-center justify-center h-full">
+        <div class="flex items-center justify-center space-x-4">
+            <div class="bg-red-400 text-white p-10 rounded-full w-20 h-20 flex items-center justify-center">
+                1
+            </div>
+            <p class="text-sm">Ofrece un programa exclusivo de doble titulación, que permite a los estudiantes de secundaria obtener un diploma, facilitando su ingreso a universidades en el extranjero.</p>
+        </div>
+        <div class="flex items-center justify-center space-x-4">
+            <div class="bg-blue-400 text-white p-10 rounded-full w-20 h-20 flex items-center justify-center">
+                2
+            </div>
+            <p class="text-sm">El colegio incluye en su currículo clases de Quechua y estudios sobre la cultura andina, promoviendo el orgullo por la identidad nacional y la diversidad cultural del país.</p>
+        </div>
+        <div class="flex items-center justify-center space-x-4">
+            <div class="bg-pink-400 text-white p-10 rounded-full w-20 h-20 flex items-center justify-center">
+                3
+            </div>
+            <p class="text-sm">El colegio cuenta con un programa integral de educación ambiental que incluye huertos escolares, reciclaje y proyectos de sostenibilidad.</p>
+        </div>
+        <div class="flex items-center justify-center space-x-4">
+            <div class="bg-purple-400 text-white p-10 rounded-full w-20 h-20 flex items-center justify-center">
+                4
+            </div>
+            <p class="text-sm">Equipado con modernos laboratorios de ciencia, robótica y programación, el colegio fomenta la experimentación y el aprendizaje práctico desde temprana edad, preparando a los estudiantes para carreras en STEM.</p>
+        </div>
+    </div>
+</section>
+
+
+
+
+     <!-- Footer -->
+     <footer class="bg-gray-800 text-white p-4 flex justify-between items-center">
+        <p>&copy; 2024 Todos los derechos reservados</p>
+        <div class="flex space-x-4">
+            <a href="#"><img src="path-to-instagram-icon.png" alt="Instagram" class="w-6 h-6"></a>
+            <a href="#"><img src="path-to-whatsapp-icon.png" alt="WhatsApp" class="w-6 h-6"></a>
         </div>
     </footer>
 </body>
 </html>
+
+

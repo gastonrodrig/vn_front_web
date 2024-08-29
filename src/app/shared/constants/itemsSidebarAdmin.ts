@@ -46,5 +46,11 @@ export const listaModulosAdmin = [
         route: 'gestionar-usuarios',
         titulo: 'Usuarios',
         icon: 'user-pen'
+    },
+    {
+        id: 10,
+        route: 'gestionar-solicitud',
+        titulo: 'Solicitudes',
+        icon: 'id-card'
     }
 ]

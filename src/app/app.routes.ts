@@ -4,6 +4,8 @@ import { adminGuard } from './core/guards/admin.guard';
 import { docenteGuard } from './core/guards/docente.guard';
 import { HomeComponent } from './home/home.component';
 import { temporalGuard } from './core/guards/temporal.guard';
+import { SolicitudComponent } from './solicitud/solicitud.component';
+
 
 export const routes: Routes = [
     {
@@ -28,5 +30,9 @@ export const routes: Routes = [
         path: 'temporal',
         canActivate: [temporalGuard],
         loadChildren:() => import ('./temporal/temporal.routes').then(m =>m.TEMPORAL_ROUTES)
+    },
+    {
+        path: 'solicitud',
+        component: SolicitudComponent
     }
 ];

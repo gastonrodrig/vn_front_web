@@ -10,7 +10,7 @@
       <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
         <mat-label>Nombre de Usuario</mat-label>
         <input
-          [(ngModel)]="usuario.nombres_usuario"
+          [(ngModel)]="usuario.usuario"
           type="text"
           placeholder="Ingrese el nombre de usuario"
           matInput
@@ -38,7 +38,7 @@
       <mat-form-field appearance="fill" class="col-span-2" [ngClass]="{ 'sm:col-span-1' : data.isCreate }">
         <mat-label>Correo</mat-label>
         <input
-          [(ngModel)]="usuario.email_usuario"
+          [(ngModel)]="usuario.email"
           type="text"
           placeholder="Ingrese el correo"
           matInput
@@ -51,7 +51,7 @@
         <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
           <mat-label>Contraseña</mat-label>
           <input
-            [(ngModel)]="usuario.contrasena_usuario"
+            [(ngModel)]="usuario.contrasena"
             type="password"
             placeholder="Ingrese la contraseña"
             matInput
@@ -103,9 +103,9 @@
                   No se han encontrado estudiantes.
                 </li>
               }
-              @for(e of displayedByRol(estudiantes); track e.estudiante_id) {
+              @for(e of displayedByRol(estudiantes); track e._id) {
                 <li 
-                  (click)="asignarUsuarioData(e.estudiante_id)"
+                  (click)="asignarUsuarioData(e._id)"
                   class="p-2 ps-4 hover:font-semibold hover:cursor-pointer"
                 >
                   {{ e.nombre + ' ' + e.apellido + ' (Nro.Documento: ' + e.numero_documento + ')' }} 
@@ -119,9 +119,9 @@
                   No se han encontrado docentes.
                 </li>
               }
-              @for(e of displayedByRol(docentes); track e.docente_id) {
+              @for(e of displayedByRol(docentes); track e._id) {
                 <li 
-                  (click)="asignarUsuarioData(e.docente_id)"
+                  (click)="asignarUsuarioData(e._id)"
                   class="p-2 ps-4 hover:font-semibold hover:cursor-pointer"
                 >
                   {{ e.nombre + ' ' + e.apellido + ' (Nro.Documento: ' + e.numero_documento + ')' }} 
@@ -135,9 +135,9 @@
                   No se han encontrado apoderados.
                 </li>
               }
-              @for(e of displayedByRol(apoderados); track e.apoderado_id) {
+              @for(e of displayedByRol(apoderados); track e._id) {
                 <li 
-                  (click)="asignarUsuarioData(e.apoderado_id)"
+                  (click)="asignarUsuarioData(e._id)"
                   class="p-2 ps-4 hover:font-semibold hover:cursor-pointer"
                 >
                   {{ e.nombre + ' ' + e.apellido + ' (Nro.Documento: ' + e.numero_documento + ')' }} 
@@ -165,14 +165,16 @@
           </button>
         }
         <div [ngClass]="{ 'scale-100' : personSelected && usuario.rol !== '' && searchTerm === '', 'scale-0' : !usuarioSinReferencia() }">
-          <button 
-            mat-flat-button 
-            (click)="quitarPersona()"
-            color="custom-color"
-          >
-            <i class="fa-solid fa-pen text-white me-1"></i>
-            {{ usuario.rol === 'Estudiante' ? 'Estudiante' : usuario.rol === 'Apoderado' ? 'Apoderado' : 'Docente' }}
-          </button>
+          @if(usuario.rol !== 'Admin') {
+            <button 
+              mat-flat-button 
+              (click)="quitarPersona()"
+              color="custom-color"
+            >
+              <i class="fa-solid fa-pen text-white me-1"></i>
+              {{ usuario.rol === 'Estudiante' ? 'Estudiante' : usuario.rol === 'Apoderado' ? 'Apoderado' : 'Docente' }}
+            </button>
+          }
         </div>
       </div>  
       <div class="mt-3 sm:mt-0 flex justify-end col-span-2">

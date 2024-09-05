@@ -24,7 +24,8 @@
     [loadedComplete]="loadedComplete"
     [editActive]="true"
     [deleteActive]="true"
-    [asignActive]="false"
+    [pfpActive]="true"
     (editAction)="editarDocente($event.isEdit, $event.id)"
     (deleteAction)="eliminarDocente($event.isDeleted, $event.id)"
+    (pfpAction)="editarPFP($event.isPfp, $event.id)"
 ></app-table>

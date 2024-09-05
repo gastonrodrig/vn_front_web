@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TableComponent } from '../../../shared/components/table/table.component';
-import { SeccionService } from '../../../core/services/seccion.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalSeccionComponent } from '../../../shared/components/modal/modal-seccion/modal-seccion.component';
 import { GradoService } from '../../../core/services/grado.service';
@@ -26,7 +25,7 @@ export class GestionarSeccionesComponent {
   seccion: any[] = []
   grados: any[] = []
   periodos: any[] = []
-  trackByField = 'secciongp_id'
+  trackByField = '_id'
   loading = false
   loadedComplete: any
   searchTerm: string = ''
@@ -52,7 +51,7 @@ export class GestionarSeccionesComponent {
     this.loading = true
     this.sgpService.listarSeccionGradoPeriodo().subscribe(
       (data: any) => {
-        this.seccionGradoPeriodo = data.sort((a: any, b: any) => a.grado.grado_id - b.grado.grado_id);
+        this.seccionGradoPeriodo = this.ordenarDatosPorGrado(data)
         this.loading = false
         this.loadedComplete = true
       },
@@ -80,11 +79,25 @@ export class GestionarSeccionesComponent {
     )
   }
 
+  extractNumber(str: string)  {
+    const match = str.match(/\d+/)
+    return match ? parseInt(match[0], 10) : 0
+  }
+
+  ordenarDatosPorGrado(data: any[]) {
+    return data.sort((a, b) => {
+      const numberA = this.extractNumber(a.grado.nombre);
+      const numberB = this.extractNumber(b.grado.nombre);
+
+      return numberA - numberB
+    });
+  }
+
   displayedSecciones() {
     return this.seccionGradoPeriodo.filter((e: any) => {
       const matchSearchTerm = e.seccion.aula.toLowerCase().includes(this.searchTerm.toLowerCase())
-      const matchGrado = this.gradoSelected === 'all' || e.grado.grado_id === Number(this.gradoSelected)
-      const matchPeriodo = this.periodoSelected === 'all' || e.periodo.periodo_id === Number(this.periodoSelected)
+      const matchGrado = this.gradoSelected === 'all' || e.grado._id === this.gradoSelected
+      const matchPeriodo = this.periodoSelected === 'all' || e.periodo._id === this.periodoSelected
       return matchSearchTerm && matchGrado && matchPeriodo
     })
   }
@@ -101,7 +114,7 @@ export class GestionarSeccionesComponent {
       (data) => {
         this.sgpService.listarSeccionGradoPeriodo().subscribe(
           (data: any) => {
-            this.seccionGradoPeriodo = data.sort((a: any, b: any) => a.grado.grado_id - b.grado.grado_id);
+            this.seccionGradoPeriodo = this.ordenarDatosPorGrado(data)
           },
           (error) => {
             console.log(error)
@@ -119,7 +132,7 @@ export class GestionarSeccionesComponent {
           this.loading = false
           const dialogRef = this.dialog.open(ModalSeccionComponent, {
             data: {
-              sgp_id: data.secciongp_id,
+              sgp_id: data._id,
               seccion: data.seccion,
               grado: data.grado,
               periodo: data.periodo,
@@ -132,7 +145,7 @@ export class GestionarSeccionesComponent {
             (data) => {
               this.sgpService.listarSeccionGradoPeriodo().subscribe(
                 (data: any) => {
-                  this.seccionGradoPeriodo = data.sort((a: any, b: any) => a.grado.grado_id - b.grado.grado_id);
+                  this.seccionGradoPeriodo = this.ordenarDatosPorGrado(data)
                 },
                 (error) => {
                   console.log(error)
@@ -170,7 +183,7 @@ export class GestionarSeccionesComponent {
                 (e)=> {
                   this.sgpService.listarSeccionGradoPeriodo().subscribe(
                     (data: any) => {
-                      this.seccionGradoPeriodo = data.sort((a: any, b: any) => a.grado.grado_id - b.grado.grado_id);
+                      this.seccionGradoPeriodo = this.ordenarDatosPorGrado(data)
                     },
                     (error) => {
                       console.log(error)

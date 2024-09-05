@@ -22,14 +22,14 @@ import { DocenteService } from '../../../core/services/docente.service';
 export class GestionarUsuariosComponent {
   usuarios = []
   usuario = []
-  trackByField = 'usuario_id'
+  trackByField = '_id'
   loading = false
   loadedComplete: any
   searchTerm: string = ''
 
   columns = [
-    { header: 'Usuario', field: 'nombres_usuario' },
-    { header: 'Correo', field: 'email_usuario' },
+    { header: 'Usuario', field: 'usuario' },
+    { header: 'Correo', field: 'email' },
     { header: 'Rol', field: 'rol' }
   ]
 
@@ -49,11 +49,12 @@ export class GestionarUsuariosComponent {
     this.loading = load
     this.userService.listarUsuarios().subscribe(
       (data: any) => {
+        console.log(data)
         this.usuarios = data.sort((a: any, b: any) => {
-          if (a.nombres_usuario.toLowerCase() < b.nombres_usuario.toLowerCase()) {
+          if (a.usuario.toLowerCase() < b.usuario.toLowerCase()) {
             return -1
           }
-          if (a.nombres_usuario.toLowerCase() > b.nombres_usuario.toLowerCase()) {
+          if (a.usuario.toLowerCase() > b.usuario.toLowerCase()) {
             return 1
           }
           return 0
@@ -71,7 +72,7 @@ export class GestionarUsuariosComponent {
 
   displayedUsuarios() {
     return this.usuarios.filter((usuario: any) =>
-      usuario.nombres_usuario.toLowerCase().includes(this.searchTerm.toLowerCase())
+      usuario.usuario.toLowerCase().includes(this.searchTerm.toLowerCase())
     )
   }
 
@@ -153,28 +154,28 @@ export class GestionarUsuariosComponent {
           this.userService.obtenerUsuario(id).subscribe(
             (data: any) => {
               if(data.estudiante !== null) {
-                this.estudianteService.eliminarUsuario(data.estudiante.estudiante_id).subscribe(
+                this.estudianteService.eliminarUsuario(data.estudiante._id).subscribe(
                   (data: any) => {
                     this.eliminarUsuario(id)
                   }
                 )
               }
               if(data.docente !== null) {
-                this.docenteService.eliminarUsuario(data.docente.docente_id).subscribe(
+                this.docenteService.eliminarUsuario(data.docente._id).subscribe(
                   (data: any) => {
                     this.eliminarUsuario(id)
                   }
                 )
               }
               if(data.apoderado !== null) {
-                this.apoderadoService.eliminarUsuario(data.apoderado.apoderado_id).subscribe(
+                this.apoderadoService.eliminarUsuario(data.apoderado._id).subscribe(
                   (data: any) => {
                     this.eliminarUsuario(id)
                   }
                 )
               }
               if(data.estudiante === null && data.docente === null && data.apoderado === null) {
-                this.eliminarUsuario(data.usuario_id)
+                this.eliminarUsuario(data._id)
               }
             }
           )

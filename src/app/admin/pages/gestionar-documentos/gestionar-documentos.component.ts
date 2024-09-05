@@ -1,89 +1,62 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatProgressBar } from '@angular/material/progress-bar';
-import { SoloNumerosDirective } from '../../../shared/directives/solo-numeros.directive';
-import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from '../../../core/services/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatButtonModule } from '@angular/material/button';
 import { EstudianteService } from '../../../core/services/estudiante.service';
 
 @Component({
-  selector: 'app-gestionar-documentos-temporal',
+  selector: 'app-gestionar-documentos',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatProgressBar,
-    SoloNumerosDirective,
-    MatFormFieldModule,
-    MatInputModule,
-    FormsModule,
-    MatButtonModule
-  ],
-  templateUrl: './gestionar-documentos-temporal.component.html',
-  styleUrl: './gestionar-documentos-temporal.component.css'
+  imports: [CommonModule, MatProgressBar, MatButtonModule],
+  templateUrl: './gestionar-documentos.component.html',
+  styleUrl: './gestionar-documentos.component.css'
 })
-export class GestionarDocumentosTemporalComponent {
-  loading = false;
-  dni = '';
-  files: File[] = [];
-  isDragging = false;
-  dragCounter = 0;
-  isDisabled = true;
-  estudiante: any
-  estudiantes: any;
-  estudianteId: any;
-  nombreUsuario: any;
-
+export class GestionarDocumentosComponent {
+  loading = false
+  estudianteId: any
+  files: File[] = []
+  isDragging = false
   isCreate = false
   isEdit = false
+  dragCounter = 0
+
+  estudiante = {
+    nombre: '',
+    apellido: '',
+    numero_documento: '',
+    grado: {
+      nombre: ''
+    },
+    periodo: {
+      anio: ''
+    },
+    multimedia: {
+      url: ''
+    },
+    archivo: []
+  }
 
   constructor(
-    private estudianteService: EstudianteService,
-    private authService: AuthService,
-    private snack: MatSnackBar,
+    private route: ActivatedRoute,
+    private router: Router,
     private cdr: ChangeDetectorRef,
+    private snack: MatSnackBar,
+    private estudianteService: EstudianteService
   ) {}
 
   ngOnInit() {
-    this.estudianteService.listarEstudiantes().subscribe(
-      (data: any) => {
-        this.estudiantes = data
-      }
-    )
-  }
-
-  desbloquear() {
-    this.loading = true;
-    const user = this.authService.getUser();
-    this.estudiante = this.estudiantes.find((e: any) => e.numero_documento === this.dni)
-  
-    if (this.dni === '') {
-      this.mostrarMensaje('El Dni es requerido.', 3000)
-      return
-    }
-  
-    if (this.nombreUsuario !== user.usuario) {
-      this.mostrarMensaje('El nombre de usuario ingresado es incorrecto.', 3000)
-      return
-    }
-  
-    if (this.estudiante === undefined) {
-      this.mostrarMensaje('El Dni ingresado no existe.', 3000)
-      return
-    }
-
-    this.estudianteId = this.estudiante._id
+    this.route.paramMap.subscribe(params => this.estudianteId = params.get('id'));
+    this.loading = true
     this.obtenerArchivos()
-    this.isDisabled = false
   }
 
   obtenerArchivos() {
     this.estudianteService.obtenerEstudiante(this.estudianteId).subscribe(
       async (data: any) => {
         this.estudiante = data
+        console.log(this.estudiante)
         this.loading = false
         const filesPromises = this.estudiante.archivo.map(async (file: any) => {
           const response = await fetch(file.url);
@@ -94,6 +67,35 @@ export class GestionarDocumentosTemporalComponent {
         this.files = await Promise.all(filesPromises);
       }
     )
+  }
+
+  guardarArchivos() {
+    this.loading = true
+    if (this.files.length === 0) {
+      this.mostrarMensaje('No se han añadido documentos.', 3000)
+      return
+    }
+
+    const formData = new FormData()
+    this.files.forEach(file => formData.append('files', file))
+    formData.append('estudiante_id', this.estudianteId.toString())
+    console.log(this.files)
+    this.estudianteService.modificarArchivosEstudiante(this.estudianteId, formData).subscribe(
+      (data: any) => {
+        this.mostrarMensaje('Los documentos han sido agregados con éxito.', 3000)
+        this.loading = false
+        this.obtenerArchivos()
+        this.files = []
+      },
+      (error) => {
+        console.log(error)
+        this.mostrarMensaje('Error al subir los documentos.', 3000)
+      }
+    )
+  }
+  
+  volverEstudiantes() {
+    this.router.navigate([`/admin/gestionar-estudiantes`])
   }
 
   onFileSelect(event: Event) {
@@ -180,31 +182,6 @@ export class GestionarDocumentosTemporalComponent {
   borrarArchivo(file: any) {
     this.files = this.files.filter(f => f !== file)
     console.log(this.files)
-  }
-
-  guardarArchivos() {
-    this.loading = true
-    if (this.files.length === 0) {
-      this.mostrarMensaje('No se han añadido documentos.', 3000)
-      return
-    }
-
-    const formData = new FormData()
-    this.files.forEach(file => formData.append('files', file))
-    formData.append('estudiante_id', this.estudianteId.toString())
-    console.log(this.files)
-    this.estudianteService.modificarArchivosEstudiante(this.estudianteId, formData).subscribe(
-      (data: any) => {
-        this.mostrarMensaje('Los documentos han sido agregados con éxito.', 3000)
-        this.loading = false
-        this.isDisabled = true
-        this.files = []
-      },
-      (error) => {
-        console.log(error)
-        this.mostrarMensaje('Error al subir los documentos.', 3000)
-      }
-    )
   }
 
   formatFileSize(size: number) {

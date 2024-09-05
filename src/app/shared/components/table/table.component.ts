@@ -17,11 +17,15 @@ export class TableComponent {
   @Input() deleteActive: any
   @Input() asignActive: any
   @Input() hoursActive: any
+  @Input() pfpActive: any
+  @Input() filesActive: any
 
   @Output() editAction = new EventEmitter<{ isEdit: boolean, id: any }>();
   @Output() deleteAction = new EventEmitter<{ isDeleted: boolean, id: any }>();
   @Output() asignAction = new EventEmitter<{ isAsigned: boolean, id: any }>();
   @Output() hoursAction = new EventEmitter<{ isHours: boolean, id: any }>();
+  @Output() pfpAction = new EventEmitter<{ isPfp: boolean, id: any }>();
+  @Output() filesAction = new EventEmitter<{ isFiles: boolean, id: any }>();
 
   p: number = 1
   itemsPerPage: number = 5
@@ -46,6 +50,14 @@ export class TableComponent {
 
   hours(id: any) {
     this.hoursAction.emit({ isHours: true, id });
+  }
+
+  pfp(id: any) {
+    this.pfpAction.emit({ isPfp: true, id });
+  }
+
+  files(id: any) {
+    this.filesAction.emit({ isFiles: true, id });
   }
   
   ngOnChanges() {

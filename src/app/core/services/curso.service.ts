@@ -9,18 +9,18 @@ export class CursoService {
   constructor(private http:HttpClient) {}
   
   listarCursos() {
-    return this.http.get(`${baseUrl}/cursos/`);
+    return this.http.get(`${baseUrl}/curso/`);
   }
   agregarCurso(curso: any){
-    return this.http.post(`${baseUrl}/cursos/`, curso);
+    return this.http.post(`${baseUrl}/curso/`, curso);
   }
   modificarCurso(id: string, curso: any){
-    return this.http.put(`${baseUrl}/cursos/${id}`, curso);
+    return this.http.put(`${baseUrl}/curso/${id}`, curso);
   }
   eliminarCurso(id: string){
-    return this.http.delete(`${baseUrl}/cursos/${id}`);
+    return this.http.delete(`${baseUrl}/curso/${id}`);
   }
   obtenerCurso(id: string) {
-    return this.http.get(`${baseUrl}/cursos/${id}`);
+    return this.http.get(`${baseUrl}/curso/${id}`);
   }
 }

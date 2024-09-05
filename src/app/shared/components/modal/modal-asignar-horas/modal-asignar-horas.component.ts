@@ -48,12 +48,26 @@ export class ModalAsignarHorasComponent {
   ) {}
 
   ngOnInit() {
-    this.cursoId = this.data.curso.curso_id
+    this.cursoId = this.data.curso._id
     this.gchService.listarGradosCursosHorasPorCurso(this.cursoId).subscribe(
       (data: any) => {
-        this.gradosXCurso = data.sort((a: any, b: any) => a.grado.grado_id - b.grado.grado_id);
+        this.gradosXCurso = this.ordenarDatosPorGrado(data)
       }
     )
+  }
+
+  extractNumber(str: string)  {
+    const match = str.match(/\d+/)
+    return match ? parseInt(match[0], 10) : 0
+  }
+
+  ordenarDatosPorGrado(data: any[]) {
+    return data.sort((a, b) => {
+      const numberA = this.extractNumber(a.grado.nombre);
+      const numberB = this.extractNumber(b.grado.nombre);
+
+      return numberA - numberB
+    });
   }
 
   obtenerHorasAsignadas() {

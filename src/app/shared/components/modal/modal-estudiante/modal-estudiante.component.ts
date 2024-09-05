@@ -64,7 +64,7 @@ export class ModalEstudianteComponent {
   ngOnInit() {
     if (this.data.isEdit) {
       this.estudiante = this.data.estudiante
-      this.estudianteId = this.data.estudiante.estudiante_id
+      this.estudianteId = this.data.estudiante._id
       if(this.estudiante.seccion === null) {
         this.estudiante.seccion = {}
       }
@@ -85,16 +85,16 @@ export class ModalEstudianteComponent {
         direccion: '',
         numero_documento: '',
         documento: {
-          documento_id: ''
+          _id: ''
         },
         periodo: {
-          periodo_id: ''
+          _id: ''
         },
         grado: {
-          grado_id: ''
+          _id: ''
         },
         seccion: {
-          seccion_id: ''
+          _id: ''
         }
       }
     }
@@ -131,9 +131,9 @@ export class ModalEstudianteComponent {
       apellido : this.estudiante.apellido,
       direccion : this.estudiante.direccion,
       numero_documento : this.estudiante.numero_documento,
-      documento_id : this.estudiante.documento.documento_id,
-      periodo_id: this.estudiante.periodo.periodo_id,
-      grado_id: this.estudiante.grado.grado_id,
+      documento_id : this.estudiante.documento._id,
+      periodo_id: this.estudiante.periodo._id,
+      grado_id: this.estudiante.grado._id,
       seccion_id : null
     }
 
@@ -214,7 +214,7 @@ export class ModalEstudianteComponent {
     const dialogRef = this.dialog.open(ModalApoderadoComponent, {
       data: {
         apoderado_id: id,
-        estudiante_id: this.data.estudiante.estudiante_id,
+        estudiante_id: this.data.estudiante._id,
         isEdit: true
       },
       width: '70%'
@@ -242,8 +242,10 @@ export class ModalEstudianteComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.loading = true
+        console.log(id)
         this.apoderadoService.eliminarApoderado(id).subscribe(
           (data: any) => {
+            console.log(data)
             this.apoderadoService.listarApoderadosPorEstudiante(this.estudianteId).subscribe(
               (data: any) => { this.apoderadoList = data }
             )

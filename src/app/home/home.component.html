@@ -1,68 +1,194 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Colegio Virgen de la Natividad</title>
-    <link rel="stylesheet" href="">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
-    <header>
-        <h1>Colegio Virgen de la Natividad</h1>
-    </header>
 
-    <nav>
-        <a href="#nosotros">Nosotros</a>
-        <a href="#servicios">Servicios</a>
-        <a href="#contacto">Contacto</a>
-        <a href="#ubicacion">Ubicación</a>
-    </nav>
 
-    <section class="hero">
-        <h1>Bienvenidos a Nuestro Colegio</h1>
-    </section>
+    <!-- Navbar -->
+   
+      <nav class="bg-dark-blue-5 dark:bg-dark-blue-5 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 dark:bg-dark-blue-5">
+        <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
+            <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo">
+            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Colegio</span>
+        </a>
+       
+        <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
+          <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium  rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-dark-blue-5 dark:bg-dark-blue-5 md:dark:bg-dark-blue-5 dark:border-gray-700">
+            <li>
+              <a href="" class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500" aria-current="page">Home</a>
+            </li>
+            <li>
+              <a href="/solicitud" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Matrícula</a>
+            </li>
+            <li>
+              <a href="/solicitud" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Nosotros</a>
+            </li>
+            <li>
+              <a href="/solicitud" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Contáctanos</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+      </nav>
+    
 
-    <div class="container">
-        <section id="nosotros" class="section">
-            <h2>Sobre Nosotros</h2>
-            <p>El Colegio Virgen de la Natividad es una institución educativa comprometida con la formación integral de nuestros estudiantes, brindando una educación de calidad basada en valores, disciplina y excelencia académica.</p>
-            <p>Desde nuestros inicios, hemos trabajado para desarrollar el potencial de cada uno de nuestros alumnos, preparándolos para enfrentar los retos del futuro con responsabilidad y confianza.</p>
-        </section>
+    <!-- Hero Section -->
+<section class="w-full h-screen flex items-center">
+    <div class="w-full h-screen flex justify-center">
+        <img 
+            src="https://www.telemundo.com/sites/nbcutelemundo/files/images/promo/article/2017/08/24/ninos-en-la-escuela.jpg" 
+            alt="Children" 
+            class="w-full h-full object-cover"
+        >
+    </div>
+</section>
+<!-- Info Section -->
+<section class="bg-blue-950 text-white py-8 "style="background-image: url('../../assets/images/fondex.jpg');">
+  <div class="container mx-auto h-full grid grid-cols-1 md:grid-cols-3 gap-8 text-center items-center min-h-[350px]">
+      <div class="w-full md:w-11/12 mx-auto">
+          <img src="assets/images/graduacion.png" alt="Academic" class="mx-auto mb-4 w-20 h-20 md:w-20 md:h-20 lg:w-20 lg:h-20">
+          <p class="text-base md:text-base lg:text-base leading-relaxed">Nuestro currículo está diseñado para fomentar el pensamiento crítico, la creatividad y la resolución de problemas, preparando a los estudiantes para los desafíos del futuro.</p>
+      </div>
+      <div class="w-full md:w-11/12 mx-auto">
+          <img src="assets/images/libro-abierto.png" alt="Professors" class="mx-auto mb-4 w-20 h-20 md:w-20 md:h-20 lg:w-20 lg:h-20">
+          <p class="text-base md:text-base lg:text-base leading-relaxed">Todos nuestros profesores poseen títulos universitarios y especializaciones en sus áreas de enseñanza, además de una formación continua que les permite estar al día con las últimas metodologías educativas.</p>
+      </div>
+      <div class="w-full md:w-11/12 mx-auto">
+          <img src="assets/images/planeta-tierra.png" alt="Recognition" class="mx-auto mb-4 w-20 h-20 md:w-20 md:h-20 lg:w-20 lg:h-20">
+          <p class="text-base md:text-base lg:text-base leading-relaxed">Hemos sido galardonados con varios premios y certificados de calidad educativa, destacando en evaluaciones de rendimiento académico a nivel nacional.</p>
+      </div>
+  </div>
+</section>
 
-        <section id="servicios" class="section">
-            <h2>Nuestros Servicios</h2>
-            <p>Ofrecemos una amplia gama de servicios educativos que incluyen:</p>
-            <ul>
-                <li>Educación inicial, primaria y secundaria.</li>
-                <li>Actividades extracurriculares y deportivas.</li>
-                <li>Programas de apoyo académico y tutorías.</li>
-                <li>Servicio de biblioteca y recursos digitales.</li>
-            </ul>
-        </section>
-
-        <section id="contacto" class="section">
-            <h2>Contacto</h2>
-            <p>Si deseas más información sobre nuestro colegio o quieres inscribir a tu hijo, no dudes en contactarnos:</p>
-            <p>Email: <a href="mailto:info@colegiovirgendelanatividad.edu.pe">info&#64;colegiovirgendelanatividad.edu.pe</a></p>
-            <p>Teléfono: +51 123 456 789</p>
-        </section>
-
-        <section id="ubicacion" class="section">
-            <h2>Ubicación</h2>
-            <p>Nuestra dirección: Av. Ejemplo 1234, Ciudad, País.</p>
-            <p>Encuéntranos en el mapa:</p>
-            <!-- Inserta un mapa de Google o imagen de ubicación aquí -->
-        </section>
+<section class="py-8"style="background-image: url('../../assets/images/fondazo.png');">
+  <section class="mb-16 bg-cover bg-center" >
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap items-center justify-between mt-8">
+            <div class="w-full md:w-6/12">
+              <div class="relative">
+                <img src="../../assets/images/vision.webp" alt="Misión" class="w-8/12 mx-auto rounded-md shadow-md hover:shadow-[0_4px_6px_rgba(0,_0,_255,_0.3),_9px_1px_120px_rgba(0,_80,_255,_0.90)] transition-transform duration-300">
+            </div>
+            </div>
+            <div class="w-full md:w-5/12 bg-blue-900 text-white p-8 mr-12 border-8 border-dashed border-sky-500 rounded-lg hover:shadow-lg hover:rotate-0 transition-transform duration-300">
+                <h6 class="text-brown-900 text-xl font-bold uppercase mb-4 text-left">Misión</h6>
+                <p class="text-brown-700 text-left">Ofrecer a los clientes productos de calidad a precios cómodos que cumplan con sus necesidades y exigencias, abarcando sus gustos de acuerdo a su estilo de vida.</p>
+            </div>
+        </div>
+    </div>
+</section>
+</section>
+<section class="bg-blue-900 py-12 mb-20" style="background-image: url('../../assets/images/fondex.jpg');">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap items-center justify-between mt-8">
+            <div class="w-full md:w-5/12 bg-white p-8 ml-12 border-8 border-dashed border-sky-500 rounded-lg hover:shadow-lg hover:rotate-0 transition-transform duration-300">
+                <h6 class="text-xl font-bold uppercase mb-4 text-left">Visión</h6>
+                <p class="text-left">Elsa Val espera convertirse a mediano plazo en una empresa mejor consolidada y reconocida, con deseos de abrir una primera tienda física en Lima y llevar a cada rincón de la región una parte de su creación hecha a mano, con paciencia y amor.</p>
+            </div>
+            <div class="w-full md:w-6/12">
+              <div class="relative">
+                <img src="../../assets/images/vision.webp" alt="Misión" class="w-8/12 mx-auto rounded-md shadow-md hover:shadow-[0_4px_6px_rgba(255,_255,_255,_0.3),_9px_1px_120px_rgba(255,_255,_255,_0.90)] transition-transform duration-300">
+            </div>
+            </div>
+        </div>
     </div>
 
-    <footer>
-        <p>&copy; 2024 Colegio Virgen de la Natividad. Todos los derechos reservados.</p>
-        <div class="social-icons">
-            <a href="https://www.facebook.com/I.E.80270VIRGENDELANATIVIDAD"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-        </div>
-    </footer>
-</body>
-</html>
+</section>
+
+    <!-- Image Section (New Section) -->
+<!-- Responsive Image Grid Section -->
+<section class="py-8 background-size: cover; background-position: center; background-repeat: no-repeat;" style="background-image: url('../../assets/images/fondazo.png');">
+  <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <img src="https://img.freepik.com/fotos-premium/grupo-jovenes-estudiantes-felices-universidad_85574-4531.jpg" alt="Students" class="w-full h-auto object-cover rounded-lg">
+          <img src="https://img.freepik.com/foto-gratis/comunicacion-linea_1098-15842.jpg" alt="Classroom" class="w-full h-auto object-cover rounded-lg">
+          <img src="https://i0.wp.com/eltiempolatino.com/wp-content/uploads/2022/08/Estudiantes-universitarios-alquileres-de-vivienda.jpg?fit=1200%2C800&ssl=1" alt="Students" class="w-full h-auto object-cover rounded-lg">
+          <img src="https://media.istockphoto.com/id/1358014313/es/foto/grupo-de-estudiantes-de-primaria-que-tienen-clase-de-computaci%C3%B3n-con-su-maestro-en-el-aula.jpg?s=612x612&w=0&k=20&c=Br0JYIbTxvMufOMXLOru56BgXc4MqZvcDVHgblPLMgM=" alt="Activities" class="w-full h-auto object-cover rounded-lg">
+      </div>
+  </div>
+</section>
+
+
+ <!-- Highlights Section -->
+ <section class="py-20 bg-gray-2 ">
+  <div class="container mx-auto max-w-16xl">
+      <ol class=" items-center sm:flex text-gray-500">
+          <!-- Paso 1 -->
+          <li class="relative mb-6 sm:mb-0">
+              <div class="flex items-center">
+                  <div class="z-10 flex items-center justify-center w-12 h-12 bg-red-400 rounded-full ring-0 ring-white  sm:ring-8 text-black  shrink-0">
+                      1
+                  </div>
+                  <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+              </div>
+              <div class="mt-3 sm:pe-8">
+                  <h3 class="text-lg text-black ">Doble Titulación</h3>
+                  <p class="text-sm font-normal text-black dark:text-black">Ofrece un programa exclusivo de doble titulación, que permite a los estudiantes de secundaria obtener un diploma, facilitando su ingreso a universidades en el extranjero.</p>
+              </div>
+          </li>
+
+          <!-- Paso 2 -->
+          <li class="relative mb-6 sm:mb-0">
+              <div class="flex items-center">
+                  <div class="z-10 flex items-center justify-center w-12 h-12 bg-blue-400 rounded-full ring-0 ring-white  sm:ring-8 text-black shrink-0">
+                      2
+                  </div>
+                  <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+              </div>
+              <div class="mt-3 sm:pe-8">
+                  <h3 class="text-lg text-black ">Clases de Quechua</h3>
+                  <p class="text-sm font-normal text-black dark:text-black">El colegio incluye en su currículo clases de Quechua y estudios sobre la cultura andina, promoviendo el orgullo por la identidad nacional y la diversidad cultural del país.</p>
+              </div>
+          </li>
+
+          <!-- Paso 3 -->
+          <li class="relative mb-6 sm:mb-0">
+              <div class="flex items-center">
+                  <div class="z-10 flex items-center justify-center w-12 h-12 bg-pink-400 rounded-full ring-0 ring-white  sm:ring-8 text-black  shrink-0">
+                      3
+                  </div>
+                  <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+              </div>
+              <div class="mt-3 sm:pe-8">
+                  <h3 class="text-lg text-black ">Educación Ambiental</h3>
+                  <p class="text-sm font-normal text-black dark:text-black">El colegio cuenta con un programa integral de educación ambiental que incluye huertos escolares, reciclaje y proyectos de sostenibilidad.</p>
+              </div>
+          </li>
+
+          <!-- Paso 4 -->
+          <li class="relative mb-6 sm:mb-0">
+              <div class="flex items-center">
+                  <div class="z-10 flex items-center justify-center w-12 h-12 bg-purple-400 rounded-full ring-0 ring-white  sm:ring-8 text-black  shrink-0">
+                      4
+                  </div>
+                  <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+              </div>
+              <div class="mt-3 sm:pe-8">
+                  <h3 class="text-lg text-black ">Laboratorios Modernos</h3>
+                  <p class="text-sm font-normal text-black dark:text-black">Equipado con modernos laboratorios de ciencia, robótica y programación, el colegio fomenta la experimentación y el aprendizaje práctico desde temprana edad, preparando a los estudiantes para carreras en STEM.</p>
+              </div>
+          </li>
+      </ol>
+  </div>
+</section>
+
+
+
+     <!-- Footer -->
+     <footer class=" bottom-0 left-0 z-20 w-full p-4 bg-dark-blue-5 border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-dark-blue-5 dark:border-gray-600">
+        <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+          © 2024 <a href="https://flowbite.com/" class="hover:underline">ColegioNatividad</a>. Todos los derechos reservados.
+        </span>
+        <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+          <li>
+            <a href="#" class="hover:underline me-4 md:me-6">Sobre nosotros</a>
+          </li>
+          <li>
+            <a href="#" class="hover:underline me-4 md:me-6">Política de Privacidad</a>
+          </li>
+          <li>
+            <a href="#" class="hover:underline me-4 md:me-6">Contáctanos</a>
+          </li>
+        </ul>
+      </footer>
+      
+
+
+
+

@@ -1,0 +1,17 @@
+<div class="payment-form">
+  <h2>Pago de Matrícula</h2>
+
+  <form (submit)="handleSubmit($event)">
+    <div>
+      <label for="card-element">Tarjeta de Crédito/Débito</label>
+      <!-- Contenedor donde Stripe renderiza el elemento de tarjeta -->
+      <div id="card-element"></div>
+      <!-- Mensajes de error para problemas con el elemento de tarjeta -->
+      <div id="card-errors" role="alert">{{ stripeError }}</div>
+    </div>
+
+    <button type="submit">
+      Pagar
+    </button>
+  </form>
+</div>

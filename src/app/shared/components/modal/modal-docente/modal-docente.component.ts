@@ -53,6 +53,7 @@ export class ModalDocenteComponent {
       this.docenteId = this.data.docente._id
 
     } else {
+      console.log(this.data)
       this.docente = {
         nombre: '',
         apellido: '',
@@ -96,6 +97,7 @@ export class ModalDocenteComponent {
     if(this.data.isCreate) {
       this.docenteService.agregarDocente(dataDocente).subscribe(
         (data) => {
+          this.loading = false
           Swal.fire('Docente guardado', 'El docente ha sido guardado con éxito', 'success').then(
             (e)=> {
               this.closeModel()

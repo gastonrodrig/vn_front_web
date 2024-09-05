@@ -108,7 +108,7 @@ export class GestionarDocentesComponent {
           const dialogRef =  this.dialog.open(ModalDocenteComponent, {
             data: {
               docente: this.docente,
-              isEdit: isEdit
+              isEdit: true
             },
             width: '70%'
           });

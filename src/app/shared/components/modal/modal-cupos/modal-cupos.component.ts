@@ -97,8 +97,20 @@ export class ModalCuposComponent {
     }
     
     // VALIDACIONES
-
-
+    if(dataCupo.capacidad < 40 || dataCupo.capacidad > 60) {
+      this.snack.open('La capacidad no puede ser menor a 40 y mayor a 60', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+    if(dataCupo.vacantes_disponibles < 40 || dataCupo.vacantes_disponibles > 60) {
+      this.snack.open('Las Vacantes no puede ser menor a 40 y mayor a 60', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
 
     if(dataCupo.grado_id === '') {
       this.snack.open('El grado es requerido', '', {

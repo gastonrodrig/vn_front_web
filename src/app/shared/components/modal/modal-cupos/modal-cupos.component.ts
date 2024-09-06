@@ -13,11 +13,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
+import { SoloNumerosDirective } from '../../../directives/solo-numeros.directive';
 
 @Component({
   selector: 'app-modal-cupos',
   standalone: true,
-  imports: [MatDialogModule, 
+  imports: [
+    MatDialogModule, 
     MatFormFieldModule, 
     MatInputModule, 
     FormsModule, 
@@ -25,7 +27,9 @@ import { MatSelectModule } from '@angular/material/select';
     MatButtonModule, 
     CommonModule, 
     MatProgressBarModule,
-    MatIconModule],
+    MatIconModule,
+    SoloNumerosDirective
+  ],
   templateUrl: './modal-cupos.component.html',
   styleUrl: './modal-cupos.component.css'
 })
@@ -85,21 +89,26 @@ export class ModalCuposComponent {
   guardarInformacion() {
     this.loading = true
     const dataCupo = {
-      capacidad : this.cupo.capacidad,
-      vacantes_disponibles : this.cupo.vacantes_disponibles,
-      grado : this.cupo._id,
-      periodo : this.cupo._id,
+      capacidad : Number(this.cupo.capacidad),
+      vacantes_disponibles : Number(this.cupo.vacantes_disponibles),
+      grado_id : this.cupo.grado._id,
+      periodo_id : this.cupo.periodo._id,
       
     }
+    
+    // VALIDACIONES
 
-    if(dataCupo.grado === '') {
+
+
+    if(dataCupo.grado_id === '') {
       this.snack.open('El grado es requerido', '', {
         duration: 3000
       })
       this.loading = false
       return
     }
-    if(dataCupo.periodo === '') {
+
+    if(dataCupo.periodo_id === '') {
       this.snack.open('El periodo es requerido', '', {
         duration: 3000
       })
@@ -117,7 +126,11 @@ export class ModalCuposComponent {
           );
         },
         (error) => {
-          console.log(error)
+          this.snack.open(error.error.message, '', {
+            duration: 3000
+          })
+          this.loading = false
+          return
         }
       )
     }

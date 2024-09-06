@@ -1,1 +1,25 @@
-<p>docente-layout works!</p>
+<div class="flex min-w-screen">
+  <app-side-bar 
+    [listaModulos]="listaModulos"
+    (modulo)="obtenerModulo($event)" 
+    bgColor="bg-[#1E4E31]" 
+    paddingXOpen="w-[225px]"
+    paddingXClosed="w-[70px]"
+    searchBgColorInput="bg-[#296C44]"
+    searchBgColorIcon="bg-[#348856]"
+    moduleBgColorHover="hover:bg-[#296C44]"
+    moduleTextColor="text-cyan-300 hover:text-cyan-300"
+    baseRoute="docente"
+    [ngClass]="{ 'fixed inset-y-0 left-0 w-64 z-50' : sidebarMostrado, 'hidden md:block' : !sidebarMostrado }"
+  ></app-side-bar>
+  <div 
+    class="overlay"
+    *ngIf="sidebarMostrado"
+    (click)="cerrarSidebar()"
+  ></div>
+  <app-docente-main-content 
+    [sidebarShowed]="sidebarMostrado"
+    (sidebarMostrado)="mostrarSidebar($event)"
+    class="w-full shadow-xl"
+  ></app-docente-main-content>
+</div>

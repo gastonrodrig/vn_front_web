@@ -52,21 +52,20 @@
         </div>
       </div>
     </div>
-    <div class="payment-form">
+    <div class="">
       <h2>Pago de Matrícula</h2>
     
-      <form (submit)="handleSubmit($event)">
-        <div>
+      <form (submit)="handleSubmit($event)" class="payment-form">
+        <div class="form-group">
           <label for="card-element">Tarjeta de Crédito/Débito</label>
           <!-- Contenedor donde Stripe renderiza el elemento de tarjeta -->
-          <div id="card-element"></div>
+          <div id="card-element" class="card-element"></div>
           <!-- Mensajes de error para problemas con el elemento de tarjeta -->
           <div id="card-errors" role="alert">{{ stripeError }}</div>
         </div>
-    
-        <button type="submit">
-          Pagar
-        </button>
+      
+        <button type="submit" class="submit-button">Pagar</button>
       </form>
+      
     </div>
 </div>

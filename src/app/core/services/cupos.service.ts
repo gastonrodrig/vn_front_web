@@ -20,4 +20,7 @@ export class CuposService {
   obtenerCupo(id: string) {
     return this.http.get(`${baseUrl}/cupos/${id}`);
   }
+  verificarCupoExistente(grado_id: string, periodo_id: string) {
+    return this.http.get(`${baseUrl}/verificar?grado_id=${grado_id}&periodo_id=${periodo_id}`);
+  }
 }

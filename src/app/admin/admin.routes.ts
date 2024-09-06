@@ -13,6 +13,7 @@ import { GestionarSolicitudComponent } from './pages/gestionar-solicitud/gestion
 import { GestionarPerfilEstudianteComponent } from './pages/gestionar-perfil-estudiante/gestionar-perfil-estudiante.component';
 import { GestionarDocumentosComponent } from './pages/gestionar-documentos/gestionar-documentos.component';
 import { GestionarPerfilDocenteComponent } from './pages/gestionar-perfil-docente/gestionar-perfil-docente.component';
+import { GestionarCuposComponent } from './pages/gestionar-cupos/gestionar-cupos.component';
 
 export const ADMIN_ROUTES: Routes = [
     { 
@@ -70,6 +71,10 @@ export const ADMIN_ROUTES: Routes = [
             {
                 path: 'gestionar-solicitud',
                 component: GestionarSolicitudComponent
+            },
+            {
+                path: 'gestionar-cupos',
+                component: GestionarCuposComponent
             }
         ]
     },

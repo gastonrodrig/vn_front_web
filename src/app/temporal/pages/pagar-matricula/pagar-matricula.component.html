@@ -1,17 +1,72 @@
-<div class="payment-form">
-  <h2>Pago de Matrícula</h2>
-
-  <form (submit)="handleSubmit($event)">
-    <div>
-      <label for="card-element">Tarjeta de Crédito/Débito</label>
-      <!-- Contenedor donde Stripe renderiza el elemento de tarjeta -->
-      <div id="card-element"></div>
-      <!-- Mensajes de error para problemas con el elemento de tarjeta -->
-      <div id="card-errors" role="alert">{{ stripeError }}</div>
+@if(loading){
+  <mat-progress-bar mode="indeterminate" class="-mt-7 mb-8"></mat-progress-bar>
+}
+<div class="mx-5 mt-2">
+  <p class="text-xl font-medium mb-4">Pago de Matricula de Alumno Nuevo</p>
+  <p class="font-normal text-sm mb-3">Ingrese el DNI de su hijo y el nombre del usuario:</p>
+  <div class="min-[1100px]:w-[760px] max-[1100px]:w-[630px] max-[950px]:w-auto"></div>
+    <div class="bg-gray-50 p-2 rounded-xl ring-1 ring-gray-300">
+      <div class="min-[1100px]:flex pt-1 mb-1 mx-1 min-[1100px]:-mb-4">
+        <div class="min-[480px]:flex gap-x-3 max-[480px]:grid max-[480px]:grid-cols-2">
+          <mat-form-field appearance="fill" class="min-[480px]:w-[300px] max-[480px]:col-span-2">
+            <mat-label>Dni del hijo</mat-label>
+            <input
+                [(ngModel)]="dni"
+                type="text"
+                placeholder="Ingrese el DNI"
+                matInput
+                [ngModelOptions]="{standalone: true}"
+            >
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill" class="min-[480px]:w-[300px] max-[480px]:col-span-2">
+            <mat-label>Nombre de usuario</mat-label>
+            <input
+                [(ngModel)]="nombreUsuario"
+                type="text"
+                placeholder="Ingrese el Nombre de usuario"
+                matInput
+                [ngModelOptions]="{standalone: true}"
+            >
+          </mat-form-field>
+        </div>
+        <div class="min-[1100px]:grid min-[1100px]:items-center min-[1100px]:ms-3 min-[1100px]:-mt-2.5">
+          <div class="flex justify-end gap-x-2">
+            <div class="-mt-2.5 relative group">
+              <i class="fa-solid fa-circle-info text-base text-gray-500 hover:text-gray-400"></i>
+              <div class="absolute hidden group-hover:block bg-black shadow-lg text-center
+              rounded-lg mt-4 p-2 text-white text-sm opacity-55 -ms-24 w-52 font-light bottom-[52px]">
+                  Ingrese el DNI y el nombre de usuario temporal para desbloquear el acceso a la subida de archivos
+              </div>
+            </div>
+            <button 
+              mat-flat-button 
+              color="custom-color" 
+              class="-mt-3"
+              (click)="desbloquear()"
+            >
+              <i class="fa-solid fa-magnifying-glass me-1"></i>
+              Buscar
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <button type="submit">
-      Pagar
-    </button>
-  </form>
+    <div class="payment-form">
+      <h2>Pago de Matrícula</h2>
+    
+      <form (submit)="handleSubmit($event)">
+        <div>
+          <label for="card-element">Tarjeta de Crédito/Débito</label>
+          <!-- Contenedor donde Stripe renderiza el elemento de tarjeta -->
+          <div id="card-element"></div>
+          <!-- Mensajes de error para problemas con el elemento de tarjeta -->
+          <div id="card-errors" role="alert">{{ stripeError }}</div>
+        </div>
+    
+        <button type="submit">
+          Pagar
+        </button>
+      </form>
+    </div>
 </div>

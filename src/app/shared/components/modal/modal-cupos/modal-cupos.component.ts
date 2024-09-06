@@ -1,0 +1,144 @@
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CuposService } from '../../../../core/services/cupos.service';
+import { GradoService } from '../../../../core/services/grado.service';
+import { PeriodoService } from '../../../../core/services/periodo.service';
+import Swal from 'sweetalert2';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSelectModule } from '@angular/material/select';
+
+@Component({
+  selector: 'app-modal-cupos',
+  standalone: true,
+  imports: [MatDialogModule, 
+    MatFormFieldModule, 
+    MatInputModule, 
+    FormsModule, 
+    MatSelectModule, 
+    MatButtonModule, 
+    CommonModule, 
+    MatProgressBarModule,
+    MatIconModule],
+  templateUrl: './modal-cupos.component.html',
+  styleUrl: './modal-cupos.component.css'
+})
+export class ModalCuposComponent {
+  cupo: any
+  cupoId: any
+  grados: any[] = []
+  periodos: any[] = []
+  GradoSeccion: any
+  loading = false
+  CupoCreated: boolean = false; 
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<ModalCuposComponent>,
+    private snack: MatSnackBar,
+    private cuposService: CuposService,
+    private gradoService: GradoService,
+    private periodoService: PeriodoService,
+  ) {}
+  ngOnInit() {
+    if (this.data.isEdit) {
+      console.log(this.data)
+      this.GradoSeccion = this.data
+      this.cupo = this.data.cupo;
+      this.cupoId = this.data.cupo._id
+    } else {
+      this.cupo = {
+        capacidad: '',
+        vacantes_disponibles: '',
+        grado: { 
+          _id: ''
+        },
+        periodo: { 
+          _id: ''
+        }
+      }
+        
+        }
+    this.gradoService.listarGrados().subscribe(
+      (data: any) => {
+        this.grados = data       
+      },
+      (error) => {
+        console.log(error)
+      },
+    )
+    this.periodoService.listarPeriodos().subscribe(
+      (data: any) => {
+        this.periodos = data        
+      },
+      (error) => {
+        console.log(error)
+      },
+    )
+  }
+  guardarInformacion() {
+    this.loading = true
+    const dataCupo = {
+      capacidad : this.cupo.capacidad,
+      vacantes_disponibles : this.cupo.vacantes_disponibles,
+      grado : this.cupo._id,
+      periodo : this.cupo._id,
+      
+    }
+
+    if(dataCupo.grado === '') {
+      this.snack.open('El grado es requerido', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+    if(dataCupo.periodo === '') {
+      this.snack.open('El periodo es requerido', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+
+    if(this.data.isCreate) {
+      this.cuposService.agregarCupos(dataCupo).subscribe(
+        (data) => {
+          Swal.fire('Cupo guardado', 'El Cupo ha sido guardado con éxito', 'success').then(
+            (e)=> {
+              this.closeModel()
+            }
+          );
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+    }
+
+    if(this.data.isEdit) {
+      this.cuposService.modificarCupos(this.cupoId, dataCupo).subscribe(
+        (data) => {
+          this.loading = false
+          Swal.fire('Cupo modificado', 'El cupo ha sido modificado con éxito', 'success').then(
+            (e)=> {
+              this.closeModel()
+            }
+          );
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+    }
+  }
+  closeModel() {
+    this.dialogRef.close()
+  }
+}

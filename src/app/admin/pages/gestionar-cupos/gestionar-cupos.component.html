@@ -1,0 +1,29 @@
+@if(loading){
+    <mat-progress-bar mode="indeterminate" class="-mt-7 mb-8"></mat-progress-bar>
+}
+<div class="mx-5 mt-2">
+    <p class="text-xl font-medium mb-4">Gestionar Cupos</p>
+    <div class="flex justify-between">
+        <app-select 
+            [(optionSelected)]="gradoSelected" 
+            [options]="grados" 
+            [nombreFiltro]="'Grados'" 
+            optionKey="_id" 
+            optionLabel="nombre"
+            [width]="'max-[1184px]:w-40 max-[956px]:w-32 max-sm:w-40 bg-gray-50 text-sm'"
+        ></app-select>
+        <button 
+            (click)="agregarCupo()"
+            mat-flat-button 
+            color="custom-color" 
+        > + Agregar </button>
+    </div>
+</div>
+<app-table 
+    [columns]="columns" 
+    [data]="displayedCupos()"
+    [trackByField]="trackByField"
+    [loadedComplete]="loadedComplete"
+    [editActive]="true"
+    (editAction)="editarCupo($event.isEdit, $event.id)"
+></app-table>

@@ -1,10 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { StripeService } from '../../../core/services/stripe.service';
 import { StripeCardElement, StripeElementChangeEvent, StripeElements, loadStripe } from '@stripe/stripe-js';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { EstudianteService } from '../../../core/services/estudiante.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-pagar-matricula',
   standalone: true,
+  imports: [
+    MatProgressBar,
+    MatInputModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatButtonModule
+  ],
   templateUrl: './pagar-matricula.component.html',
   styleUrls: ['./pagar-matricula.component.css']
 })
@@ -12,10 +27,25 @@ export class PagarMatriculaComponent implements OnInit {
   private elements: StripeElements | undefined;
   private card: StripeCardElement | undefined;
   stripeError: string | undefined;
+  loading = false
+  dni = ''
+  nombreUsuario = ''
+  estudiantes: any
+  estudiante: any
 
-  constructor(private stripeService: StripeService) {}
+  constructor(
+    private stripeService: StripeService,
+    private estudianteService: EstudianteService,
+    private authService: AuthService,
+    private snack: MatSnackBar
+  ) {}
 
   async ngOnInit() {
+    this.estudianteService.listarEstudiantes().subscribe(
+      (data: any) => {
+        this.estudiantes = data
+      }
+    )
     const stripe = await this.stripeService.getStripe();
     if (stripe) {
       this.elements = stripe.elements();
@@ -24,6 +54,16 @@ export class PagarMatriculaComponent implements OnInit {
       this.card.on('change', (event: StripeElementChangeEvent) => {
         this.stripeError = event.error?.message;
       });
+    }
+  }
+
+  desbloquear() {
+    const user = this.authService.getUser()
+    this.estudiante = this.estudiantes.find((e: any) => e.numero_documento === this.dni)
+
+    if (this.estudiante === undefined) {
+      this.mostrarMensaje('El Dni ingresado no existe.', 3000)
+      return
     }
   }
 
@@ -61,5 +101,12 @@ export class PagarMatriculaComponent implements OnInit {
         }
       );
     }
+  }
+
+  mostrarMensaje(message: string, duration: number) {
+    this.snack.open(message, 'Cerrar', {
+      duration: duration
+    })
+    this.loading = false
   }
 }

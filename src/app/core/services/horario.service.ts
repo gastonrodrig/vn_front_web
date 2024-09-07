@@ -26,6 +26,9 @@ export class HorarioService {
   listarHorariosPorSeccionGrado(seccionId: string, gradoId: string) {
     return this.http.get(`${baseUrl}/horario/seccion/${seccionId}/grado/${gradoId}`);
   }
+  listarHorariosPorDocente(docenteId: string) {
+    return this.http.get(`${baseUrl}/horario/docente/${docenteId}`);
+  }
   obtenerCantidadRegistros(seccionId: string, gradoId: string, cursoId: string) {
     return this.http.get(`${baseUrl}/horario/${seccionId}/${gradoId}/${cursoId}`);
   }

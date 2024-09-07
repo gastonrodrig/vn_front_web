@@ -1,22 +1,22 @@
 export const listaDias = [
   {
     id: 0,
-    nombre: 'Lunes'
+    nombre: 'Lun.'
   },
   {
     id: 1,
-    nombre: 'Martes'
+    nombre: 'Mar.'
   },
   {
     id: 2,
-    nombre: 'Miercoles'
+    nombre: 'Mie.'
   },
   {
     id: 3,
-    nombre: 'Jueves'
+    nombre: 'Jue.'
   },
   {
     id: 4,
-    nombre: 'Viernes'
+    nombre: 'Vie.'
   }
 ]

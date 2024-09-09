@@ -50,16 +50,17 @@ export class ModalDocenteComponent {
     if (this.data.isEdit) {
       console.log(this.data)
       this.docente = this.data.docente;
-      this.docenteId = this.data.docente.docente_id
+      this.docenteId = this.data.docente._id
 
     } else {
+      console.log(this.data)
       this.docente = {
         nombre: '',
         apellido: '',
         direccion: '',
         numero_documento: '',
         documento: {
-          documento_id: ''
+          _id: ''
         }
       }
     }
@@ -81,7 +82,7 @@ export class ModalDocenteComponent {
       direccion : this.docente.direccion,
       telefono : this.docente.telefono,
       numero_documento : this.docente.numero_documento,
-      documento_id : this.docente.documento.documento_id,
+      documento_id : this.docente.documento._id,
       
     }
 
@@ -96,6 +97,7 @@ export class ModalDocenteComponent {
     if(this.data.isCreate) {
       this.docenteService.agregarDocente(dataDocente).subscribe(
         (data) => {
+          this.loading = false
           Swal.fire('Docente guardado', 'El docente ha sido guardado con éxito', 'success').then(
             (e)=> {
               this.closeModel()

@@ -42,12 +42,12 @@
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Tipo de Documento</mat-label>
                 <mat-select 
-                    [(ngModel)]="apoderado.documento.documento_id"
+                    [(ngModel)]="apoderado.documento._id"
                     [ngModelOptions]="{standalone: true}"
                 >
                     <mat-option 
                         *ngFor="let e of tipoDocumento" 
-                        [value]="e.documento_id"
+                        [value]="e._id"
                     >
                         {{ e.type }}
                     </mat-option>
@@ -115,13 +115,13 @@
                     <div class="flex">
                         <p class="font-medium uppercase me-2">Apoderados: </p>
                         <div class="flex-col justify-start items-center -mt-1">
-                            @for(apoderado of apoderadoList; track apoderado.apoderado_id) {
+                            @for(apoderado of apoderadoList; track apoderado._id) {
                                 <div class="flex justify-between max-w-72 px-2 py-1 mb-2 bg-gray-400 
                                 text-black duration-300 rounded-lg shadow-md">
                                     <p>
                                         {{ apoderado.nombre + ' ' + apoderado.apellido + ' (Nro.Documento: ' + apoderado.numero_documento + ')'  }}
                                     </p>
-                                    <i class="fa-solid fa-xmark hover:cursor-pointer" (click)="eliminarApoderado(apoderado.apoderado_id)"></i>
+                                    <i class="fa-solid fa-xmark hover:cursor-pointer" (click)="eliminarApoderado(apoderado._id)"></i>
                                 </div>
                             }
                         </div>

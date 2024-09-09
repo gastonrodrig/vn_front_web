@@ -4,17 +4,17 @@
 <div class="mx-5 mt-2">
   <p class="text-xl font-medium mb-4">Gestionar Usuarios</p>
   <div class="flex justify-between">
-      <app-input 
-          [(model)]="searchTerm" 
-          [placeholder]="'Buscar'" 
-          [icon]="'magnifying-glass'"
-          [widthFont]="'font-normal bg-gray-50'"
-      ></app-input>
-      <button 
-          (click)="agregarUsuario()"
-          mat-flat-button 
-          color="custom-color" 
-      > + Agregar </button>
+    <app-input 
+      [(model)]="searchTerm" 
+      [placeholder]="'Buscar'" 
+      [icon]="'magnifying-glass'"
+      [widthFont]="'font-normal bg-gray-50'"
+    ></app-input>
+    <button 
+      (click)="agregarUsuario()"
+      mat-flat-button 
+      color="custom-color" 
+    > + Agregar </button>
   </div>
 </div>
 <app-table 

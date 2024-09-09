@@ -8,6 +8,7 @@ import { TableComponent } from '../../../shared/components/table/table.component
 import { InputComponent } from '../../../shared/components/UI/input/input.component';
 import { MatButtonModule } from '@angular/material/button';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-gestionar-docentes',
@@ -19,7 +20,7 @@ import Swal from 'sweetalert2';
 export class GestionarDocentesComponent {
   docentes = []
   docente = []
-  trackByField = 'docente_id'
+  trackByField = '_id'
   loading = false
   loadedComplete: any
   searchTerm: string = '';
@@ -33,7 +34,8 @@ export class GestionarDocentesComponent {
 
   constructor(
     private docenteService: DocenteService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router: Router
   ){}
 
   ngOnInit() {
@@ -106,7 +108,7 @@ export class GestionarDocentesComponent {
           const dialogRef =  this.dialog.open(ModalDocenteComponent, {
             data: {
               docente: this.docente,
-              isEdit: isEdit
+              isEdit: true
             },
             width: '70%'
           });
@@ -179,12 +181,20 @@ export class GestionarDocentesComponent {
               );
             },
             (error) => {
+              console.log(error)
               this.loading = false
               Swal.fire('Error', 'Error al eliminar el docente de la base de datos', 'error');
             }
           );
         }
       });
+    }
+  }
+
+  editarPFP(isPfp: any, id: any) {
+    this.loading = true
+    if(isPfp) {
+      this.router.navigate([`/admin/gestionar-perfil-docente/${id}`])
     }
   }
 

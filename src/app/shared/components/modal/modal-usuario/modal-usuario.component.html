@@ -165,6 +165,7 @@
           </button>
         }
         <div [ngClass]="{ 'scale-100' : personSelected && usuario.rol !== '' && searchTerm === '', 'scale-0' : !usuarioSinReferencia() }">
+          @if(usuario.rol !== 'Admin') {
           <button 
             mat-flat-button 
             (click)="quitarPersona()"
@@ -173,6 +174,7 @@
             <i class="fa-solid fa-pen text-white me-1"></i>
             {{ usuario.rol === 'Estudiante' ? 'Estudiante' : usuario.rol === 'Apoderado' ? 'Apoderado' : 'Docente' }}
           </button>
+        }
         </div>
       </div>  
       <div class="mt-3 sm:mt-0 flex justify-end col-span-2">

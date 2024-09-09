@@ -363,7 +363,11 @@ export class ModalUsuarioComponent {
       }
     }
   }
+  rolSeleccionado: boolean = false;
 
+  onRolChange(rol: string) {
+    this.rolSeleccionado = !!rol;
+  }
   guardarInformacion() {
     this.loading = true
     if(this.data.isCreate) {
@@ -377,7 +381,55 @@ export class ModalUsuarioComponent {
         apoderado_id: Number(this.usuario?.apoderado?.apoderado_id)
       }
 
-      // VALIDACIONES
+      switch (this.usuario.rol) {
+        case 'Estudiante':
+          userData.estudiante_id = this.usuario.estudiante._id
+          break
+        case 'Docente':
+          userData.docente_id = this.usuario.docente._id
+          break
+        case 'Apoderado':
+          userData.apoderado_id = this.usuario.apoderado._id
+          break
+        case 'Admin':
+          // No se necesita hacer cambios adicionales para Admin
+          break
+        default:
+          console.error('Rol desconocido:', this.usuario.rol)
+          this.loading = false
+          return
+      }
+  
+          // Validaciones
+      if (!userData.nombres_usuario && !userData.rol && !userData.email_usuario && !userData.contrasena_usuario) {
+        Swal.fire('Error', 'Todos los campos deben ser completados.', 'error');
+        this.loading = false;
+        return;
+      }
+
+      // Validación de nombre (no puede contener números)
+      if (/\d/.test(this.usuario.nombres_usuario)) {
+        Swal.fire('Error', 'El nombre no puede contener números.', 'error');
+        this.loading = false;
+        return;
+      }
+
+      // Validación de correo (debe ser una dirección de correo electrónico válida)
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(this.usuario.email_usuario)) {
+        Swal.fire('Error', 'El correo electrónico no es válido.', 'error');
+        this.loading = false;
+        return;
+      }
+
+      // Validación de contraseña (no puede estar vacía)
+      if (!this.usuario.contrasena_usuario) {
+        Swal.fire('Error', 'La contraseña no puede estar vacía.', 'error');
+        this.loading = false;
+        return;
+      }
+
+      
 
       this.userService.agregarUsuario(userData).subscribe(
         (data: any) => {

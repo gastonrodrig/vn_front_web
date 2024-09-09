@@ -93,20 +93,35 @@ export class ModalSeccionComponent {
       }
     )
   }
-
+  intentosFallidos: number = 0;
   crearSeccion() {
     this.loading = true
     const dataSeccion = {
       nombre: this.seccion.nombre,
       aula: this.seccion.aula
     }
-
-    if(dataSeccion.nombre === '') {
-      this.snack.open('El nombre de la seccion es requerida', '',{
+    const nombreValido = /^[a-zA-Z\s]+$/.test(dataSeccion.nombre);
+   
+    //validacion//
+  
+    if (dataSeccion.nombre === '' || dataSeccion.aula === '') {
+      this.snack.open('El nombre de la sección y el aula son requeridos', '', {
         duration: 3000
-      })
-      this.loading = false
-      return
+      });
+      this.loading = false;
+      this.intentosFallidos++;
+      this.validarIntentos('vacío');
+      return;
+    }
+  
+    if (!nombreValido) {
+      this.snack.open('El nombre no puede contener números', '', {
+        duration: 3000
+      });
+      this.loading = false;
+      this.intentosFallidos++;
+      this.validarIntentos('números');
+      return;
     }
 
     this.seccionService.agregarSeccion(dataSeccion).subscribe(
@@ -117,13 +132,37 @@ export class ModalSeccionComponent {
       },
       (error) => {
         console.log(error)
+        this.intentosFallidos++;
+      this.validarIntentos('error desconocido');
       }
-    )
+    );
   }
-
+  validarIntentos(errorTipo: string) {
+    if (this.intentosFallidos === 3) {
+      let mensajeError = '';
+  
+      if (errorTipo === 'vacío') {
+        mensajeError = ' No se pudo guardar la sección porque el nombre o el aula están vacíos.';
+      } else if (errorTipo === 'números') {
+        mensajeError = ' No se pudo guardar la sección porque el nombre contiene números.';
+      } else {
+        mensajeError = ' No se pudo guardar la sección debido a un error desconocido.';
+      }
+  
+      Swal.fire(
+        'error',
+        mensajeError,
+        'error'
+      ).then((e) => {
+        this.closeModel();
+      });
+  
+      this.intentosFallidos = 0;
+    }
+  }
   guardarInformacion() {
     this.loading = true
-
+    const regex = /\d/;
     if(this.data.isCreate) {
       const dataSGP = {
         seccion_id: this.seccionGradoPeriodo.seccion.seccion_id,
@@ -146,13 +185,26 @@ export class ModalSeccionComponent {
         }
       )
     }
-
+ 
     if(this.data.isEdit) {
       const data = {
         nombre: this.seccionGradoPeriodo.seccion.nombre,
         aula: this.seccionGradoPeriodo.seccion.aula
       }
-  
+      const nombreValido = /^[a-zA-Z\s]+$/.test(data.nombre);
+
+ if (data.nombre === '' || data.aula === '') {
+   Swal.fire('Error', 'El nombre de la sección y el aula son requeridos', 'error');
+   this.loading = false;
+   return;
+ }
+
+ if (!nombreValido) {
+   Swal.fire('Error', 'El nombre no puede contener números', 'error');
+   this.loading = false;
+   return;
+ }
+
       // VALIDACIONES
 
       this.sgpService.modificarSeccion(this.seccionGradoPeriodo_id, data).subscribe(

@@ -93,6 +93,13 @@ export class ModalCursoComponent {
       this.loading = false
       return
     }
+    const nombreValido = /^[a-zA-Z\s]+$/.test(dataCurso.nombre);
+
+    if (!nombreValido) {
+      Swal.fire('Error', 'El nombre no puede contener números', 'error');
+      this.loading = false;
+      return;
+    }
 
     this.cursoService.agregarCurso(dataCurso).subscribe(
       (data: any) => {
@@ -132,6 +139,9 @@ export class ModalCursoComponent {
         this.grados.forEach((grado: any) => {
           this.checkedItems[grado.grado_id] = this.gradosSeleccionados.includes(grado.grado_id)
         })
+      },
+      (error) => {
+        console.log(error)
       }
     ) 
   }
@@ -158,6 +168,7 @@ export class ModalCursoComponent {
           grado_id: gradoId,
           curso_id: this.cursoId,
           horas: null
+          
         }
         this.gchService.agregarGradoCursosHoras(dataGCH).subscribe(
           (data: any) => {
@@ -165,6 +176,7 @@ export class ModalCursoComponent {
               duration: 3000
             })
             this.listarGradosPorCurso()
+           
           }
         )
       } 

@@ -24,39 +24,45 @@ export const listaModulosAdmin = [
         icon: 'font'
     },
     {
-        id: 6,
+        id: 5,
         route: 'gestionar-cursos',
         titulo: 'Cursos',
         icon: 'book'
     },
     {
-        id: 7,
+        id: 6,
         route: 'gestionar-horarios',
         titulo: 'Horarios',
         icon: 'calendar-days'
     },
     {
-        id: 8,
+        id: 7,
         route: 'gestionar-matricula',
         titulo: 'Matricula',
         icon: 'file-invoice'
     },
     {
-        id: 9,
+        id: 8,
         route: 'gestionar-usuarios',
         titulo: 'Usuarios',
         icon: 'user-pen'
     },
     {
-        id: 10,
+        id: 9,
         route: 'gestionar-solicitud',
         titulo: 'Solicitudes',
         icon: 'id-card'
     },
     {
-        id: 11,
+        id: 10,
         route: 'gestionar-cupos',
         titulo: 'Cupos',
         icon: 'users'
+    },
+    {
+        id: 11,
+        route: 'gestionar-periodos',
+        titulo: 'Periodos',
+        icon: '1'
     }
 ]

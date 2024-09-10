@@ -3,8 +3,8 @@
 }
 <div class="mx-5 mt-2">
   <p class="text-xl font-medium mb-4">Pago de Matricula de Alumno Nuevo</p>
-  <p class="font-normal text-sm mb-3">Ingrese el DNI de su hijo y el nombre del usuario:</p>
-  <div class="min-[1100px]:w-[760px] max-[1100px]:w-[630px] max-[950px]:w-auto"></div>
+  <p class="font-normal text-sm mb-3">Ingrese el DNI de su hijo y el nombre del usuario: {{ isDisabled === false ? '✅' : '' }}</p>
+  <div class="min-[1100px]:w-[760px] max-[1100px]:w-[630px] max-[950px]:w-auto">
     <div class="bg-gray-50 p-2 rounded-xl ring-1 ring-gray-300">
       <div class="min-[1100px]:flex pt-1 mb-1 mx-1 min-[1100px]:-mb-4">
         <div class="min-[480px]:flex gap-x-3 max-[480px]:grid max-[480px]:grid-cols-2">
@@ -35,8 +35,8 @@
             <div class="-mt-2.5 relative group">
               <i class="fa-solid fa-circle-info text-base text-gray-500 hover:text-gray-400"></i>
               <div class="absolute hidden group-hover:block bg-black shadow-lg text-center
-              rounded-lg mt-4 p-2 text-white text-sm opacity-55 -ms-24 w-52 font-light bottom-[52px]">
-                  Ingrese el DNI y el nombre de usuario temporal para desbloquear el acceso a la subida de archivos
+              rounded-lg mt-4 p-2 text-white text-sm opacity-55 -ms-24 w-48 font-light bottom-[52px]">
+                  Ingrese el DNI y el nombre de usuario temporal para desbloquear el acceso al pago de la matrícula 
               </div>
             </div>
             <button 
@@ -52,20 +52,129 @@
         </div>
       </div>
     </div>
-    <div class="">
-      <h2>Pago de Matrícula</h2>
+  </div>
+  <div class="grid grid-cols-2 mt-6 gap-x-10">
+    <div class="col-span-2 md:col-span-1">
+      <div class="rounded-xl ring-1 ring-gray-300 p-5" [ngClass]="{'pointer-events-none opacity-50 bg-gray-100': isDisabled }">
+        <div class="grid md:w-auto">
+          <p class="font-medium text-lg mb-2">Datos Personales</p>
+          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 -mb-3">
+            <mat-label>Nombre</mat-label>
+            <input
+              [(ngModel)]="name"
+              type="text"
+              placeholder="Ingrese el nombre"
+              matInput
+              [ngModelOptions]="{standalone: true}"
+            >
+          </mat-form-field>
     
-      <form (submit)="handleSubmit($event)" class="payment-form">
-        <div class="form-group">
-          <label for="card-element">Tarjeta de Crédito/Débito</label>
-          <!-- Contenedor donde Stripe renderiza el elemento de tarjeta -->
-          <div id="card-element" class="card-element"></div>
-          <!-- Mensajes de error para problemas con el elemento de tarjeta -->
-          <div id="card-errors" role="alert">{{ stripeError }}</div>
+          <div class="grid grid-cols-2 gap-x-2 col-span-2 sm:col-span-1">
+            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 -mb-3">
+              <mat-label>Numero</mat-label>
+              <input
+                [(ngModel)]="number"
+                type="text"
+                placeholder="Ingrese el numero"
+                matInput
+                [ngModelOptions]="{standalone: true}"
+              >
+              <mat-icon matSuffix>phone</mat-icon>
+            </mat-form-field>
+    
+            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 -mb-3">
+              <mat-label>Correo</mat-label>
+              <input
+                [(ngModel)]="email"
+                type="text"
+                placeholder="Ingrese el numero"
+                matInput
+                [ngModelOptions]="{standalone: true}"
+              >
+              <mat-icon matSuffix>email</mat-icon>
+            </mat-form-field>
+          </div>
+    
+          <div class="grid grid-cols-2 gap-x-2 col-span-2 sm:col-span-1">
+            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 -mb-3">
+              <mat-label>Tipo de Documento</mat-label>
+              <mat-select 
+                  [(ngModel)]="tipoDoc"
+                  [ngModelOptions]="{standalone: true}"
+              >
+                  <mat-option 
+                      *ngFor="let e of tiposDocumento" 
+                      [value]="e._id"
+                  >
+                      {{ e.type }}
+                  </mat-option>
+              </mat-select>
+          </mat-form-field>
+    
+            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 -mb-3">
+              <mat-label>Nro. Documento</mat-label>
+              <input
+                [(ngModel)]="n_doc"
+                type="text"
+                placeholder="Ingrese el numero"
+                matInput
+                [ngModelOptions]="{standalone: true}"
+              >
+              <mat-icon matSuffix>badge</mat-icon>
+            </mat-form-field>
+          </div>
+    
+          <p class="font-medium text-lg mb-2">Datos del Pago</p>
+          <div class="col-span-2 sm:col-span-1 mb-2">
+            <div id="card-element" class="card-element">
+    
+            </div>
+          </div>
+    
+          <p class="font-medium text-lg mb-2">Dirección de Facturación</p>
+          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 -mb-3">
+            <mat-label>Direccion</mat-label>
+            <input
+              [(ngModel)]="line1"
+              type="text"
+              placeholder="Ingrese el direccion 1"
+              matInput
+              [ngModelOptions]="{standalone: true}"
+            >
+            <mat-icon matSuffix>location_on</mat-icon>
+          </mat-form-field>
+          <div class="flex justify-end gap-x-2">
+            <p class="flex justify-start items-center text-sm font-normal w-3/4">Se enviará la boleta/ruc al correo proporcionado durante su contacto.</p>
+            <button 
+              (click)="pagar()"  
+              mat-flat-button 
+              color="custom-color" 
+              class="mt-3 w-1/4"
+            >
+              Pagar
+            </button>
+          </div>
         </div>
-      
-        <button type="submit" class="submit-button">Pagar</button>
-      </form>
-      
+      </div>
     </div>
+    <div class="col-span-2 md:col-span-1 flex items-center justify-center mt-6 md:-mt-4 md:mx-6">
+      <div class="bg-white rounded-xl ring-1 ring-gray-300 p-6 md:m-3 font-medium text-xl">
+        <p class="flex justify-center gap-x-2 items-center">
+          <i class="fa-solid fa-graduation-cap"></i>
+          Matrícula de Alumno Nuevo
+        </p>
+        <div class="mt-3 border-b border-gray-400"></div>
+        <p class="mt-3 -mb-2">Información del Precio</p>
+        <div class="flex flex-col my-4 text-base">
+          <p class="mb-1">Monto Base: <span class="font-normal">S/ 246.00</span></p>
+          <p>IGV (18%): <span class="font-normal">S/ 54.00</span></p>
+          <div class="mt-3 border-b border-gray-400 mb-3"></div>
+          <p>Total a pagar: <span class="font-normal">S/ 300.00</span></p>
+        </div>
+        <div class="mt-3 border-b border-gray-200"></div>
+        <p class="text-sm mt-3 font-normal">El país, la ciudad y el departamento 
+          figurarán en Boleta/Ruc como Peru, Lima, Departamento de Lima respectivamente.</p>
+      </div>
+    </div>
+  </div>
 </div>

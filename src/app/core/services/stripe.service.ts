@@ -11,13 +11,13 @@ export class StripeService {
   private stripePromise: Promise<Stripe | null>;
 
   constructor(private http: HttpClient) {
-    this.stripePromise = loadStripe('pk_test_51Pr2OvGk8XuMQuxy4SKqcatnltCcjyHPnK0c38oZyOoIKMzRZ429cZHNS1CLPI93FbGRR1KHgFA5ZSzhYtDl4O6j0007JeaqHk');
+    this.stripePromise = loadStripe(environment.stripePublicKey.toString());
   }
 
-  getStripe(): Promise<Stripe | null> {
+  getStripe() {
     return this.stripePromise;
   }
-
+  
   procesarPago(data: any) {
     return this.http.post(`${baseUrl}/stripe/`, data)
   }

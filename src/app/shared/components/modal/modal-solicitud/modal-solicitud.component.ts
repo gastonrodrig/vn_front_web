@@ -67,64 +67,9 @@ export class ModalSolicitudComponent {
 
   guardarSolicitud() {
     this.loading = true;
-
-    // Validaciones básicas de campos requeridos
-    if (this.solicitud.nombre_hijo === '') {
-      this.snack.open('El nombre del hijo es requerido', '', {
-        duration: 3000
-      });
-      this.loading = false;
-      return;
-    }
-
-    if (this.solicitud.apellido_hijo === '') {
-      this.snack.open('El apellido del hijo es requerido', '', {
-        duration: 3000
-      });
-      this.loading = false;
-      return;
-    }
-
-    if (this.solicitud.dni_hijo === '') {
-      this.snack.open('El DNI del hijo es requerido', '', {
-        duration: 3000
-      });
-      this.loading = false;
-      return;
-    }
-
-    if (this.solicitud.telefono_padre === '') {
-      this.snack.open('El teléfono del padre es requerido', '', {
-        duration: 3000
-      });
-      this.loading = false;
-      return;
-    }
-
-    if (this.solicitud.correo_padre === '') {
-      this.snack.open('El correo del padre es requerido', '', {
-        duration: 3000
-      });
-      this.loading = false;
-      return;
-    }
-
-    if (this.data.isCreate) {
-      this.solicitudService.agregarSolicitud(this.solicitud).subscribe(
-        (data: any) => {
-          Swal.fire('Solicitud guardada', 'La solicitud ha sido guardada con éxito', 'success').then(() => {
-            this.closeModal();
-          });
-        },
-        (error) => {
-          this.loading = false;
-          console.log(error);
-        }
-      );
-    }
-
+    
     if (this.data.isEdit) {
-      this.solicitudService.modificarSolicitud(this.solicitudId,this.solicitud).subscribe(
+      this.solicitudService.modificarSolicitud(this.solicitudId, { estado: this.solicitud.estado }).subscribe(
         (data: any) => {
           this.loading = false;
           Swal.fire('Solicitud actualizada', 'La solicitud ha sido actualizada con éxito', 'success').then(() => {

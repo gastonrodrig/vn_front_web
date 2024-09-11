@@ -1,85 +1,13 @@
 <div class="p-4">
     <div class="flex flex-col items-center">
         <div class="text-base mt-2 mb-6 font-medium">
-            <p>{{ data.isEdit ? 'Editar Solicitud' : 'Agregar Solicitud' }}</p> 
+            <p>{{ data.isEdit ? 'Editar Solicitud' : 'Editar Solicitud' }}</p> 
         </div> 
     </div>
     <form (ngSubmit)="guardarSolicitud()">
         <p class="pl-0.5 pb-4 font-medium">Datos de la solicitud:</p>
         <div class="grid grid-cols-2 gap-x-4">
-            <!-- Nombre del hijo -->
-            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-                <mat-label>Nombre del hijo</mat-label>
-                <input
-                    [(ngModel)]="solicitud.nombre_hijo"
-                    type="text"
-                    placeholder="Ingrese el nombre del hijo"
-                    matInput
-                    [ngModelOptions]="{standalone: true}"
-                >
-            </mat-form-field>
-
-            <!-- Apellido del hijo -->
-            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-                <mat-label>Apellido del hijo</mat-label>
-                <input
-                    [(ngModel)]="solicitud.apellido_hijo"
-                    type="text"
-                    placeholder="Ingrese el apellido del hijo"
-                    matInput
-                    [ngModelOptions]="{standalone: true}"
-                >
-            </mat-form-field>
-
-            <!-- DNI del hijo -->
-            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-                <mat-label>DNI del hijo</mat-label>
-                <input
-                    [(ngModel)]="solicitud.dni_hijo"
-                    type="text"
-                    placeholder="Ingrese el DNI del hijo"
-                    matInput
-                    [ngModelOptions]="{standalone: true}"
-                >
-            </mat-form-field>
-
-            <!-- Teléfono del padre -->
-            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-                <mat-label>Teléfono del padre</mat-label>
-                <input
-                    [(ngModel)]="solicitud.telefono_padre"
-                    type="text"
-                    placeholder="Ingrese el teléfono del padre"
-                    matInput
-                    [ngModelOptions]="{standalone: true}"
-                >
-                <mat-icon matSuffix>phone</mat-icon>
-            </mat-form-field>
-
-            <!-- Correo del padre -->
-            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-                <mat-label>Correo del padre</mat-label>
-                <input
-                    [(ngModel)]="solicitud.correo_padre"
-                    type="email"
-                    placeholder="Ingrese el correo del padre"
-                    matInput
-                    [ngModelOptions]="{standalone: true}"
-                >
-                <mat-icon matSuffix>email</mat-icon>
-            </mat-form-field>
-
-            <!-- Grado -->
-            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-                <mat-label>Grado</mat-label>
-                <mat-select 
-                    [(ngModel)]="solicitud.grado_ID"
-                    [ngModelOptions]="{standalone: true}"
-                >
-                    <mat-option *ngFor="let grado of grados" [value]="grado.id">{{ grado.nombre }}</mat-option>
-                </mat-select>
-            </mat-form-field>
-
+            
             <!-- Estado -->
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Estado de la solicitud</mat-label>
@@ -93,22 +21,12 @@
                 </mat-select>
             </mat-form-field>
 
-            <!-- Fecha de la solicitud -->
-            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-                <mat-label>Fecha de la solicitud</mat-label>
-                <input
-                    [(ngModel)]="solicitud.fecha_solicitud"
-                    type="date"
-                    matInput
-                    [ngModelOptions]="{standalone: true}"
-                >
-            </mat-form-field>
         </div>
 
         <!-- Botón Guardar -->
         <div class="flex justify-end mt-4">
             <button mat-flat-button color="primary" [disabled]="loading">
-                {{ data.isEdit ? 'Guardar cambios' : 'Agregar solicitud' }}
+                {{ data.isEdit ? 'Guardar cambios' : 'Editar solicitud' }}
             </button>
         </div>
     </form>

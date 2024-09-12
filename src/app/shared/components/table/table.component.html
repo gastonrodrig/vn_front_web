@@ -10,9 +10,11 @@
                     {{ column.header }}
                   </th>
                 }
-                <th class="py-3.5 pl-5 pr-3 text-left text-sm font-semibold text-gray-900">
-                  Acciones
-                </th>
+                @if(!noActions) {
+                  <th class="py-3.5 pl-5 pr-3 text-left text-sm font-semibold text-gray-900">
+                    Acciones
+                  </th>
+                }
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
@@ -23,58 +25,60 @@
                       {{ getNestedProperty(row, column.field) }}
                     </td>
                   }
-                  <td>
-                    <div class="flex py-3 pl-5 pr-3 text-base gap-x-3">
-                      @if(asignActive) {
-                        <div 
-                          class="hover:text-amber-500 hover:cursor-pointer hover:scale-125 duration-200"
-                          (click)="asign(row[trackByField])"
-                        >
-                          <i class="fa-solid fa-user-graduate"></i>
-                        </div>
-                      }
-                      @if(hoursActive) {
-                        <div
-                          class="hover:text-emerald-500 hover:cursor-pointer hover:scale-125 duration-200"
-                          (click)="hours(row[trackByField])"
-                        >
-                          <i class="fa-solid fa-clock"></i>
-                        </div>
-                      }
-                      @if(pfpActive) {
-                        <div
-                          class="hover:text-lime-500 hover:cursor-pointer hover:scale-125 duration-200"
-                          (click)="pfp(row[trackByField])"
-                        >
-                          <i class="fa-solid fa-id-badge"></i>
-                        </div>
-                      }
-                      @if(filesActive) {
-                        <div
-                          class="hover:text-orange-500 hover:cursor-pointer hover:scale-125 duration-200"
-                          (click)="files(row[trackByField])"
-                        >
-                          <i class="fa-solid fa-file-pdf"></i>
-                        </div>
-                      }
-                      @if(editActive) {
-                        <div 
-                          class="hover:text-blue-500 hover:cursor-pointer hover:scale-125 duration-200"
-                          (click)="edit(row[trackByField])"
-                        >
-                          <i class="fa-solid fa-pen"></i>
-                        </div>
-                      }
-                      @if(deleteActive) {
-                        <div 
-                          class="hover:text-red-500 hover:cursor-pointer hover:scale-125 duration-200"
-                          (click)="delete(row[trackByField])"
-                        >
-                          <i class="fa-solid fa-trash"></i>
-                        </div>
-                      }
-                    </div>
-                  </td>
+                  @if(!noActions) {
+                    <td>
+                      <div class="flex py-3 pl-5 pr-3 text-base gap-x-3">
+                        @if(asignActive) {
+                          <div 
+                            class="hover:text-amber-500 hover:cursor-pointer hover:scale-125 duration-200"
+                            (click)="asign(row[trackByField])"
+                          >
+                            <i class="fa-solid fa-user-graduate"></i>
+                          </div>
+                        }
+                        @if(hoursActive) {
+                          <div
+                            class="hover:text-emerald-500 hover:cursor-pointer hover:scale-125 duration-200"
+                            (click)="hours(row[trackByField])"
+                          >
+                            <i class="fa-solid fa-clock"></i>
+                          </div>
+                        }
+                        @if(pfpActive) {
+                          <div
+                            class="hover:text-lime-500 hover:cursor-pointer hover:scale-125 duration-200"
+                            (click)="pfp(row[trackByField])"
+                          >
+                            <i class="fa-solid fa-id-badge"></i>
+                          </div>
+                        }
+                        @if(filesActive) {
+                          <div
+                            class="hover:text-orange-500 hover:cursor-pointer hover:scale-125 duration-200"
+                            (click)="files(row[trackByField])"
+                          >
+                            <i class="fa-solid fa-file-pdf"></i>
+                          </div>
+                        }
+                        @if(editActive) {
+                          <div 
+                            class="hover:text-blue-500 hover:cursor-pointer hover:scale-125 duration-200"
+                            (click)="edit(row[trackByField])"
+                          >
+                            <i class="fa-solid fa-pen"></i>
+                          </div>
+                        }
+                        @if(deleteActive) {
+                          <div 
+                            class="hover:text-red-500 hover:cursor-pointer hover:scale-125 duration-200"
+                            (click)="delete(row[trackByField])"
+                          >
+                            <i class="fa-solid fa-trash"></i>
+                          </div>
+                        }
+                      </div>
+                    </td>
+                  }
                 </tr>
               }
             </tbody>

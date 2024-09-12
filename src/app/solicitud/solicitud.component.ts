@@ -8,25 +8,19 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SolicitudService } from '../core/services/solicitud.service';
 import { GradoService } from '../core/services/grado.service';
 import Swal from 'sweetalert2';
-
-interface Solicitud {
-  nombre_hijo: string;
-  apellido_hijo: string;
-  dni_hijo: string;
-  telefono_padre: string;
-  correo_padre: string;
-  grado: {
-    _id: string;
-  };
-  estado: string;
-  fecha_solicitud: Date;
-}
-
+import { MatSelectModule } from '@angular/material/select';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-solicitud',
   standalone: true,
-  imports: [MatInputModule, FormsModule, MatCheckbox],
+  imports: [
+    MatInputModule, 
+    FormsModule, 
+    MatCheckbox,
+    MatSelectModule,
+  CommonModule,
+  ],
   templateUrl: './solicitud.component.html',
   styleUrls: ['./solicitud.component.css']
 })
@@ -36,7 +30,7 @@ export class SolicitudComponent {
   solicitudId: any;
   loading = false;
   aceptarTerminos = false; // Términos de aceptación
-  grado: any[] = []; // Lista de grados
+  grados: any[] = []; // Lista de grados
 
   constructor(
     private snack: MatSnackBar,
@@ -56,6 +50,14 @@ export class SolicitudComponent {
       estado: 'pendiente', // El estado inicial de la solicitud es "pendiente"
       fecha_solicitud: new Date()
     };
+    this.gradoService.listarGrados().subscribe(
+      (data: any) => {
+        this.grados = data       
+      },
+      (error) => {
+        console.log(error)
+      },
+    )
   }
 
   // Método para manejar el envío del formulario
@@ -68,9 +70,7 @@ export class SolicitudComponent {
       dni_hijo: this.solicitud.dni_hijo,
       telefono_padre: this.solicitud.telefono_padre,
       correo_padre: this.solicitud.correo_padre,
-      estado: this.solicitud.estado,
-      fecha_solicitud: this.solicitud.fecha_solicitud,
-      grado_id: this.solicitud.grado._id,
+      grado_ID: this.solicitud.grado._id,
     };
 
     this.solicitudService.agregarSolicitud(dataSolicitud).subscribe(

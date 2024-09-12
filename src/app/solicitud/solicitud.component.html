@@ -75,12 +75,27 @@
             </div>
 
           </div>
+          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+            <mat-label>Grado</mat-label>
+            <mat-select 
+                [(ngModel)]="solicitud.grado._id"
+                [ngModelOptions]="{standalone: true}"
+            >
+                <mat-option 
+                    *ngFor="let e of grados" 
+                    [value]="e._id"
+                >
+                    {{ e.nombre}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
 
           <!-- Fecha de Solicitud -->
           <mat-form-field appearance="fill" class="w-full mb-4">
             <mat-label>Fecha de Solicitud</mat-label>
             <input matInput name="fecha_solicitud" [value]="todayDate()" readonly>
           </mat-form-field>
+
 
           <!-- Términos y Condiciones -->
           <div class="flex items-center mb-4">

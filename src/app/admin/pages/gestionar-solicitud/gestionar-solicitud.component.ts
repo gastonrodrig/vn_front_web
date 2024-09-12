@@ -17,14 +17,12 @@ import Swal from 'sweetalert2';
   styleUrl: './gestionar-solicitud.component.css'
 })
 export class GestionarSolicitudComponent {
-  solicitudes = [];
-  solicitud = {};
-  trackByField = 'solicitud_id';
-  loading = false;
-  searchTerm: string = '';
-
-  // Agregar esta propiedad
-  loadedComplete: boolean = false;
+  solicitudes = []
+  solicitud = []
+  trackByField = 'solicitud_id'
+  loading = false
+  searchTerm: string = ''
+  loadedComplete: boolean = false
 
   columns = [
     { header: 'Nombre del hijo', field: 'nombre_hijo' },
@@ -33,8 +31,8 @@ export class GestionarSolicitudComponent {
     { header: 'Teléfono del padre', field: 'telefono_padre' },
     { header: 'Correo del padre', field: 'correo_padre' },
     { header: 'Estado', field: 'estado' },
-    { header: 'Fecha', field: 'fecha_solicitud',}
-  ];
+    { header: 'Fecha', field: 'fecha_solicitud' }
+  ]
 
   constructor(
     private solicitudService: SolicitudService,
@@ -44,29 +42,25 @@ export class GestionarSolicitudComponent {
   ngOnInit() {
     this.loading = true;
     this.listarSolicitudes()
-  
   }
+
   listarSolicitudes(){
     this.solicitudService.listarSolicitudes().subscribe(
       (data: any) => { 
-        console.log(data)
         this.solicitudes = data.map((solicitud: any) => {
-          solicitud.fecha_solicitud = this.formatFecha(solicitud.fecha_solicitud);
-          return solicitud;
-        });
-        this.loading = false;
-        this.loadedComplete = true; // Establecer en true cuando se cargan los datos
-        
+          solicitud.fecha_solicitud = this.formatFecha(solicitud.fecha_solicitud)
+          return solicitud
+        })
+        this.loading = false
+        this.loadedComplete = true
       },
       (error) => {
-        this.loading = false;
-        Swal.fire('Error', 'Error al cargar los datos de solicitudes', 'error');
+        this.loading = false
+        Swal.fire('Error', 'Error al cargar los datos de solicitudes', 'error')
       }
     );
+  }
 
-
-
-}
   formatFecha(fecha: any) {
     const date = new Date(fecha)
     const year = date.getFullYear()
@@ -83,91 +77,8 @@ export class GestionarSolicitudComponent {
     return this.solicitudes.filter((solicitud: any) =>
       solicitud.nombre_hijo.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
       solicitud.dni_hijo.includes(this.searchTerm)
-    );
+    )
   }
 
-  agregarSolicitud() {
-    const dialogRef = this.dialog.open(ModalSolicitudComponent, {
-      data: { isCreate: true },
-      width: '70%'
-    });
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.solicitudService.listarSolicitudes().subscribe(
-        (data: any) => {
-          this.solicitudes = data.sort((a: any, b: any) => a.nombre_hijo.localeCompare(b.nombre_hijo));
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    });
-  }
-  editarSolicitud(isEdit: any, id: any) {
-    this.loading = true;
-    if (isEdit) {
-      this.solicitudService.obtenerSolicitud(id).subscribe(
-        (data: any) => {
-          this.solicitud = data; // Cambié de array a objeto
-          this.loading = false;
-          const dialogRef = this.dialog.open(ModalSolicitudComponent, {
-            data: { solicitud: this.solicitud, isEdit: true },
-            width: '70%'
-          });
-
-          dialogRef.afterClosed().subscribe(() => {
-            this.solicitudService.listarSolicitudes().subscribe(
-              (data: any) => {
-                this.solicitudes = data.sort((a: any, b: any) => a.nombre_hijo.localeCompare(b.nombre_hijo));
-              },
-              (error) => {
-                console.log(error);
-              }
-            );
-          });
-        },
-        (error) => {
-          this.loading = false;
-          console.log(error);
-        }
-      );
-    }
-  }
-  eliminarSolicitud(isDeleted: any, id: any) {
-    if (isDeleted) {
-      Swal.fire({
-        title: 'Eliminar solicitud',
-        text: '¿Estás seguro de eliminar la solicitud?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Eliminar',
-        cancelButtonText: 'Cancelar'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.loading = true;
-          this.solicitudService.eliminarSolicitud(id).subscribe(
-            () => {
-              this.loading = false;
-              Swal.fire('Solicitud eliminada', 'La solicitud ha sido eliminada con éxito', 'success');
-              this.solicitudService.listarSolicitudes().subscribe(
-                (data: any) => {
-                  this.solicitudes = data.sort((a: any, b: any) => a.nombre_hijo.localeCompare(b.nombre_hijo));
-                },
-                (error) => {
-                  console.log(error);
-                }
-              );
-            },
-            (error) => {
-              this.loading = false;
-              Swal.fire('Error', 'Error al eliminar la solicitud', 'error');
-            }
-          );
-        }
-      });
-    }
-  }
 }
 

@@ -369,6 +369,21 @@ export class ModalUsuarioComponent {
       }
     }
   }
+  rolSeleccionado: boolean = false;
+
+  onRolChange(rol: string) {
+    this.rolSeleccionado = !!rol;
+  }
+  validacionesPre(){
+  if (!this.usuario.rol) {
+    Swal.fire('Error', 'Debe seleccionar un rol.', 'error');
+    this.loading = false;
+    return;
+  }
+
+
+
+  }
 
   guardarInformacion() {
     this.loading = true
@@ -402,8 +417,38 @@ export class ModalUsuarioComponent {
           return
       }
   
-      // VALIDACIONES
-  
+    if (!this.usuario.rol) {
+      Swal.fire('Error', 'Debe seleccionar un rol.', 'error');
+      this.loading = false;
+      return;
+    }
+
+    if (!this.usuario.email || !this.usuario.contrasena || !this.usuario.usuario) {
+      Swal.fire('Error', 'Todos los campos deben ser completados.', 'error');
+      this.loading = false;
+      return;
+    }
+
+    if (/\d/.test(this.usuario.usuario)) {
+      Swal.fire('Error', 'El nombre no puede contener números.', 'error');
+      this.loading = false;
+      return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(this.usuario.email)) {
+      Swal.fire('Error', 'El correo electrónico no es válido.', 'error');
+      this.loading = false;
+      return;
+    }
+
+    if (!this.usuario.contrasena) {
+      Swal.fire('Error', 'La contraseña no puede estar vacía.', 'error');
+      this.loading = false;
+      return;
+    }
+
+      
       this.userService.agregarUsuario(userData).subscribe(
         (data: any) => {
           this.usuarioId = data._id

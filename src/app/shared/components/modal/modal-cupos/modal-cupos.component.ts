@@ -62,7 +62,6 @@ export class ModalCuposComponent {
         _id: ''
       }
     }
-   
     this.gradoService.listarGrados().subscribe(
       (data: any) => {
         this.grados = data       

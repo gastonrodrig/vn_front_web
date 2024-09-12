@@ -93,6 +93,13 @@ export class ModalCursoComponent {
       this.loading = false
       return
     }
+    const nombreValido = /^[a-zA-Z\s]+$/.test(dataCurso.nombre);
+
+    if (!nombreValido) {
+      Swal.fire('Error', 'El nombre no puede contener números', 'error');
+      this.loading = false;
+      return;
+    }
 
     this.cursoService.agregarCurso(dataCurso).subscribe(
       (data: any) => {
@@ -135,7 +142,8 @@ export class ModalCursoComponent {
       },
       (error) => {
         console.log(error)
-      }
+      },
+      
     ) 
   }
 
@@ -167,6 +175,7 @@ export class ModalCursoComponent {
               duration: 3000
             })
             this.listarGradosPorCurso()
+           
           }
         )
       } 
@@ -392,8 +401,27 @@ export class ModalCursoComponent {
       const data = {
         nombre: this.curso.nombre
       }
+      if(data.nombre === '') {
+       
+        Swal.fire('Error', 'El nombre del curso es requerido', 'error');
+        this.loading = false;
+        return;
 
+        /*this.snack.open('El nombre del curso es requerido', 'Cerrar', {
+          duration: 3000
+        })
+        this.loading = false
+        return*/
+      }
+      const nombreValido = /^[a-zA-Z\s]+$/.test(data.nombre);
+  
+      if (!nombreValido) {
+        Swal.fire('Error', 'El nombre no puede contener números', 'error');
+        this.loading = false;
+        return;
+      }
       if(this.obtenerGradosSeleccionados().length === 0) {
+        
         this.snack.open('Debe seleccionar por lo menos 1 grado.', 'Cerrar', {
           duration: 3000
         })

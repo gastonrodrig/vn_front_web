@@ -93,20 +93,29 @@ export class ModalSeccionComponent {
       }
     )
   }
-
+  
   crearSeccion() {
     this.loading = true
     const dataSeccion = {
       nombre: this.seccion.nombre,
       aula: this.seccion.aula
     }
+    const nombreValido = /^[a-zA-Z\s]+$/.test(dataSeccion.nombre);
+   
+  
+    if (dataSeccion.nombre === '' || dataSeccion.aula === '') {
 
-    if(dataSeccion.nombre === '') {
-      this.snack.open('El nombre de la seccion es requerida', '',{
-        duration: 3000
-      })
-      this.loading = false
-      return
+      Swal.fire('Error', 'El nombre de la sección y el aula son requeridos', 'error');
+      this.loading = false;
+      return;
+    }
+  
+    if (!nombreValido) {
+      Swal.fire('Error', 'El nombre no puede contener números', 'error');
+      this.loading = false;
+      return;
+
+      
     }
 
     this.seccionService.agregarSeccion(dataSeccion).subscribe(
@@ -118,12 +127,12 @@ export class ModalSeccionComponent {
       (error) => {
         console.log(error)
       }
-    )
+    );
   }
-
+  
   guardarInformacion() {
     this.loading = true
-
+    const regex = /\d/;
     if(this.data.isCreate) {
       const dataSGP = {
         seccion_id: this.seccionGradoPeriodo.seccion._id,
@@ -132,6 +141,17 @@ export class ModalSeccionComponent {
       }
   
       // VALIDACIONES
+ if (!this.seccionGradoPeriodo.seccion || !this.seccionGradoPeriodo.seccion._id) {
+  Swal.fire('Error', 'Debe elegir una sección.', 'error');
+  this.loading = false;
+  return;
+}
+
+if (!this.seccionGradoPeriodo.grado || !this.seccionGradoPeriodo.grado._id) {
+  Swal.fire('Error', 'Debe elegir un grado.', 'error');
+  this.loading = false;
+  return;
+}
 
       this.sgpService.agregarSeccionGradoPeriodo(dataSGP).subscribe(
         (data) => {
@@ -146,13 +166,26 @@ export class ModalSeccionComponent {
         }
       )
     }
-
+ 
     if(this.data.isEdit) {
       const data = {
         nombre: this.seccionGradoPeriodo.seccion.nombre,
         aula: this.seccionGradoPeriodo.seccion.aula
       }
-  
+      const nombreValido = /^[a-zA-Z\s]+$/.test(data.nombre);
+
+ if (data.nombre === '' || data.aula === '') {
+   Swal.fire('Error', 'El nombre de la sección y el aula son requeridos', 'error');
+   this.loading = false;
+   return;
+ }
+
+ if (!nombreValido) {
+   Swal.fire('Error', 'El nombre no puede contener números', 'error');
+   this.loading = false;
+   return;
+ }
+
       // VALIDACIONES
 
       this.seccionService.modificarSeccion(this.seccionId, data).subscribe(

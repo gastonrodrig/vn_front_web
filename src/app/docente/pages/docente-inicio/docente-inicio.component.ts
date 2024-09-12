@@ -48,7 +48,6 @@ export class DocenteInicioComponent {
     private horarioService: HorarioService,
     private authService: AuthService,
     private cdService: CursoDocenteService
-
   ) {}
 
   ngOnInit() {

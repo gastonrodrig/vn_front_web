@@ -11,11 +11,7 @@
             [icon]="'magnifying-glass'"
             [widthFont]="'font-normal bg-gray-50'"
         ></app-input>
-        <button 
-            (click)="agregarSolicitud()"
-            mat-flat-button 
-            color="custom-color" 
-        > + Editar </button>
+       
     </div>
 </div>
 
@@ -24,11 +20,7 @@
     [data]="displayedSolicitudes()"
     [trackByField]="trackByField"
     [loadedComplete]="loadedComplete"
-    [editActive]="true"
-    [deleteActive]="true"
-    [asignActive]="false"
-    (editAction)="editarSolicitud($event.isEdit, $event.id)"
-    (deleteAction)="eliminarSolicitud($event.isDeleted, $event.id)"
+    [noActions]="true"
 ></app-table>
 
 

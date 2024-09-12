@@ -28,14 +28,14 @@ export class GestionarMatriculaComponent {
     { header: 'Nro. Documento', field: 'estudiante.numero_documento' },
     { header: 'Nombre', field: 'estudiante' },
     { header: 'Monto', field: 'monto',
-      valueGetter: (row: any) => this.formatMonto(row.monto)
+      
     },
     { header: 'Método de Pago', field: 'metodo_pago' },
     { header: 'Nro. Operacion', field: 'n_operacion' },
     { header: 'Periodo del estudiante', field: 'periodo.anio' },
     { header: 'Tipo', field: 'tipo' },
     { header: 'Fecha', field: 'fecha',
-      valueGetter: (row: any) => this.formatFecha(row.fecha)
+    
     },
   ]
 

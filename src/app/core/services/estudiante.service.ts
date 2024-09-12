@@ -50,4 +50,7 @@ export class EstudianteService {
   modificarArchivosEstudiante(id: string, data: FormData) {
     return this.http.put(`${baseUrl}/estudiante/assign-files/${id}`, data)
   }
+  obtenerEstudiantePorNroDoc(numero_documento: string) {
+    return this.http.get(`${baseUrl}/estudiante/documento/${numero_documento}`)
+  }
 }

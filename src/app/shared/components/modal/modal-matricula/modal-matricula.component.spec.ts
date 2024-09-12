@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MainContentComponent } from './main-content.component';
+import { ModalMatriculaComponent } from './modal-matricula.component';
 
-describe('MainContentComponent', () => {
-  let component: MainContentComponent;
-  let fixture: ComponentFixture<MainContentComponent>;
+describe('ModalMatriculaComponent', () => {
+  let component: ModalMatriculaComponent;
+  let fixture: ComponentFixture<ModalMatriculaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MainContentComponent]
+      imports: [ModalMatriculaComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MainContentComponent);
+    fixture = TestBed.createComponent(ModalMatriculaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -23,6 +23,9 @@ export class CursoDocenteService {
   listarDocentesPorCurso(id: string) {
     return this.http.get(`${baseUrl}/curso-docente/curso/${id}`);
   }
+  listarCursoPorDocente(id: string) {
+    return this.http.get(`${baseUrl}/curso-docente/docente/${id}`);
+  }
   eliminarCursoDocentePorCursoYDocente(cursoId: string, docenteId: string) {
     return this.http.delete(`${baseUrl}/curso-docente/${cursoId}/${docenteId}`);
   }

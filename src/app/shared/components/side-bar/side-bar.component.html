@@ -63,7 +63,7 @@
   <ul class="pt-2 w-full">
     @for (modulo of listaModulos; track modulo.id) {
       <li 
-        class="text-gray-300 text-base cursor-pointer p-2 px-6 rounded-md mt-2 w-full transition-all"
+        class="text-gray-300 text-base cursor-pointer p-2 px-6 rounded-md mt-1 w-full transition-all"
         (click)="toggleClick(modulo)"
         [class]="moduleBgColorHover"
         [ngClass]="changeColorTexts(modulo)"

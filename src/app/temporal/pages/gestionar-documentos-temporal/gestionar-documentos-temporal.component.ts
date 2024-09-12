@@ -26,16 +26,16 @@ import { EstudianteService } from '../../../core/services/estudiante.service';
   styleUrl: './gestionar-documentos-temporal.component.css'
 })
 export class GestionarDocumentosTemporalComponent {
-  loading = false;
-  dni = '';
-  files: File[] = [];
-  isDragging = false;
-  dragCounter = 0;
-  isDisabled = true;
+  loading = false
+  dni = ''
+  files: File[] = []
+  isDragging = false
+  dragCounter = 0
+  isDisabled = true
   estudiante: any
-  estudiantes: any;
-  estudianteId: any;
-  nombreUsuario: any;
+  estudiantes: any
+  estudianteId: any
+  nombreUsuario: any
 
   isCreate = false
   isEdit = false

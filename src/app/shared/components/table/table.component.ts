@@ -19,6 +19,7 @@ export class TableComponent {
   @Input() hoursActive: any
   @Input() pfpActive: any
   @Input() filesActive: any
+  @Input() noActions: any
 
   @Output() editAction = new EventEmitter<{ isEdit: boolean, id: any }>();
   @Output() deleteAction = new EventEmitter<{ isDeleted: boolean, id: any }>();
@@ -33,6 +34,9 @@ export class TableComponent {
   totalResults: any
 
   getNestedProperty(obj: any, path: string): any {
+    if (path === 'estudiante') {
+      return `${obj.estudiante.apellido}, ${obj.estudiante.nombre}`;
+    }
     return path.split('.').reduce((o, p) => o && o[p], obj);
   }
 

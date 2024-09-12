@@ -79,9 +79,6 @@ export class GestionarCuposComponent {
 
   agregarCupo() {
     const dialogRef = this.dialog.open(ModalCuposComponent, {
-      data: {
-        isCreate: true
-      },
       width: '70%'
     })
 
@@ -99,42 +96,6 @@ export class GestionarCuposComponent {
     )
   }
   
-  editarCupo(isEdit: any, id: any) {
-    this.loading = true
-    if (isEdit) {
-      this.cuposService.obtenerCupo(id).subscribe(
-        (data: any) => {
-          this.cupo = data
-          this.loading = false
-          const dialogRef = this.dialog.open(ModalCuposComponent, {
-            data: {
-              cupo: this.cupo,
-              isEdit: true
-            },
-            width: '70%'
-          });
-
-          dialogRef.afterClosed().subscribe(
-            (data) => {
-              this.cuposService.listarCupos().subscribe(
-                (data: any) => {
-                  this.cupos = this.ordenarDatosPorGrado(data)
-                },
-                (error) => {
-                  console.log(error)
-                }
-              )
-            }
-          )
-        },
-        (error) => {
-          this.loading = false
-          console.log(error);
-        }
-      );
-    }
-  }
-
   extractNumber(str: string)  {
     const match = str.match(/\d+/)
     return match ? parseInt(match[0], 10) : 0

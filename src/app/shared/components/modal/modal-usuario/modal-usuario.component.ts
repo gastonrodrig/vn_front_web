@@ -165,7 +165,6 @@ export class ModalUsuarioComponent {
     return this.searchTerm !== '';
   }
 
-
   usuarioSinReferencia() {
     return (this.usuario.estudiante?._id ?? '') !== '' || 
            (this.usuario.docente?._id ?? '') !== '' || 

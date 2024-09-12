@@ -1,92 +1,125 @@
 <div class="p-4">
   <div class="flex flex-col items-center">
-      <div class="text-base mt-2 mb-6 font-medium">
-          <p>Agregar Matricula</p> 
-      </div> 
+    <div class="text-base mt-2 mb-6 font-medium">
+      <p>Agregar Matricula</p> 
+    </div>
   </div>
   <form (ngSubmit)="guardarInformacion()">
-      <p class="pl-0.5 pb-4 font-medium">Datos de la Matrícula:</p>
-      <div class="grid grid-cols-2 gap-x-4">
-          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-              <mat-label>Nombre</mat-label>
-              <input
-                  [(ngModel)]="docente.nombre"
-                  type="text"
-                  placeholder="Ingrese el nombre"
-                  matInput
-                  [ngModelOptions]="{standalone: true}"
-              >
-          </mat-form-field>
+    <p class="pl-0.5 pb-4 font-medium">Datos de la Matrícula:</p>
+    <div class="grid grid-cols-2 gap-x-4">
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <mat-label>Monto (S/.)</mat-label>
+        <input
+          [(ngModel)]="matricula.monto"
+          type="text"
+          placeholder="Ingrese el monto"
+          matInput
+          appSoloNumeros
+          [ngModelOptions]="{standalone: true}"
+        >
+      </mat-form-field>
 
-          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-              <mat-label>Apellido</mat-label>
-              <input
-                  [(ngModel)]="docente.apellido"
-                  type="text"
-                  placeholder="Ingrese el apellido"
-                  matInput
-                  [ngModelOptions]="{standalone: true}"
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+          <mat-label>Metodo de Pago</mat-label>
+          <mat-select 
+              [(ngModel)]="matricula.metodo_pago"
+              [ngModelOptions]="{standalone: true}"
+          >
+              <mat-option 
+                  *ngFor="let e of listaMetodosPago" 
+                  [value]="e.nombre"
               >
-          </mat-form-field>
+                  {{ e.nombre }}
+              </mat-option>
+          </mat-select>
+      </mat-form-field>
 
-          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-              <mat-label>Tipo de Documento</mat-label>
-              <mat-select 
-                  [(ngModel)]="docente.documento._id"
-                  [ngModelOptions]="{standalone: true}"
-              >
-                  <mat-option 
-                      *ngFor="let e of tipoDocumento" 
-                      [value]="e._id"
-                  >
-                      {{ e.type }}
-                  </mat-option>
-              </mat-select>
-          </mat-form-field>
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <mat-label>Número de Operacion</mat-label>
+        <input
+          [(ngModel)]="matricula.n_operacion"
+          type="text"
+          placeholder="Ingrese el nro. de operación"
+          matInput
+          appSoloNumeros
+          [ngModelOptions]="{standalone: true}"
+        >
+      </mat-form-field>
 
-          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-              <mat-label>Numero de Documento</mat-label>
-              <input
-                  [(ngModel)]="docente.numero_documento"
-                  type="text"
-                  placeholder="Ingrese el Numero del Documento"
-                  matInput
-                  appSoloNumeros
-                  [ngModelOptions]="{standalone: true}"
-              >
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-              <mat-label>Direccion</mat-label>
-              <input
-                  [(ngModel)]="docente.direccion"
-                  type="text"
-                  placeholder="Ingrese su Direccion"
-                  matInput
-                  [ngModelOptions]="{standalone: true}"
-              >
-              <mat-icon matSuffix>location_on</mat-icon>
-          </mat-form-field>
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <mat-label>Periodo</mat-label>
+        <mat-select 
+          [(ngModel)]="matricula.periodo_id"
+          [ngModelOptions]="{standalone: true}"
+        >
+          <mat-option 
+            *ngFor="let e of periodos" 
+            [value]="e._id"
+          >
+            {{ e.anio }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-              <mat-label>Telefono</mat-label>
-              <input
-                  [(ngModel)]="docente.telefono"
-                  type="text"
-                  placeholder="Ingrese su telefono"
-                  matInput
-                  [ngModelOptions]="{standalone: true}"
-              >
-              <mat-icon matSuffix>phone</mat-icon>
-          </mat-form-field>
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <mat-label>Dni del Estudiante</mat-label>
+        <input
+          [(ngModel)]="dni"
+          type="text"
+          (input)="validarDNI(dni)" 
+          placeholder="Ingrese el Dni"
+          matInput
+          appSoloNumeros
+          [ngModelOptions]="{standalone: true}"
+        >
+        <mat-icon matSuffix>badge</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <mat-label>Nombre del Estudiante</mat-label>
+        <input
+          [(ngModel)]="nombreEstudiante"
+          type="text"
+          matInput
+          disabled
+          [ngModelOptions]="{standalone: true}"
+        >
+        <mat-icon matSuffix>person</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <mat-label>Fecha</mat-label>
+        <input 
+          [(ngModel)]="fecha"
+          matInput  
+          [matDatepicker]="picker"
+          [ngModelOptions]="{standalone: true}"
+        >
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <mat-label>Tiempo</mat-label>
+        <input
+          [(ngModel)]="tiempo"
+          type="text"
+          placeholder="hh:mm:ss"
+          matInput
+          [ngModelOptions]="{standalone: true}"
+        >
+        <mat-icon matSuffix>access_time</mat-icon>
+      </mat-form-field>
+    </div>
+
+
+    <div class="flex justify-end w-full">
+      <div class="p-2">
+        <button mat-flat-button color="custom-color" class="me-2">Guardar</button>
+        <button mat-button mat-dialog-close color="custom-color">Cancelar</button>
       </div>
-
-
-      <div class="flex justify-end w-full">
-          <div class="p-2">
-              <button mat-flat-button color="custom-color" class="me-2">{{ data.isEdit ? 'Editar' : 'Guardar' }}</button>
-              <button mat-button mat-dialog-close color="custom-color">Cancelar</button>
-          </div>
-      </div>
+    </div>
   </form>
 </div>
 @if(loading) {

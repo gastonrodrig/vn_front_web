@@ -1,4 +1,8 @@
 export const listaMetodosPago = [
-  'Tarjeta',
-  'Efectivo'
+  {
+    nombre: 'Tarjeta'
+  },
+  {
+    nombre: 'Efectivo'
+  }
 ]

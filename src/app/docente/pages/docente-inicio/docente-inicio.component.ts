@@ -12,6 +12,7 @@ import { TableComponent } from '../../../shared/components/table/table.component
 import { InputComponent } from '../../../shared/components/UI/input/input.component';
 import { HorarioService } from '../../../core/services/horario.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { CursoDocenteService } from '../../../core/services/curso-docente.service';
 
 @Component({
   selector: 'app-docente-inicio',
@@ -32,7 +33,8 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './docente-inicio.component.css'
 })
 export class DocenteInicioComponent {
-  horarios: any[] = [];  // Aquí se guardarán los horarios del docente
+  horarios: any[] = [];
+  cursos :any [] = [];  
   loading = false;
   docenteId: any;
   
@@ -41,10 +43,12 @@ export class DocenteInicioComponent {
   times = listaHoras;
 
   horarioPorDiaYHora: any = {};  // Objeto para organizar horarios por día y hora
-
+  
   constructor(
     private horarioService: HorarioService,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdService: CursoDocenteService
+
   ) {}
 
   ngOnInit() {
@@ -55,6 +59,14 @@ export class DocenteInicioComponent {
     this.horarioService.listarHorariosPorDocente(this.docenteId).subscribe(
       (data: any) => {
         this.organizarHorarios(data);  // Organizamos los horarios
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+    this.cdService.listarCursoPorDocente(this.docenteId).subscribe(
+      (data: any) => {
+        this.cursos = data;  // Organizamos los horarios
       },
       (error) => {
         console.log(error);

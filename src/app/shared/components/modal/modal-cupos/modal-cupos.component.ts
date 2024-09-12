@@ -4,7 +4,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CuposService } from '../../../../core/services/cupos.service';
 import { GradoService } from '../../../../core/services/grado.service';
 import { PeriodoService } from '../../../../core/services/periodo.service';
-import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { SoloNumerosDirective } from '../../../directives/solo-numeros.directive';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal-cupos',
@@ -50,25 +50,19 @@ export class ModalCuposComponent {
     private gradoService: GradoService,
     private periodoService: PeriodoService,
   ) {}
+
   ngOnInit() {
-    if (this.data.isEdit) {
-      console.log(this.data)
-      this.GradoSeccion = this.data
-      this.cupo = this.data.cupo;
-      this.cupoId = this.data.cupo._id
-    } else {
-      this.cupo = {
-        capacidad: '',
-        vacantes_disponibles: '',
-        grado: { 
-          _id: ''
-        },
-        periodo: { 
-          _id: ''
-        }
+    this.cupo = {
+      capacidad: '',
+      vacantes_disponibles: '',
+      grado: { 
+        _id: ''
+      },
+      periodo: { 
+        _id: ''
       }
-        
-        }
+    }
+   
     this.gradoService.listarGrados().subscribe(
       (data: any) => {
         this.grados = data       
@@ -86,6 +80,7 @@ export class ModalCuposComponent {
       },
     )
   }
+
   guardarInformacion() {
     this.loading = true
     const dataCupo = {
@@ -128,41 +123,24 @@ export class ModalCuposComponent {
       return
     }
 
-    if(this.data.isCreate) {
-      this.cuposService.agregarCupos(dataCupo).subscribe(
-        (data) => {
-          Swal.fire('Cupo guardado', 'El Cupo ha sido guardado con éxito', 'success').then(
-            (e)=> {
-              this.closeModel()
-            }
-          );
-        },
-        (error) => {
-          this.snack.open(error.error.message, '', {
-            duration: 3000
-          })
-          this.loading = false
-          return
-        }
-      )
-    }
-
-    if(this.data.isEdit) {
-      this.cuposService.modificarCupos(this.cupoId, dataCupo).subscribe(
-        (data) => {
-          this.loading = false
-          Swal.fire('Cupo modificado', 'El cupo ha sido modificado con éxito', 'success').then(
-            (e)=> {
-              this.closeModel()
-            }
-          );
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
-    }
+    this.cuposService.agregarCupos(dataCupo).subscribe(
+      (data) => {
+        Swal.fire('Cupo guardado', 'El Cupo ha sido guardado con éxito', 'success').then(
+          (e)=> {
+            this.closeModel()
+          }
+        );
+      },
+      (error) => {
+        this.snack.open(error.error.message, '', {
+          duration: 3000
+        })
+        this.loading = false
+        return
+      }
+    )
   }
+
   closeModel() {
     this.dialogRef.close()
   }

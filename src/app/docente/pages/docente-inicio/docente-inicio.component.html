@@ -2,12 +2,12 @@
   <mat-progress-bar mode="indeterminate" class="-mt-7 mb-8"></mat-progress-bar>
 }
 <div class="mx-4 mt-2">
-  <div class="flex flex-wrap w-full">
-    <div class="w-full lg:w-1/2 h-full bg-green-100 p-3">
+  <div class="flex gap-x-4 w-full">
+    <div class="w-full lg:w-1/2 h-full bg-gray-100 p-3 ring-1 ring-gray-300 rounded-xl shadow-2xl">
       <!-- Centramos el título "Horario" -->
       <p class="text-center font-normal mb-3">Horario</p>
       <div class="overflow-x-auto">
-        <table class="table-auto w-full divide-y divide-gray-500 border-4 border-gray-700 rounded-xl overflow-hidden" style="background-color: #DFF2D8;">
+        <table class="table-auto w-full divide-y divide-gray-500 border-2 border-stone-300 rounded-xl overflow-hidden" style="background-color: #dbd8d8;">
           <thead class="bg-gray-50">
             <tr>
               <th class="text-center px-2 py-2 w-32 text-xs font-medium text-gray-500 uppercase tracking-wider">Hora</th>
@@ -41,8 +41,18 @@
         </table>  
       </div>
     </div>
-    <div class="w-full lg:w-1/2 h-full bg-gray-200">
-      <!-- Puedes añadir contenido adicional aquí -->
+    <div class="w-full lg:w-1/2 h-full p-4 bg-gray-100 ring-1 ring-gray-300 rounded-xl shadow-2xl">
+      <p class="text-center font-normal mb-3"> Lista de Cursos Asignados: </p>
+      <div class="bg-gray-100">       
+        <div class="grid grid-cols-2 gap-4 ">
+            @for (e of cursos; track e._id) {
+              <div class="bg-gray-400 py-3.5 pl-5 pr-3 text-center text-sm font-normal text-white border-2 border-stone-300 rounded-xl overflow-hidden ">
+                {{ e.curso.nombre }}
+              </div>
+            } 
+          </div>
+        </div>
+      </div> 
     </div>
   </div>
-</div>
+

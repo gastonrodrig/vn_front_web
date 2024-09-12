@@ -1,0 +1,60 @@
+<div class="p-4">
+  <div class="flex flex-col items-center">
+    <div class="text-base mt-2 mb-6 font-medium">
+      <p>{{ data.isEdit ? 'Editar Periodo' : 'Agregar Periodo' }}</p> 
+    </div> 
+  </div>
+
+  <form [formGroup]="periodoForm" (ngSubmit)="guardarInformacion()">
+    <p class="pl-0.5 pb-4 font-medium">Datos del periodo{{ data.isCreate ? ' (Periodos permitidos hasta los 2 proximos años)' : '' }}:</p>
+    <div class="grid grid-cols-2 gap-x-4">
+      <mat-form-field appearance="fill" class="col-span-2">
+        <mat-label>Año</mat-label>
+        <input
+          formControlName="anio"
+          type="text"
+          placeholder="Ingrese el año"
+          matInput
+          appSoloNumeros
+          (ngModelChange)="onYearChange($event)"
+        >
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <mat-label>Fecha de Inicio</mat-label>
+        <input 
+          formControlName="fechaInicio"
+          matInput  
+          [matDatepicker]="pickerInicio"
+          [matDatepickerFilter]="dateFilter"
+        >
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+        <mat-datepicker #pickerInicio></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <mat-label>Fecha de Fin</mat-label>
+        <input 
+          formControlName="fechaFin"
+          matInput  
+          [matDatepicker]="pickerFin"
+          [matDatepickerFilter]="dateFilter"
+        >
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
+        <mat-datepicker #pickerFin></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="flex justify-end w-full">
+      <div class="p-2">
+        <button mat-flat-button color="custom-color" class="me-2">{{ data.isEdit ? 'Editar' : 'Guardar' }}</button>
+        <button mat-button mat-dialog-close color="custom-color">Cancelar</button>
+      </div>
+    </div>
+  </form>
+</div>
+@if(loading) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}

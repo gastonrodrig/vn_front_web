@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SolicitudService } from '../../../../core/services/solicitud.service';
 import Swal from 'sweetalert2';
+import { GradoService } from '../../../../core/services/grado.service';
 
 
 
@@ -37,14 +38,19 @@ export class ModalSolicitudComponent {
   solicitud: any;
   solicitudId: any;
   loading = false;
-  grados: any[] = []; 
+  grado: any[] = []; 
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<ModalSolicitudComponent>,
     private snack: MatSnackBar,
-    private solicitudService: SolicitudService
-  ) {}
+    private solicitudService: SolicitudService,
+    private gradoService: GradoService
+  ) 
+  {
+    dialogRef.disableClose = true
+
+  }
 
   ngOnInit() {
     if (this.data.isEdit) {
@@ -57,33 +63,15 @@ export class ModalSolicitudComponent {
         dni_hijo: '',
         telefono_padre: '',
         correo_padre: '',
-        grado_ID: 0,
+        grado: {
+          _id: ''
+        },
         estado: '',
         fecha_solicitud: new Date()
       };
     }
     
   }
-
-  guardarSolicitud() {
-    this.loading = true;
-    
-    if (this.data.isEdit) {
-      this.solicitudService.modificarSolicitud(this.solicitudId, { estado: this.solicitud.estado }).subscribe(
-        (data: any) => {
-          this.loading = false;
-          Swal.fire('Solicitud actualizada', 'La solicitud ha sido actualizada con éxito', 'success').then(() => {
-            this.closeModal();
-          });
-        },
-        (error) => {
-          this.loading = false;
-          console.log(error);
-        }
-      );
-    }
-  }
-
   closeModal() {
     this.dialogRef.close();
   }

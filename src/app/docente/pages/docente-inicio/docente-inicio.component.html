@@ -1,0 +1,48 @@
+@if(loading) {
+  <mat-progress-bar mode="indeterminate" class="-mt-7 mb-8"></mat-progress-bar>
+}
+<div class="mx-4 mt-2">
+  <div class="flex flex-wrap w-full">
+    <div class="w-full lg:w-1/2 h-full bg-green-100 p-3">
+      <!-- Centramos el título "Horario" -->
+      <p class="text-center font-normal mb-3">Horario</p>
+      <div class="overflow-x-auto">
+        <table class="table-auto w-full divide-y divide-gray-500 border-4 border-gray-700 rounded-xl overflow-hidden" style="background-color: #DFF2D8;">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="text-center px-2 py-2 w-32 text-xs font-medium text-gray-500 uppercase tracking-wider">Hora</th>
+              <!-- Aseguramos que las columnas de los días tengan un tamaño mínimo -->
+              <th *ngFor="let day of days" class="px-2 py-2 text-center text-xs font-medium text-gray-500 tracking-wider uppercase min-w-[100px]">
+                {{ day.nombre }}
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let time of times">
+              <td class="px-2 py-2 w-32 whitespace-nowrap text-xs text-center text-gray-500 font-normal">{{ time }}</td>
+              <ng-container *ngIf="time === '09:30:00 - 10:00:00'; else defaultRow">
+                <td class="px-4 py-2 whitespace-nowrap text-xs text-gray-500 text-center bg-gray-200 font-normal uppercase" [attr.colspan]="days.length + 1">
+                  Recreo
+                </td>
+              </ng-container>
+              <ng-template #defaultRow>
+                <td 
+                  *ngFor="let day of days" 
+                  class="px-2 py-1 whitespace-nowrap text-xs text-white text-center font-normal"
+                  [ngClass]="{'bg-cyan-500 border-l border-r border-gray-200': isSelected(day.nombre, time)}"
+                >
+                  <div *ngIf="isSelected(day.nombre, time)">
+                    {{ getCellInfo(day.nombre, time)?.curso.nombre }}
+                  </div>
+                </td>
+              </ng-template>
+            </tr>
+          </tbody>
+        </table>  
+      </div>
+    </div>
+    <div class="w-full lg:w-1/2 h-full bg-gray-200">
+      <!-- Puedes añadir contenido adicional aquí -->
+    </div>
+  </div>
+</div>

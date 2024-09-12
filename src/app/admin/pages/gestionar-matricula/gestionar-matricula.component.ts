@@ -6,7 +6,6 @@ import { TableComponent } from '../../../shared/components/table/table.component
 import { InputComponent } from '../../../shared/components/UI/input/input.component';
 import { MatriculaService } from '../../../core/services/matricula.service';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ModalMatriculaComponent } from '../../../shared/components/modal/modal-matricula/modal-matricula.component';
 

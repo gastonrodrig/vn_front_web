@@ -147,21 +147,7 @@ export class ModalCuposComponent {
       )
     }
 
-    if(this.data.isEdit) {
-      this.cuposService.modificarCupos(this.cupoId, dataCupo).subscribe(
-        (data) => {
-          this.loading = false
-          Swal.fire('Cupo modificado', 'El cupo ha sido modificado con éxito', 'success').then(
-            (e)=> {
-              this.closeModel()
-            }
-          );
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
-    }
+    
   }
   closeModel() {
     this.dialogRef.close()

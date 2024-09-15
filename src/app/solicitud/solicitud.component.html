@@ -2,7 +2,7 @@
 <nav class="bg-dark-blue-5 dark:bg-dark-blue-5 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 dark:bg-dark-blue-5">
     <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
-      <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Colegio Logo">
+      <img src="assets/images/logo.png" class="h-8" alt="Colegio Logo">
       <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Colegio</span>
     </a>
 
@@ -115,21 +115,60 @@
     </div>
   </div>
 </section>
+<section class="bg-white dark:bg-gray-900" style="background-image: url('../../assets/images/fondex.jpg');">
+  <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+      <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
+          <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Programas para cada tipo de alumno</h2>
+          <p class="mb-5 font-light text-gray-500 sm:text-xl dark:text-gray-400">Requisitos Matricula 2025</p>
+      </div>
+      <div class="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
+          <!-- Alumno Nuevo -->
+          <div (click)="verInformacion('nuevo')" class="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border-4 border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-white dark:text-blue hover:text-blue-900 hover:border-blue-900">
+              <h3 class="mb-4 text-2xl font-semibold">Alumno Nuevo</h3>
+              <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">Para estudiantes que ingresan por primera vez a nuestro colegio.</p>
+              <div class="flex justify-center items-baseline my-8">
+        
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-24 h-24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+                </svg>
+                
+              </div>
+              
+          </div>
+
+          <!-- Alumno Traslado -->
+          <div (click)="verInformacion('traslado')" class="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border-4 border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-white dark:text-blue hover:text-blue-900 hover:border-blue-900">
+              <h3 class="mb-4 text-2xl font-semibold">Alumno Traslado</h3>
+              <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">Para estudiantes que se trasladan desde otros colegios.</p>
+              <div class="flex justify-center items-baseline my-8">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-24 h-24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9.75h4.875a2.625 2.625 0 0 1 0 5.25H12M8.25 9.75 10.5 7.5M8.25 9.75 10.5 12m9-7.243V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0c1.1.128 1.907 1.077 1.907 2.185Z" />
+                </svg>
+                
+              </div>
+              
+          </div>
+
+          <!-- Alumno Regular -->
+          <div (click)="verInformacion('regular')" class="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border-4 border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-white dark:text-blue hover:text-blue-900 hover:border-blue-900">
+              <h3 class="mb-4 text-2xl font-semibold">Alumno Regular</h3>
+              <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">Para estudiantes que ya forman parte de nuestra comunidad.</p>
+              <div class="flex justify-center items-baseline my-8">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-24 h-24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
+                </svg>
+                
+                  
+              </div>
+            
+          </div>
+      </div>
+  </div>
+</section>
 
 <!-- Footer -->
 <footer class="bottom-0 left-0 z-20 w-full p-4 bg-white border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800 dark:border-gray-600">
-  <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+  <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400 text-center">
     © 2024 <a href="#" class="hover:underline">ColegioNatividad</a>. Todos los derechos reservados.
   </span>
-  <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
-    <li>
-      <a href="#" class="hover:underline me-4 md:me-6">Sobre nosotros</a>
-    </li>
-    <li>
-      <a href="#" class="hover:underline me-4 md:me-6">Política de Privacidad</a>
-    </li>
-    <li>
-      <a href="#" class="hover:underline me-4 md:me-6">Contáctanos</a>
-    </li>
-  </ul>
 </footer>

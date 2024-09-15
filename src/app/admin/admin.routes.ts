@@ -15,6 +15,7 @@ import { GestionarDocumentosComponent } from './pages/gestionar-documentos/gesti
 import { GestionarPerfilDocenteComponent } from './pages/gestionar-perfil-docente/gestionar-perfil-docente.component';
 import { GestionarCuposComponent } from './pages/gestionar-cupos/gestionar-cupos.component';
 import { GestionarPeriodosComponent } from './pages/gestionar-periodos/gestionar-periodos.component';
+import { GestionarVacantesComponent } from './pages/gestionar-vacantes/gestionar-vacantes.component';
 
 export const ADMIN_ROUTES: Routes = [
   { 
@@ -80,6 +81,10 @@ export const ADMIN_ROUTES: Routes = [
       {
         path: 'gestionar-periodos',
         component: GestionarPeriodosComponent
+      },
+      {
+        path: 'gestionar-vacantes',
+        component: GestionarVacantesComponent
       }
     ]
   },

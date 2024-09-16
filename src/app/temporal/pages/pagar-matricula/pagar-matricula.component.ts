@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { DocumentoService } from '../../../core/services/documento.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
+import { GmailService } from '../../../core/services/gmail.service';
 
 @Component({
   selector: 'app-pagar-matricula',
@@ -34,79 +35,79 @@ export class PagarMatriculaComponent implements OnInit {
   private elements: StripeElements | undefined;
   private card: StripeCardElement | undefined;
   stripeError: string | undefined;
-  loading = false
-  estudiantes: any
-  estudiante: any
-  estudianteId: any
-  tiposDocumento: any
+  loading = false;
+  estudiantes: any;
+  estudiante: any;
+  estudianteId: any;
+  tiposDocumento: any;
 
-  dni = ''
-  nombreUsuario = ''
+  dni = '';
+  nombreUsuario = '';
 
-  name = ''
-  number = ''
-  email = ''
-  line1 = ''
-  tipoDoc = ''
-  n_doc = ''
+  name = '';
+  number = '';
+  email = '';
+  line1 = '';
+  tipoDoc = '';
+  n_doc = '';
 
-  isDisabled = true
+  isDisabled = true;
 
   constructor(
     private stripeService: StripeService,
     private estudianteService: EstudianteService,
     private authService: AuthService,
     private documentoService: DocumentoService,
+    private gmailService: GmailService,
     private snack: MatSnackBar
   ) {}
 
   ngOnInit() {
     this.estudianteService.listarEstudiantes().subscribe(
       (data: any) => {
-        this.estudiantes = data
+        this.estudiantes = data;
       }
-    )
+    );
     this.documentoService.listarTiposDocumento().subscribe(
       (data: any) => {
-        this.tiposDocumento = data
+        this.tiposDocumento = data;
       }
-    )
-    this.cargarElementosStripe()
+    );
+    this.cargarElementosStripe();
   }
 
   desbloquear() {
-    this.loading = true
-    const user = this.authService.getUser()
-    this.estudiante = this.estudiantes.find((e: any) => e.numero_documento === this.dni)
+    this.loading = true;
+    const user = this.authService.getUser();
+    this.estudiante = this.estudiantes.find((e: any) => e.numero_documento === this.dni);
 
     if (this.dni === '') {
-      this.mostrarMensaje('El Dni es requerido.', 3000)
-      return
+      this.mostrarMensaje('El Dni es requerido.', 3000);
+      return;
     }
 
     if (this.estudiante === undefined) {
-      this.mostrarMensaje('El Dni ingresado no existe.', 3000)
-      return
-    }
-  
-    if (this.nombreUsuario !== user.usuario) {
-      this.mostrarMensaje('El nombre de usuario ingresado es incorrecto.', 3000)
-      return
+      this.mostrarMensaje('El Dni ingresado no existe.', 3000);
+      return;
     }
 
-    this.estudianteId = this.estudiante._id
-    
+    if (this.nombreUsuario !== user.usuario) {
+      this.mostrarMensaje('El nombre de usuario ingresado es incorrecto.', 3000);
+      return;
+    }
+
+    this.estudianteId = this.estudiante._id;
+
     this.estudianteService.obtenerEstudiante(this.estudianteId).subscribe(
       (data: any) => {
-        if(data.estado === 'Pendiente') {
-          this.mostrarMensaje('Los documentos del estudiante aun no han sido aprobados.', 3000);
-        }
-        else {
-          this.isDisabled = false
-          this.loading = false
+        if (data.estado === 'Pendiente') {
+          this.mostrarMensaje('Los documentos del estudiante aún no han sido aprobados.', 3000);
+        } else {
+          this.isDisabled = false;
+          this.loading = false;
         }
       }
-    )
+    );
   }
 
   async cargarElementosStripe() {
@@ -116,18 +117,18 @@ export class PagarMatriculaComponent implements OnInit {
       this.card = this.elements.create('card', { hidePostalCode: false });
       this.card.mount('#card-element');
       this.card.on('change', (event: StripeElementChangeEvent) => {
-        if(event.error) {
-          this.mostrarMensaje(event.error?.message, 3000)
+        if (event.error) {
+          this.mostrarMensaje(event.error?.message, 3000);
         }
       });
     }
   }
 
   async pagar() {
-    if (!this.card){
-      return
+    if (!this.card) {
+      return;
     }
-  
+
     const stripe = await this.stripeService.getStripe();
     const { paymentMethod, error } = await stripe!.createPaymentMethod({
       type: 'card',
@@ -144,26 +145,28 @@ export class PagarMatriculaComponent implements OnInit {
         phone: this.number
       },
     });
-  
+
     if (error) {
       console.error(error);
-      this.mostrarMensaje(error.message, 3000)   
+      this.mostrarMensaje(error.message, 3000);
       this.stripeError = error.message;
     } else {
       const paymentData = {
-        amount: 1000,
-        currency: 'pen',
+        nombre_completo: this.name,
+        monto: 1000,
+        divisa: 'pen',
         paymentMethodId: paymentMethod.id,
         metadata: {
           tipoDocumento: this.tipoDoc,
           nroDocumento: this.n_doc
         }
       };
-      console.log(paymentMethod);
-  
+
       this.stripeService.procesarPago(paymentData).subscribe(
-        (response: any) => {
+        async (response: any) => {
           console.log('Payment successful:', response);
+          const stripeOperationId  = response.stripeOperationId ;
+          await this.enviarCorreoConBoleta(stripeOperationId);
         },
         (error) => {
           console.error('Payment failed:', error);
@@ -172,10 +175,26 @@ export class PagarMatriculaComponent implements OnInit {
     }
   }
 
+  async enviarCorreoConBoleta(operationId: string) {
+    const correoData = {
+      to: this.email,
+      subject: 'Boleta de Pago - Virgen de la Natividad',
+      dni: this.dni
+    };
+
+    try {
+      await this.gmailService.sendEmailPdf(operationId, correoData).toPromise();
+      this.mostrarMensaje('Correo enviado exitosamente con la boleta.', 3000);
+    } catch (error) {
+      console.error('Error al enviar el correo:', error);
+      this.mostrarMensaje('Error al enviar el correo.', 3000);
+    }
+  }
+
   mostrarMensaje(message: any, duration: number) {
     this.snack.open(message, 'Cerrar', {
       duration: duration
-    })
-    this.loading = false
+    });
+    this.loading = false;
   }
 }

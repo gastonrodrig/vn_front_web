@@ -18,7 +18,9 @@
   [data]="displayedSolicitudes()"
   [trackByField]="trackByField"
   [loadedComplete]="loadedComplete"
-  [noActions]="true"
+  [actionsByState]="actionsByState"
+  [requestActive]="true"
+  (actionEvent)="handleTableAction($event)"
 ></app-table>
 
 

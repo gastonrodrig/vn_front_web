@@ -1,12 +1,10 @@
-import { Component, Inject } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
-import { ModalSolicitudComponent } from '../shared/components/modal/modal-solicitud/modal-solicitud.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SolicitudService } from '../core/services/solicitud.service';
-import { GradoService } from '../core/services/grado.service';
+import { SolicitudService } from '../../core/services/solicitud.service';
+import { GradoService } from '../../core/services/grado.service';
 import Swal from 'sweetalert2';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';

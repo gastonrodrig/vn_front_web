@@ -100,7 +100,7 @@ export class PagarMatriculaComponent implements OnInit {
 
     this.estudianteService.obtenerEstudiante(this.estudianteId).subscribe(
       (data: any) => {
-        if (data.estado === 'Pendiente') {
+        if (data.estado !== 'Aprobado') {
           this.mostrarMensaje('Los documentos del estudiante aún no han sido aprobados.', 3000);
         } else {
           this.isDisabled = false;

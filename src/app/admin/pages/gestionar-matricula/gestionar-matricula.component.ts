@@ -6,8 +6,8 @@ import { TableComponent } from '../../../shared/components/table/table.component
 import { InputComponent } from '../../../shared/components/UI/input/input.component';
 import { MatriculaService } from '../../../core/services/matricula.service';
 import { MatDialog } from '@angular/material/dialog';
-import Swal from 'sweetalert2';
 import { ModalMatriculaComponent } from '../../../shared/components/modal/modal-matricula/modal-matricula.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestionar-matricula',
@@ -27,16 +27,12 @@ export class GestionarMatriculaComponent {
   columns = [
     { header: 'Nro. Documento', field: 'estudiante.numero_documento' },
     { header: 'Nombre', field: 'estudiante' },
-    { header: 'Monto', field: 'monto',
-      
-    },
+    { header: 'Monto', field: 'monto' },
     { header: 'Método de Pago', field: 'metodo_pago' },
     { header: 'Nro. Operacion', field: 'n_operacion' },
     { header: 'Periodo del estudiante', field: 'periodo.anio' },
     { header: 'Tipo', field: 'tipo' },
-    { header: 'Fecha', field: 'fecha',
-    
-    },
+    { header: 'Fecha', field: 'fecha' }
   ]
 
   constructor(
@@ -52,7 +48,6 @@ export class GestionarMatriculaComponent {
   listarMatriculas() {
     this.matriculaService.listarMatriculas().subscribe(
       (data: any) => {
-        console.log(data)
         this.matriculas = data.map((matricula: any) => {
           matricula.monto = this.formatMonto(matricula.monto)
           matricula.fecha = this.formatFecha(matricula.fecha);
@@ -64,7 +59,6 @@ export class GestionarMatriculaComponent {
       (error) => {
         this.loading = false
         Swal.fire('Error', 'Error al cargar los datos', 'error')
-        console.log(error)
       }
     )
   }

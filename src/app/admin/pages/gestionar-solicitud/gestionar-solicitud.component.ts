@@ -6,7 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { InputComponent } from '../../../shared/components/UI/input/input.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalSolicitudComponent } from '../../../shared/components/modal/modal-solicitud/modal-solicitud.component';
+import { EstudianteService } from '../../../core/services/estudiante.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -17,14 +18,14 @@ import Swal from 'sweetalert2';
   styleUrl: './gestionar-solicitud.component.css'
 })
 export class GestionarSolicitudComponent {
-  solicitudes = [];
-  solicitud = {};
-  trackByField = 'solicitud_id';
-  loading = false;
-  searchTerm: string = '';
+  solicitudes = []
+  solicitud = []
+  trackByField = '_id'
+  loading = false
+  searchTerm: string = ''
+  loadedComplete: boolean = false
 
-  // Agregar esta propiedad
-  loadedComplete: boolean = false;
+  solicitudDni: any
 
   columns = [
     { header: 'Nombre del hijo', field: 'nombre_hijo' },
@@ -33,40 +34,48 @@ export class GestionarSolicitudComponent {
     { header: 'Teléfono del padre', field: 'telefono_padre' },
     { header: 'Correo del padre', field: 'correo_padre' },
     { header: 'Estado', field: 'estado' },
-    { header: 'Fecha', field: 'fecha_solicitud',}
-  ];
+    { header: 'Fecha', field: 'fecha_solicitud' }
+  ]
+
+  actionsByState = {
+    'Pendiente': [
+      { icon: 'fa-check', action: 'enProceso', style: 'hover:text-green-500' },
+      { icon: 'fa-x', action: 'cancelado', style: 'hover:text-red-500' }
+    ],
+    'En Proceso': [
+      { icon: 'fa-check-double', action: 'aprobado', style: 'hover:text-green-500' },
+      { icon: 'fa-x', action: 'cancelado', style: 'hover:text-red-500' }
+    ],
+    'Aprobado': [],
+    'Cancelado': []
+  }
 
   constructor(
     private solicitudService: SolicitudService,
+    private estudianteService: EstudianteService,
+    private snack: MatSnackBar,
     public dialog: MatDialog
   ) {}
 
   ngOnInit() {
-    this.loading = true;
+    this.loading = true
     this.listarSolicitudes()
-  
   }
-  listarSolicitudes(){
+
+  listarSolicitudes() {
     this.solicitudService.listarSolicitudes().subscribe(
       (data: any) => { 
-        console.log(data)
-        this.solicitudes = data.map((solicitud: any) => {
-          solicitud.fecha_solicitud = this.formatFecha(solicitud.fecha_solicitud);
-          return solicitud;
-        });
-        this.loading = false;
-        this.loadedComplete = true; // Establecer en true cuando se cargan los datos
-        
+        this.solicitudes = this.ordenarFechas(data)
+        this.loading = false
+        this.loadedComplete = true
       },
       (error) => {
-        this.loading = false;
-        Swal.fire('Error', 'Error al cargar los datos de solicitudes', 'error');
+        this.loading = false
+        Swal.fire('Error', 'Error al cargar los datos de solicitudes', 'error')
       }
     );
-
-
-
-}
+  }
+ 
   formatFecha(fecha: any) {
     const date = new Date(fecha)
     const year = date.getFullYear()
@@ -79,95 +88,121 @@ export class GestionarSolicitudComponent {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
   }
 
+  ordenarFechas(data: any) {
+    return data.map((solicitud: any) => {
+      solicitud.fecha_solicitud = this.formatFecha(solicitud.fecha_solicitud)
+      return solicitud
+    }).sort((a: any, b: any) => {
+      return new Date(b.fecha_solicitud).getTime() - new Date(a.fecha_solicitud).getTime()
+    })
+  }
+
   displayedSolicitudes() {
     return this.solicitudes.filter((solicitud: any) =>
       solicitud.nombre_hijo.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
       solicitud.dni_hijo.includes(this.searchTerm)
-    );
+    )
   }
 
-  agregarSolicitud() {
-    const dialogRef = this.dialog.open(ModalSolicitudComponent, {
-      data: { isCreate: true },
-      width: '70%'
-    });
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.solicitudService.listarSolicitudes().subscribe(
-        (data: any) => {
-          this.solicitudes = data.sort((a: any, b: any) => a.nombre_hijo.localeCompare(b.nombre_hijo));
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    });
+  handleTableAction(event: { id: any, action: string }) {
+    const { id, action } = event
+    switch (action) {
+      case 'enProceso':
+        Swal.fire({
+          title: 'Procesar solicitud',
+          text: '¿Estás seguro de procesar la solicitud?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Procesar',
+          cancelButtonText: 'Cerrar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.cambiarEstadoEnProceso(id)
+          }
+        });
+        break;
+      case 'aprobado':
+        Swal.fire({
+          title: 'Aprobar solicitud',
+          text: '¿Estás seguro de aprobar la solicitud?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Aprobar',
+          cancelButtonText: 'Cerrar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.cambiarEstadoGeneral(id, 'Aprobado')
+          }
+        });
+        break;
+      case 'cancelado':
+        Swal.fire({
+          title: 'Cancelar solicitud',
+          text: '¿Está seguro de cancelar la solicitud?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Cancelar',
+          cancelButtonText: 'Cerrar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.cambiarEstadoGeneral(id, 'Cancelado')
+          }
+        });
+        break;
+    }
   }
-  editarSolicitud(isEdit: any, id: any) {
-    this.loading = true;
-    if (isEdit) {
-      this.solicitudService.obtenerSolicitud(id).subscribe(
-        (data: any) => {
-          this.solicitud = data; // Cambié de array a objeto
-          this.loading = false;
-          const dialogRef = this.dialog.open(ModalSolicitudComponent, {
-            data: { solicitud: this.solicitud, isEdit: true },
-            width: '70%'
-          });
 
-          dialogRef.afterClosed().subscribe(() => {
-            this.solicitudService.listarSolicitudes().subscribe(
+  cambiarEstadoEnProceso(id: any) {
+    this.loading = true
+
+    this.solicitudService.obtenerSolicitud(id).subscribe(
+      (data: any) => {
+        this.solicitudDni = data.dni_hijo;
+
+        this.estudianteService.obtenerEstudiantePorNroDoc(this.solicitudDni).subscribe(
+          (data: any) => {
+            this.solicitudService.cambiarEstadoEnProceso(id).subscribe(
               (data: any) => {
-                this.solicitudes = data.sort((a: any, b: any) => a.nombre_hijo.localeCompare(b.nombre_hijo));
-              },
-              (error) => {
-                console.log(error);
+                console.log(data);
+                this.listarSolicitudes();
               }
-            );
-          });
-        },
-        (error) => {
-          this.loading = false;
-          console.log(error);
-        }
-      );
-    }
+            )
+          },
+          (error) => {
+            this.loading = false
+            this.mostrarMensaje('No existe un estudiante con el DNI proporcionado')
+          }
+        )
+      }
+    )
   }
-  eliminarSolicitud(isDeleted: any, id: any) {
-    if (isDeleted) {
-      Swal.fire({
-        title: 'Eliminar solicitud',
-        text: '¿Estás seguro de eliminar la solicitud?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Eliminar',
-        cancelButtonText: 'Cancelar'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.loading = true;
-          this.solicitudService.eliminarSolicitud(id).subscribe(
-            () => {
-              this.loading = false;
-              Swal.fire('Solicitud eliminada', 'La solicitud ha sido eliminada con éxito', 'success');
-              this.solicitudService.listarSolicitudes().subscribe(
-                (data: any) => {
-                  this.solicitudes = data.sort((a: any, b: any) => a.nombre_hijo.localeCompare(b.nombre_hijo));
-                },
-                (error) => {
-                  console.log(error);
-                }
-              );
-            },
-            (error) => {
-              this.loading = false;
-              Swal.fire('Error', 'Error al eliminar la solicitud', 'error');
-            }
-          );
-        }
-      });
+
+  cambiarEstadoGeneral(id: any, estado: any) {
+    this.loading = true
+    const data = {
+      estado: estado
     }
+    this.solicitudService.cambiarEstadoGeneral(id, data).subscribe(
+      (data: any) => {
+        console.log(data)
+        this.listarSolicitudes()
+      }
+    )
   }
+
+  mostrarMensaje(mensaje: any) {
+    this.snack.open(mensaje, '', {
+      duration: 3000
+    })
+    this.loading = false
+    return
+  }
+
 }
 

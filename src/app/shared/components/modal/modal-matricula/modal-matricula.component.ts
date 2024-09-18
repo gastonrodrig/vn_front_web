@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,10 +10,12 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { SoloNumerosDirective } from '../../../directives/solo-numeros.directive';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DocumentoService } from '../../../../core/services/documento.service';
 import { MatriculaService } from '../../../../core/services/matricula.service';
-import Swal from 'sweetalert2';
 import { listaMetodosPago } from '../../../constants/itemsPayment';
+import { EstudianteService } from '../../../../core/services/estudiante.service';
+import { PeriodoService } from '../../../../core/services/periodo.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal-matricula',
@@ -28,59 +30,68 @@ import { listaMetodosPago } from '../../../constants/itemsPayment';
     MatButtonModule, 
     CommonModule, 
     MatProgressBarModule,
-    MatIconModule
+    MatIconModule,
+    MatDatepickerModule
   ],
   templateUrl: './modal-matricula.component.html',
   styleUrl: './modal-matricula.component.css'
 })
 export class ModalMatriculaComponent {
-  tipoDocumento: any[] = []
+  periodos: any[] = []
   listaMetodosPago: any
-  docente: any
-  docenteId: any
+  matricula: any
   loading = false
+
+  dni: any
+  fecha: any
+  tiempo: any
+
+  nombreEstudiante: any
+  estudianteId: any
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<ModalMatriculaComponent>,
     private snack: MatSnackBar,
-    private tipoDocumentService: DocumentoService,
+    private estudianteService: EstudianteService,
+    private periodoService: PeriodoService,
     private matriculaService: MatriculaService
   ) {}
 
   ngOnInit() {
     this.listaMetodosPago = listaMetodosPago
-    this.docente = {
-      nombre: '',
-      apellido: '',
-      direccion: '',
-      numero_documento: '',
-      documento: {
-        _id: ''
-      }
+    this.matricula = {
+      monto: '',
+      metodo_pago: '',
+      n_operacion: '',
+      periodo_id: '',
+      estudiante_id: '',
+      tipo: '',
+      fecha: ''
     }
-    this.tipoDocumentService.listarTiposDocumento().subscribe(
+    this.periodoService.listarPeriodos().subscribe(
       (data: any) => {
-        this.tipoDocumento = data
+        this.periodos = data
       },
       (error) => {
         console.log(error)
-      },
+      }
     )
   }
 
   guardarInformacion() {
     this.loading = true
-    const dataDocente = {
-      nombre : this.docente.nombre,
-      apellido : this.docente.apellido,
-      direccion : this.docente.direccion,
-      telefono : this.docente.telefono,
-      numero_documento : this.docente.numero_documento,
-      documento_id : this.docente.documento._id,
+    const matriculaData = {
+      monto: Number(this.matricula.monto),
+      metodo_pago: this.matricula.metodo_pago,
+      n_operacion: this.matricula.n_operacion,
+      periodo_id: this.matricula.periodo_id,
+      estudiante_id: this.estudianteId,
+      tipo: 'Presencial',
+      fecha: this.formatDateTime(this.fecha, this.tiempo)
     }
 
-    if(dataDocente.nombre === '') {
+    if(this.matricula.monto === '') {
       this.snack.open('El nombre del docente es requerido', '', {
         duration: 3000
       })
@@ -88,10 +99,11 @@ export class ModalMatriculaComponent {
       return
     }
 
-    this.matriculaService.agregarMatricula(dataDocente).subscribe(
+    this.matriculaService.agregarMatricula(matriculaData).subscribe(
       (data) => {
+        console.log(data)
         this.loading = false
-        Swal.fire('Docente guardado', 'El docente ha sido guardado con éxito', 'success').then(
+        Swal.fire('Matricula agregada', 'La matricula ha sido guardada con éxito', 'success').then(
           (e)=> {
             this.closeModel()
           }
@@ -101,6 +113,27 @@ export class ModalMatriculaComponent {
         console.log(error)
       }
     )
+  }
+
+  validarDNI(dni: string) {
+    if (dni.length === 8) {
+      this.loading = true
+      this.estudianteService.obtenerEstudiantePorNroDoc(dni).subscribe(
+        (data: any) => {
+          this.loading = false
+          this.nombreEstudiante = `${data.apellido}, ${data.nombre}`
+          this.estudianteId = data._id
+        }
+      )
+    } else {
+      this.nombreEstudiante = ''
+    }
+  }
+
+  formatDateTime(date: Date, time: string) {
+    const [hours, minutes, seconds] = time.split(':').map(Number)
+    date.setHours(hours, minutes, seconds);
+    return formatDate(date, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", 'en-US', '+0000');
   }
 
   closeModel() {

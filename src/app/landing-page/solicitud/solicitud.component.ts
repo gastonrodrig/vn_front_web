@@ -8,6 +8,9 @@ import { GradoService } from '../../core/services/grado.service';
 import Swal from 'sweetalert2';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
+import { SoloNumerosDirective } from '../../shared/directives/solo-numeros.directive';
+import { MatButton } from '@angular/material/button';
+
 
 @Component({
   selector: 'app-solicitud',
@@ -18,6 +21,8 @@ import { CommonModule } from '@angular/common';
     MatCheckbox,
     MatSelectModule,
   CommonModule,
+  SoloNumerosDirective,
+  MatButton,
   ],
   templateUrl: './solicitud.component.html',
   styleUrls: ['./solicitud.component.css']
@@ -71,6 +76,8 @@ export class SolicitudComponent {
       grado_ID: this.solicitud.grado._id,
     };
 
+    
+
     this.solicitudService.agregarSolicitud(dataSolicitud).subscribe(
       (data) => {
         Swal.fire('Solicitud guardada', 'La solicitud ha sido enviada con éxito', 'success');
@@ -108,11 +115,53 @@ export class SolicitudComponent {
     }
 
   }
-  saveToLocalStorage() {
-    localStorage.setItem('docentes', JSON.stringify(this.SolicitudList))
+  
+
+  validarDatos(): boolean {
+    if (!this.solicitud.nombre_hijo || this.solicitud.nombre_hijo.length < 2) {
+      this.mostrarMensaje('El nombre del hijo es requerido y debe tener al menos 2 caracteres.');
+      return false;
+    }
+
+    if (!this.solicitud.apellido_hijo || this.solicitud.apellido_hijo.length < 2) {
+      this.mostrarMensaje('El apellido del hijo es requerido y debe tener al menos 2 caracteres.');
+      return false;
+    }
+
+    if (!this.solicitud.dni_hijo || !/^\d+$/.test(this.solicitud.dni_hijo) || this.solicitud.dni_hijo.length < 8) {
+      this.mostrarMensaje('El DNI del hijo es requerido, debe contener solo números y tener al menos 8 dígitos.');
+      return false;
+    }
+
+    if (!this.solicitud.telefono_padre || !/^\d+$/.test(this.solicitud.telefono_padre) || this.solicitud.telefono_padre.length < 9) {
+      this.mostrarMensaje('El teléfono del padre es requerido y debe ser válido.');
+      return false;
+    }
+
+    if (!this.solicitud.correo_padre || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.solicitud.correo_padre)) {
+      this.mostrarMensaje('El correo del padre es requerido y debe tener un formato válido.');
+      return false;
+    }
+
+    if (!this.solicitud.grado._id) {
+      this.mostrarMensaje('Debe seleccionar un grado.');
+      return false;
+    }
+
+    if (!this.aceptarTerminos) {
+      this.mostrarMensaje('Debe aceptar los términos y condiciones.');
+      return false;
+    }
+
+    return true;
   }
 
-
+  // Mostrar mensaje de error
+  mostrarMensaje(mensaje: string) {
+    this.snack.open(mensaje, 'Cerrar', {
+      duration: 3000,
+    });
+  }
   verInformacion(tipoAlumno: string) {
     let titulo = '';
     let iconoSVG = '';

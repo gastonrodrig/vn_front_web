@@ -29,56 +29,56 @@
 </nav>
 
 <!-- Sección de Matrícula -->
-<section id="solicitud" class="bg-cover bg-no-repeat bg-gray-100 pt-60 pb-60" style="background-image: url('../../assets/images/fonNat.png'); background-size: cover; background-position: center;">
-  <div class="container mx-auto px-50 pt-20">
-    <div class="flex mt-8 ml-40">
-      <div class="w-full md:w-1/3">
-        <form #solicitudForm="ngForm" (ngSubmit)="onSubmit(solicitudForm)" class="bg-white p-8 rounded-lg shadow-lg">
-          <h3 class="text-3xl font-semibold text-center text-blue-900 mb-4">Matrícula</h3>
-          
-          <!-- Nombre del Hijo -->
-          <div class="flex flex-wrap -mx-2 mb-4">
-            <div class="w-full lg:w-1/2 md:w-1/2 px-2 mb-4">
-              <mat-form-field appearance="fill" class="w-full">
-                <mat-label>Nombre del Hijo</mat-label>
-                <input matInput placeholder="Nombre del hijo" name="nombre_hijo" [(ngModel)]="solicitud.nombre_hijo" required>
-              </mat-form-field>
-            </div>
+<section id="solicitud" class="bg-cover bg-no-repeat pt-12 bg-gray-100" style="background-image: url('../../assets/images/fondoSinLibro.png'); background-size: cover; background-position: center;">
+ <div class="grid grid-cols-2 gap-x-4 sm:mx-20 mx-10  ">
+  <div class=" grid col-span-2 md:col-span-1 md:py-32 pt-10 align-middle justify-center items-center ">
+    <img  class="h-auto w-auto " src="/assets/images/LibroA.png">
+  </div>
+  <div class="col-span-2 md:col-span-1 py-24 ">
+    <form #solicitudForm="ngForm" (ngSubmit)="onSubmit(solicitudForm)" class="bg-white p-8 rounded-lg shadow-lg">
+      <h3 class="text-3xl font-semibold text-center text-blue-900 mb-4">Matrícula</h3>
+      
+      <!-- Nombre del Hijo -->
+      <div class="grid grid-cols-2 gap-2">
+       
+          <mat-form-field appearance="fill" class=" col-span-2 min-[1127px]:col-span-1 max-md:col-span-1 max-[535px]:col-span-2">
+            <mat-label>Nombre del Hijo</mat-label>
+            <input matInput placeholder="Nombre del hijo" name="nombre_hijo" [(ngModel)]="solicitud.nombre_hijo" required>
+          </mat-form-field>
+        
 
-            <!-- Apellido del Hijo -->
-            <div class="w-full lg:w-1/2 md:w-1/2 px-2 mb-4">
-              <mat-form-field appearance="fill" class="w-full">
-                <mat-label>Apellido del Hijo</mat-label>
-                <input matInput name="apellido_hijo" [(ngModel)]="solicitud.apellido_hijo" required>
-              </mat-form-field>
-            </div>
+        <!-- Apellido del Hijo -->
+       
+          <mat-form-field appearance="fill" class="col-span-2 min-[1127px]:col-span-1  max-md:col-span-1 max-[535px]:col-span-2">
+            <mat-label>Apellido del Hijo</mat-label>
+            <input matInput name="apellido_hijo" [(ngModel)]="solicitud.apellido_hijo" required>
+          </mat-form-field>
+        
 
-            <!-- DNI del Hijo -->
-            <div class="w-full lg:w-1/2 md:w-1/2 px-2 mb-4">
-              <mat-form-field appearance="fill" class="w-full">
-                <mat-label>DNI del Hijo</mat-label>
-                <input matInput name="dni_hijo" [(ngModel)]="solicitud.dni_hijo" required pattern="[0-9]{8}">
-              </mat-form-field>
-            </div>
+        <!-- DNI del Hijo -->
+       
+          <mat-form-field appearance="fill" class="col-span-2 min-[1127px]:col-span-1  max-md:col-span-1 max-[535px]:col-span-2">
+            <mat-label>DNI del Hijo</mat-label>
+            <input matInput name="dni_hijo" [(ngModel)]="solicitud.dni_hijo" appSoloNumeros>
+          </mat-form-field>
+        
 
-            <!-- Teléfono del Padre -->
-            <div class="w-full lg:w-1/2 md:w-1/2 px-2 mb-4">
-              <mat-form-field appearance="fill" class="w-full">
-                <mat-label>Teléfono del Padre</mat-label>
-                <input matInput name="telefono_padre" [(ngModel)]="solicitud.telefono_padre" required pattern="[0-9]{9}">
-              </mat-form-field>
-            </div>
+        <!-- Teléfono del Padre -->
+       
+          <mat-form-field appearance="fill" class="col-span-2 min-[1127px]:col-span-1  max-md:col-span-1 max-[535px]:col-span-2">
+            <mat-label>Teléfono del Padre</mat-label>
+            <input matInput name="telefono_padre" [(ngModel)]="solicitud.telefono_padre"  appSoloNumeros>
+          </mat-form-field>
+        
 
-            <!-- Correo del Padre -->
-            <div class="w-full lg:w-1/2 md:w-1/2 px-2 mb-4">
-              <mat-form-field appearance="fill" class="w-full">
-                <mat-label>Correo del Padre</mat-label>
-                <input matInput name="correo_padre" [(ngModel)]="solicitud.correo_padre" required email>
-              </mat-form-field>
-            </div>
-
-          </div>
-          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <!-- Correo del Padre -->
+       
+          <mat-form-field appearance="fill" class="col-span-2 min-[1127px]:col-span-1  max-md:col-span-1 max-[535px]:col-span-2">
+            <mat-label>Correo del Padre</mat-label>
+            <input matInput name="correo_padre" [(ngModel)]="solicitud.correo_padre" required email>
+          </mat-form-field>
+        
+          <mat-form-field appearance="fill" class="col-span-2 min-[1127px]:col-span-1  max-md:col-span-1 max-[535px]:col-span-2">
             <mat-label>Grado</mat-label>
             <mat-select 
                 [(ngModel)]="solicitud.grado._id"
@@ -93,27 +93,32 @@
             </mat-select>
         </mat-form-field>
 
-          <!-- Fecha de Solicitud -->
-          <mat-form-field appearance="fill" class="w-full mb-4">
-            <mat-label>Fecha de Solicitud</mat-label>
-            <input matInput name="fecha_solicitud" [value]="todayDate()" readonly>
-          </mat-form-field>
+      </div>
 
 
-          <!-- Términos y Condiciones -->
-          <div class="flex items-center mb-4">
-            <mat-checkbox [(ngModel)]="aceptarTerminos" name="terminos" required>
-              Acepto los términos y condiciones
-            </mat-checkbox>
-          </div>
+      <!-- Términos y Condiciones -->
+      <div class="flex items-center mb-4">
+        <mat-checkbox [(ngModel)]="aceptarTerminos" name="terminos" required>
+          Acepto los términos y condiciones
+        </mat-checkbox>
+      </div>
 
-          <!-- Botón de Enviar -->
-          <div class="w-full text-center">
-            <button mat-raised-button color="primary" type="submit" [disabled]="!solicitudForm.valid || !aceptarTerminos">
-              Guardar Solicitud
-            </button>
-          </div>
-        </form> <!-- Cierre correcto del formulario -->
+      <!-- Botón de Enviar -->
+      <div class="w-full text-center">
+        <button mat-flat-button 
+        color="custom-color"  type="submit" [disabled]="!solicitudForm.valid || !aceptarTerminos">
+          Guardar Solicitud
+        </button>
+      </div>
+    </form> <!-- Cierre correcto del formulario -->
+  </div>
+  
+ </div>
+  <div class="container mx-auto ">
+
+    <div class="flex mt-8 ml-40">
+      <div class="w-full md:w-1/3 items-center align-middle justify-center">
+       
       </div>
     </div>
   </div>

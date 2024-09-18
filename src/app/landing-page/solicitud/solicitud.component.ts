@@ -42,17 +42,6 @@ export class SolicitudComponent {
   ) {}
 
   ngOnInit() {
-    // Inicializa la solicitud
-    this.solicitud = {
-      nombre_hijo: '',
-      apellido_hijo: '',
-      dni_hijo: '',
-      telefono_padre: '',
-      correo_padre: '',
-      grado: { _id: '' },
-      estado: 'pendiente', // El estado inicial de la solicitud es "pendiente"
-      fecha_solicitud: new Date()
-    };
     this.gradoService.listarGrados().subscribe(
       (data: any) => {
         this.grados = data       
@@ -62,8 +51,6 @@ export class SolicitudComponent {
       },
     )
   }
-
-  // Método para manejar el envío del formulario
   
   guardarSolicitud() {
     this.loading = true;
@@ -73,10 +60,8 @@ export class SolicitudComponent {
       dni_hijo: this.solicitud.dni_hijo,
       telefono_padre: this.solicitud.telefono_padre,
       correo_padre: this.solicitud.correo_padre,
-      grado_ID: this.solicitud.grado._id,
+      grado_id: this.solicitud.grado._id,
     };
-
-    
 
     this.solicitudService.agregarSolicitud(dataSolicitud).subscribe(
       (data) => {
@@ -91,6 +76,7 @@ export class SolicitudComponent {
       }
     );
   }
+
   limpiarFormulario() {
     this.solicitud = {
       nombre_hijo: '',
@@ -98,25 +84,17 @@ export class SolicitudComponent {
       dni_hijo: '',
       telefono_padre: '',
       correo_padre: '',
-      estado: 'pendiente',
-      fecha_solicitud: new Date()
+      grado: { _id: '' }
     };
     this.aceptarTerminos = false;
   }
-  todayDate(): string {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
-  }
-
   
   onSubmit(form: any) {
     if (form.valid && this.aceptarTerminos) {
       this.guardarSolicitud();
     }
-
   }
   
-
   validarDatos(): boolean {
     if (!this.solicitud.nombre_hijo || this.solicitud.nombre_hijo.length < 2) {
       this.mostrarMensaje('El nombre del hijo es requerido y debe tener al menos 2 caracteres.');
@@ -162,6 +140,7 @@ export class SolicitudComponent {
       duration: 3000,
     });
   }
+
   verInformacion(tipoAlumno: string) {
     let titulo = '';
     let iconoSVG = '';

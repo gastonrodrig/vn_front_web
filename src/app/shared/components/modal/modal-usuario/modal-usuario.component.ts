@@ -72,11 +72,9 @@ export class ModalUsuarioComponent {
     if (this.data.isEdit) {
       this.usuario = this.data.usuario
       this.usuarioId = this.data.usuario._id
-      console.log(this.usuario)
       const rol = this.data.usuario.rol
       if (rol === 'Estudiante' || rol === 'Docente' || rol === 'Apoderado') {
         const entity = this.data.usuario[rol.toLowerCase()]
-        // console.log(entity)
         if (entity) {
           this.searchTerm = `${entity.nombre} ${entity.apellido} (Nro.Documento: ${entity.numero_documento})`
         }
@@ -368,21 +366,6 @@ export class ModalUsuarioComponent {
       }
     }
   }
-  rolSeleccionado: boolean = false;
-
-  onRolChange(rol: string) {
-    this.rolSeleccionado = !!rol;
-  }
-  validacionesPre(){
-  if (!this.usuario.rol) {
-    Swal.fire('Error', 'Debe seleccionar un rol.', 'error');
-    this.loading = false;
-    return;
-  }
-
-
-
-  }
 
   guardarInformacion() {
     this.loading = true
@@ -395,58 +378,72 @@ export class ModalUsuarioComponent {
         estudiante_id: null,
         docente_id: null,
         apoderado_id: null
-      };
+      }
+
+      if(this.usuario.email === '') {
+        this.mostrarMensaje('El email no puede estar vacío')
+      }
+
+      if(this.usuario.contrasena === '') {
+        this.mostrarMensaje('La contraseña no puede estar vacía')
+      }
+  
+      if(this.usuario.usuario === '') {
+        this.mostrarMensaje('El nombre de usuario no puede estar vacío')
+      }
+
+      if(this.usuario.contrasena === '') {
+        this.mostrarMensaje('La contraseña no puede estar vacía')
+      }
+  
+      if(/\d/.test(this.usuario.usuario)) {
+        this.mostrarMensaje('El nombre no puede contener números')
+      }
+  
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if(!emailPattern.test(this.usuario.email)) {
+        this.mostrarMensaje('El correo electrónico no es válido')
+      }
+
+      if(this.usuario.rol === '') {
+        this.mostrarMensaje('Debe seleccionar un rol')
+      }
 
       switch (this.usuario.rol) {
         case 'Estudiante':
-          userData.estudiante_id = this.usuario.estudiante._id
-          break
+          if (!this.usuario.estudiante || !this.usuario.estudiante._id) {
+            this.mostrarMensaje('Debe seleccionar un estudiante');
+            this.loading = false;
+            return;
+          }
+          userData.estudiante_id = this.usuario.estudiante._id;
+          break;
         case 'Docente':
-          userData.docente_id = this.usuario.docente._id
-          break
+          if (!this.usuario.docente || !this.usuario.docente._id) {
+            this.mostrarMensaje('Debe seleccionar un docente');
+            this.loading = false;
+            return;
+          }
+          userData.docente_id = this.usuario.docente._id;
+          break;
         case 'Apoderado':
-          userData.apoderado_id = this.usuario.apoderado._id
-          break
+          if (!this.usuario.apoderado || !this.usuario.apoderado._id) {
+            this.mostrarMensaje('Debe seleccionar un apoderado');
+            this.loading = false;
+            return;
+          }
+          userData.apoderado_id = this.usuario.apoderado._id;
+          break;
         case 'Admin':
-          // No se necesita hacer cambios adicionales para Admin
-          break
+          // Admin no requiere asignación de ids
+          break;
         default:
-          console.error('Rol desconocido:', this.usuario.rol)
-          this.loading = false
-          return
+          console.error('Rol desconocido:', this.usuario.rol);
+          this.loading = false;
+          return;
       }
-  
-    if (!this.usuario.rol) {
-      Swal.fire('Error', 'Debe seleccionar un rol.', 'error');
-      this.loading = false;
-      return;
-    }
 
-    if (!this.usuario.email || !this.usuario.contrasena || !this.usuario.usuario) {
-      Swal.fire('Error', 'Todos los campos deben ser completados.', 'error');
-      this.loading = false;
-      return;
-    }
-
-    if (/\d/.test(this.usuario.usuario)) {
-      Swal.fire('Error', 'El nombre no puede contener números.', 'error');
-      this.loading = false;
-      return;
-    }
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(this.usuario.email)) {
-      Swal.fire('Error', 'El correo electrónico no es válido.', 'error');
-      this.loading = false;
-      return;
-    }
-
-    if (!this.usuario.contrasena) {
-      Swal.fire('Error', 'La contraseña no puede estar vacía.', 'error');
-      this.loading = false;
-      return;
-    }
-
+      console.log(this.usuario)
       
       this.userService.agregarUsuario(userData).subscribe(
         (data: any) => {
@@ -459,6 +456,10 @@ export class ModalUsuarioComponent {
           } else {
             this.asignarUsuarioPorRol(data.rol, data[`${data.rol.toLowerCase()}`]._id)
           }
+        },
+        (error) => {
+          this.loading = false
+          this.mostrarMensaje(error.error.message)
         }
       )
     }
@@ -473,9 +474,6 @@ export class ModalUsuarioComponent {
           docente_id: null,
           apoderado_id: null
         }
-        console.log(this.usuario)
-        console.log(userData)
-        console.log(this.usuarioId)
   
         this.userService.modificarUsuario(this.usuarioId, userData).subscribe(
           (data: any) => {
@@ -576,6 +574,14 @@ export class ModalUsuarioComponent {
       },
       width: '35%'
     })
+  }
+
+  mostrarMensaje(mensaje: string) {
+    this.snack.open(mensaje, 'Cerrar', {
+      duration: 3000,
+    })
+    this.loading = false
+    return
   }
 
   closeModel() {

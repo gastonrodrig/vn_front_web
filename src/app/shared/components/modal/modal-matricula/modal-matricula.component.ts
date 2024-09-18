@@ -16,6 +16,7 @@ import { EstudianteService } from '../../../../core/services/estudiante.service'
 import { PeriodoService } from '../../../../core/services/periodo.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import Swal from 'sweetalert2';
+import { listaTiposMatricula } from '../../../constants/itemsRegistration';
 
 @Component({
   selector: 'app-modal-matricula',
@@ -39,8 +40,10 @@ import Swal from 'sweetalert2';
 export class ModalMatriculaComponent {
   periodos: any[] = []
   listaMetodosPago: any
+  listaTiposMatricula: any
   matricula: any
   loading = false
+  nOperacionDisabled = false
 
   dni: any
   fecha: any
@@ -59,7 +62,9 @@ export class ModalMatriculaComponent {
   ) {}
 
   ngOnInit() {
+    this.nOperacionDisabled = true;  
     this.listaMetodosPago = listaMetodosPago
+    this.listaTiposMatricula = listaTiposMatricula
     this.matricula = {
       monto: '',
       metodo_pago: '',
@@ -67,6 +72,7 @@ export class ModalMatriculaComponent {
       periodo_id: '',
       estudiante_id: '',
       tipo: '',
+      tipoMa:'',
       fecha: ''
     }
     this.periodoService.listarPeriodos().subscribe(
@@ -88,6 +94,7 @@ export class ModalMatriculaComponent {
       periodo_id: this.matricula.periodo_id,
       estudiante_id: this.estudianteId,
       tipo: 'Presencial',
+      tipoMa: this.matricula.tipoMa,
       fecha: this.formatDateTime(this.fecha, this.tiempo)
     }
 
@@ -136,7 +143,25 @@ export class ModalMatriculaComponent {
     return formatDate(date, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", 'en-US', '+0000');
   }
 
+  actualizarMonto(tipoMatricula: string) {
+    if (tipoMatricula === 'Nuevo' || tipoMatricula === 'Regular') {
+      this.matricula.monto = 300;
+    } else if (tipoMatricula === 'Traslado Externo') {
+      this.matricula.monto = 350;
+    } else {
+      this.matricula.monto = '';
+    }
+  }
+
   closeModel() {
     this.dialogRef.close()
+  }
+
+  verificarTipoPago(tipoPago: string) {
+    if (tipoPago === 'Transferencia' || tipoPago === 'Tarjeta') {
+      this.nOperacionDisabled = false;  
+    } else if (tipoPago === 'Efectivo') {
+      this.nOperacionDisabled = true;  
+    }
   }
 }

@@ -39,16 +39,15 @@ export class GestionarVacantesComponent {
     { header: 'Grado', field: 'grado.nombre' },
     { header: 'Periodo', field: 'periodo.anio' },
     { header: 'Estado', field: 'estado' }
-  ];
+  ]
 
   constructor(
     private gradoService: GradoService,
     private periodoService: PeriodoService,
     private estudianteService: EstudianteService,
     private vacanteService: VacanteService,
-    public dialog: MatDialog,
-    private router: Router
-  ){}
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.loading = true
@@ -59,21 +58,20 @@ export class GestionarVacantesComponent {
       this.periodoService.listarPeriodos()
     ]).subscribe(
       ([vacantes, estudiantes, grados, periodos]) => {
-        // Asigna los datos a las variables correspondientes
         this.vacantes = vacantes;
         this.estudiantes = estudiantes;
         this.grados = grados;
         this.periodos = periodos;
-  
-        // Aquí puedes realizar la acción después de que todos los servicios hayan emitido al menos una vez
+
         this.loading = false;
       },
       (error) => {
         console.log(error);
         this.loading = false;
       }
-    );
+    )
   }
+  
   displayedVacantes() {
     return this.vacantes.filter((e: any) => {
       const matchSearchTerm = e.estudiante.numero_documento.includes(this.searchTerm)
@@ -82,6 +80,7 @@ export class GestionarVacantesComponent {
       return matchSearchTerm && matchGrado && matchPeriodo
     })
   }
+
   agregarVacante() {
     const dialogRef = this.dialog.open(ModalVacanteComponent, {
       width: '70%'

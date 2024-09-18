@@ -42,6 +42,14 @@ export class SolicitudComponent {
   ) {}
 
   ngOnInit() {
+    this.solicitud = {
+      nombre_hijo: '',
+      apellido_hijo: '',
+      solicitud_dni: '',
+      telefono_padre: '',
+      correo_padre: '',
+      grado: { _id: '' }
+    }
     this.gradoService.listarGrados().subscribe(
       (data: any) => {
         this.grados = data       

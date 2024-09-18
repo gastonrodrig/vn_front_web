@@ -1,0 +1,50 @@
+@if(loading){
+    <mat-progress-bar mode="indeterminate" class="-mt-7 mb-8"></mat-progress-bar>
+}
+<div class="mx-5 mt-2">
+    <p class="text-xl font-medium mb-4">Gestionar Vacantes</p>
+    <div class="grid sm:grid-cols-4 sm:grid-rows-1 gap-4 sm:gap-y-0 grid-cols-2 grid-rows-2">
+        <div class="order-1">
+            <app-input 
+                [(model)]="searchTerm" 
+                [placeholder]="'Buscar'" 
+                [icon]="'magnifying-glass'"
+                [widthFont]="'max-[1184px]:w-40 max-[956px]:w-32 max-sm:w-40 font-normal bg-gray-50'"
+            ></app-input>
+        </div>
+        <div class="order-3 sm:order-2 xl:-ms-16 flex justify-start text-sm">
+            <app-select 
+                [(optionSelected)]="gradoSelected" 
+                [options]="grados" 
+                [nombreFiltro]="'Grados'" 
+                optionKey="_id" 
+                optionLabel="nombre"
+                [width]="'max-[1184px]:w-40 max-[956px]:w-32 max-sm:w-40 bg-gray-50'"
+            ></app-select>
+        </div>
+        <div class="order-4 sm:order-3 xl:-ms-32 flex max-sm:justify-end sm:justify-start text-sm -me-2 sm:-me-0">
+            <app-select 
+                [(optionSelected)]="periodoSelected" 
+                [options]="periodos" 
+                [nombreFiltro]="'Periodos'" 
+                optionKey="_id" 
+                optionLabel="anio"
+                [width]="'max-[1184px]:w-40 max-[956px]:w-32 max-sm:w-40 bg-gray-50'"
+            ></app-select>
+        </div>
+        <div class="order-2 sm:order-4 flex justify-end">
+            <button 
+                (click)="agregarVacante()"
+                mat-flat-button 
+                color="custom-color" 
+            > + Agregar </button>
+        </div>
+    </div>
+</div>
+<app-table 
+    [columns]="columns" 
+    [data]="displayedVacantes()"
+    [trackByField]="trackByField"
+    [loadedComplete]="loadedComplete"
+    [noActions]="true"
+></app-table>

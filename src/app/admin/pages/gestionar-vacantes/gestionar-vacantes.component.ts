@@ -38,7 +38,8 @@ export class GestionarVacantesComponent {
     { header: 'Nro. Documento', field: 'estudiante.numero_documento' },
     { header: 'Grado', field: 'grado.nombre' },
     { header: 'Periodo', field: 'periodo.anio' },
-    { header: 'Estado', field: 'estado' }
+    { header: 'Estado', field: 'estado' },
+    { header: 'Fecha', field: 'fecha'}
   ]
 
   constructor(
@@ -58,7 +59,7 @@ export class GestionarVacantesComponent {
       this.periodoService.listarPeriodos()
     ]).subscribe(
       ([vacantes, estudiantes, grados, periodos]) => {
-        this.vacantes = vacantes;
+        this.vacantes = this.ordenarFechas(vacantes);
         this.estudiantes = estudiantes;
         this.grados = grados;
         this.periodos = periodos;
@@ -71,6 +72,28 @@ export class GestionarVacantesComponent {
       }
     )
   }
+
+  formatFecha(fecha: any) {
+    const date = new Date(fecha)
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    const seconds = String(date.getSeconds()).padStart(2, '0')
+  
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+  }
+
+  ordenarFechas(data: any) {
+    return data.map((vacante: any) => {
+      vacante.fecha = this.formatFecha(vacante.fecha)
+      return vacante
+    }).sort((a: any, b: any) => {
+      return new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
+    })
+  }
+
   
   displayedVacantes() {
     return this.vacantes.filter((e: any) => {
@@ -90,7 +113,7 @@ export class GestionarVacantesComponent {
       (data) => {
         this.vacanteService.listarVacantes().subscribe(
           (data) => {
-            this.vacantes = data
+            this.vacantes = this.ordenarFechas(data)
           }
         )
       }

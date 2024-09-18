@@ -31,7 +31,8 @@ export class GestionarMatriculaComponent {
     { header: 'Método de Pago', field: 'metodo_pago' },
     { header: 'Nro. Operacion', field: 'n_operacion' },
     { header: 'Periodo del estudiante', field: 'periodo.anio' },
-    { header: 'Tipo', field: 'tipo' },
+    { header: 'Tipo Modalidad', field: 'tipo' },
+    { header: 'Tipo Matricula', field: 'tipoMa' },
     { header: 'Fecha', field: 'fecha' }
   ]
 
@@ -48,6 +49,7 @@ export class GestionarMatriculaComponent {
   listarMatriculas() {
     this.matriculaService.listarMatriculas().subscribe(
       (data: any) => {
+        console.log(data)
         this.matriculas = data.map((matricula: any) => {
           matricula.monto = this.formatMonto(matricula.monto)
           matricula.fecha = this.formatFecha(matricula.fecha);

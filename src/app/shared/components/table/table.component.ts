@@ -1,10 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [NgxPaginationModule],
+  imports: [NgxPaginationModule, CommonModule],
   templateUrl: './table.component.html',
   styleUrl: './table.component.css'
 })
@@ -20,6 +21,8 @@ export class TableComponent {
   @Input() pfpActive: any
   @Input() filesActive: any
   @Input() noActions: any
+  @Input() requestActive: any
+  @Input() actionsByState: { [key: string]: { icon: string, action: string, style: string }[] } = {};
 
   @Output() editAction = new EventEmitter<{ isEdit: boolean, id: any }>();
   @Output() deleteAction = new EventEmitter<{ isDeleted: boolean, id: any }>();
@@ -27,6 +30,8 @@ export class TableComponent {
   @Output() hoursAction = new EventEmitter<{ isHours: boolean, id: any }>();
   @Output() pfpAction = new EventEmitter<{ isPfp: boolean, id: any }>();
   @Output() filesAction = new EventEmitter<{ isFiles: boolean, id: any }>();
+  @Output() requestAction = new EventEmitter<{ isRequest: boolean, id: any }>();
+  @Output() actionEvent = new EventEmitter<{ id: any, action: string }>();
 
   p: number = 1
   itemsPerPage: number = 5
@@ -62,6 +67,18 @@ export class TableComponent {
 
   files(id: any) {
     this.filesAction.emit({ isFiles: true, id });
+  }
+
+  request(id: any) {
+    this.requestAction.emit({ isRequest: true, id });
+  }
+
+  handleAction(id: any, action: string) {
+    this.actionEvent.emit({ id, action });
+  }
+
+  getActions(state: string) {
+    return this.actionsByState[state] || [];
   }
   
   ngOnChanges() {

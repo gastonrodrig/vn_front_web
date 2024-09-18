@@ -76,6 +76,17 @@
                             <i class="fa-solid fa-trash"></i>
                           </div>
                         }
+                        @if(requestActive) {
+                          @for(action of getActions(row.estado); track action.icon) {
+                            <div 
+                              class="hover:cursor-pointer hover:scale-125 duration-200"
+                              (click)="handleAction(row[trackByField], action.action)"
+                              [ngClass]="action.style"
+                            >
+                              <i class="fa-solid {{ action.icon }}"></i>
+                            </div>
+                          }
+                        }
                       </div>
                     </td>
                   }

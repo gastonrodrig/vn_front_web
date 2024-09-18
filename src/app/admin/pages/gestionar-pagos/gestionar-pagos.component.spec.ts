@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ModalSolicitudComponent } from './modal-solicitud.component';
+import { GestionarPagosComponent } from './gestionar-pagos.component';
 
-describe('ModalSolicitudComponent', () => {
-  let component: ModalSolicitudComponent;
-  let fixture: ComponentFixture<ModalSolicitudComponent>;
+describe('GestionarPagosComponent', () => {
+  let component: GestionarPagosComponent;
+  let fixture: ComponentFixture<GestionarPagosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ModalSolicitudComponent]
+      imports: [GestionarPagosComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ModalSolicitudComponent);
+    fixture = TestBed.createComponent(GestionarPagosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

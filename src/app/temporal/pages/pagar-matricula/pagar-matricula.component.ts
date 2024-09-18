@@ -92,22 +92,22 @@ export class PagarMatriculaComponent implements OnInit {
     }
 
     if (this.nombreUsuario !== user.usuario) {
-      this.mostrarMensaje('El nombre de usuario ingresado es incorrecto.', 3000);
-      return;
+      this.mostrarMensaje('El nombre de usuario ingresado es incorrecto.', 3000)
+      return
     }
 
-    this.estudianteId = this.estudiante._id;
+    this.estudianteId = this.estudiante._id
 
     this.estudianteService.obtenerEstudiante(this.estudianteId).subscribe(
       (data: any) => {
         if (data.estado === 'Pendiente') {
-          this.mostrarMensaje('Los documentos del estudiante aún no han sido aprobados.', 3000);
+          this.mostrarMensaje('Los documentos del estudiante aún no han sido aprobados.', 3000)
         } else {
-          this.isDisabled = false;
-          this.loading = false;
+          this.isDisabled = false
+          this.loading = false
         }
       }
-    );
+    )
   }
 
   async cargarElementosStripe() {

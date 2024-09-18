@@ -70,5 +70,11 @@ export const listaModulosAdmin = [
         route: 'gestionar-vacantes',
         titulo: 'Vacantes',
         icon: 'user-graduate'
+    },
+    {
+        id: 13,
+        route: 'gestionar-pagos',
+        titulo: 'Pagos',
+        icon: 'money-bill'
     }
 ]

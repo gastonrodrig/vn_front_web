@@ -72,7 +72,9 @@ export class GestionarPagosComponent {
             ...pago.metadata,
             tipoDocumento: this.documentos[pago.metadata.tipoDocumento] || 'Desconocido' // Si no existe, muestra 'Desconocido'
           },
-          paymentDate: this.formatFecha(pago.paymentDate)
+          paymentDate: this.formatFecha(pago.paymentDate),
+          monto: this.convertMonto(pago.monto)
+
         }))
         .sort((a: any, b: any) => new Date(b.paymentDate).getTime() - new Date(a.paymentDate).getTime());
         this.loading = false;
@@ -83,6 +85,11 @@ export class GestionarPagosComponent {
         Swal.fire('Error', 'Error al cargar los datos', 'error');
       }
     );
+  }
+
+  convertMonto(monto: number): string {
+    const montoConvertido = monto * (300 / 1000);
+    return montoConvertido.toFixed(2);
   }
 
   formatFecha(fecha: any) {

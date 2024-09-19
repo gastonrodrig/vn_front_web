@@ -76,7 +76,7 @@
                             <i class="fa-solid fa-trash"></i>
                           </div>
                         }
-                        @if(requestActive) {
+                        @if(requestActive || vacantActive) {
                           @for(action of getActions(row.estado); track action.icon) {
                             <div 
                               class="hover:cursor-pointer hover:scale-125 duration-200"

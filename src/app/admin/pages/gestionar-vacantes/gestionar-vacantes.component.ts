@@ -13,6 +13,8 @@ import { VacanteService } from '../../../core/services/vacante.service';
 import { InputComponent } from '../../../shared/components/UI/input/input.component';
 import { combineLatest } from 'rxjs';
 import { ModalVacanteComponent } from '../../../shared/components/modal/modal-vacante/modal-vacante.component';
+import Swal from 'sweetalert2';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-gestionar-vacantes',
@@ -42,11 +44,20 @@ export class GestionarVacantesComponent {
     { header: 'Fecha', field: 'fecha'}
   ]
 
+  actionsByState = {
+    'Reservado': [
+      { icon: 'fa-x', action: 'cancelado', style: 'hover:text-red-500' }
+    ],
+    'Confirmado': [],
+    'Cancelado': []
+  }
+
   constructor(
     private gradoService: GradoService,
     private periodoService: PeriodoService,
     private estudianteService: EstudianteService,
     private vacanteService: VacanteService,
+    private snack: MatSnackBar,
     public dialog: MatDialog
   ) {}
 
@@ -105,6 +116,45 @@ export class GestionarVacantesComponent {
       const matchPeriodo = this.periodoSelected === 'all' || e.periodo._id === this.periodoSelected
       return matchSearchTerm && matchGrado && matchPeriodo
     })
+  }
+
+  handleTableAction(event: { id: any, action: string }) {
+    const { id, action } = event
+    switch (action) {
+      case 'cancelado':
+        Swal.fire({
+          title: 'Cancelar vacante',
+          text: '¿Está seguro de cancelar la vacante?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Cancelar',
+          cancelButtonText: 'Cerrar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.vacanteService.cambiarEstadoCancelado(id).subscribe(
+              (data: any) => {
+                this.mostrarMensaje('La Vacante ha sido cancelada')
+                this.vacanteService.listarVacantes().subscribe(
+                  (data: any) => {
+                    this.vacantes = this.ordenarFechas(data)
+                  }
+                )
+              }
+            )
+          }
+        });
+        break;
+    }
+  }
+
+  mostrarMensaje(mensaje: any) {
+    this.snack.open(mensaje, '', {
+      duration: 3000
+    })
+    this.loading = false
+    return
   }
 
   agregarVacante() {

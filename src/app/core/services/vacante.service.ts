@@ -24,4 +24,7 @@ export class VacanteService {
   obtenerVacantePorEstudiante(id: string) {
     return this.http.get(`${baseUrl}/vacante/estudiante/${id}`);
   }
+  cambiarEstadoCancelado(id: string) {
+    return this.http.patch(`${baseUrl}/vacante/${id}/cancelar/`, null);
+  }
 }

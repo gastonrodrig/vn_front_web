@@ -46,5 +46,7 @@
     [data]="displayedVacantes()"
     [trackByField]="trackByField"
     [loadedComplete]="loadedComplete"
-    [noActions]="true"
+    [actionsByState]="actionsByState"
+    [vacantActive]="true"
+    (actionEvent)="handleTableAction($event)"
 ></app-table>

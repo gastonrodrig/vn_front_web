@@ -93,9 +93,12 @@ export class GestionarVacantesComponent {
       return new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
     })
   }
-
   
   displayedVacantes() {
+    if (!this.vacantes) {
+      return []
+    }
+
     return this.vacantes.filter((e: any) => {
       const matchSearchTerm = e.estudiante.numero_documento.includes(this.searchTerm)
       const matchGrado = this.gradoSelected === 'all' || e.grado._id === this.gradoSelected

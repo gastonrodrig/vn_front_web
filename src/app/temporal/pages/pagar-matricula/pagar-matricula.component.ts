@@ -17,6 +17,7 @@ import { GmailService } from '../../../core/services/gmail.service';
 import { SolicitudService } from '../../../core/services/solicitud.service';
 import { VacanteService } from '../../../core/services/vacante.service';
 import { MatriculaService } from '../../../core/services/matricula.service';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-pagar-matricula',
@@ -65,6 +66,7 @@ export class PagarMatriculaComponent implements OnInit {
     private solicitudService: SolicitudService,
     private vacanteService: VacanteService,
     private matriculaService: MatriculaService,
+    private usuarioService: UserService,
     private snack: MatSnackBar
   ) {}
 
@@ -170,7 +172,8 @@ export class PagarMatriculaComponent implements OnInit {
         paymentMethodId: paymentMethod.id,
         metadata: {
           tipoDocumento: this.tipoDoc,
-          nroDocumento: this.n_doc
+          nroDocumento: this.n_doc,
+          estudiante_id: this.estudianteId
         }
       };
 
@@ -178,7 +181,6 @@ export class PagarMatriculaComponent implements OnInit {
         async (response: any) => {
           console.log('Payment successful:', response);
           const stripeOperationId  = response.stripeOperationId;
-          this.mostrarMensaje('Pago exitoso.', 3000);
 
           this.estudianteService.cambiarEstadoEstudiante(this.estudianteId, { estado: 'Pagó' }).subscribe(
             (data: any) => {
@@ -191,7 +193,7 @@ export class PagarMatriculaComponent implements OnInit {
               const vacanteId = data[0]._id
               this.vacanteService.cambiarEstado(vacanteId, { estado: 'Confirmado' }).subscribe(
                 (data: any) => {
-                  console.log(data);
+                  console.log(data)
                 }
               )
             }
@@ -207,10 +209,13 @@ export class PagarMatriculaComponent implements OnInit {
             tipoMa: 'Nuevo',
             fecha: new Date()
           }
-          
+
           this.matriculaService.agregarMatricula(dataMatricula).subscribe(
             (data: any) => {
-              console.log(data);
+              console.log(data)
+            },
+            (error) => {
+              this.mostrarMensaje(error.error.message, 3000)
             }
           )
 
@@ -234,7 +239,10 @@ export class PagarMatriculaComponent implements OnInit {
 
     try {
       await this.gmailService.sendEmailPdf(operationId, correoData).toPromise();
-      this.mostrarMensaje('Correo enviado exitosamente con la boleta.', 3000);
+      this.mostrarMensaje('Se le ha enviado la boleta a su correo adjuntado en el pago.', 3000);
+
+      
+      // this.usuarioService.eliminarUsuario()
       this.loading = false
     } catch (error) {
       console.error('Error al enviar el correo:', error);

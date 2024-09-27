@@ -124,18 +124,43 @@ export class ModalMatriculaComponent {
 
   validarDNI(dni: string) {
     if (dni.length === 8) {
-      this.loading = true
+      this.loading = true;
+  
       this.estudianteService.obtenerEstudiantePorNroDoc(dni).subscribe(
         (data: any) => {
-          this.loading = false
-          this.nombreEstudiante = `${data.apellido}, ${data.nombre}`
-          this.estudianteId = data._id
+          this.loading = false;
+          this.nombreEstudiante = `${data.apellido}, ${data.nombre}`;
+          this.estudianteId = data._id;
+  
+          // Verificar si el estudiante ya tiene una matrícula
+          this.matriculaService.obtenerMatricula(data._id).subscribe(
+            (matricula: any) => {
+              if (matricula) {
+                // Si ya tiene una matrícula, es un estudiante regular
+                this.matricula.tipoMa = 'Regular';
+                // Deshabilitar el selector de tipo de matrícula
+                this.matricula.monto = 300; // Monto para alumnos regulares
+              } else {
+                // Si no tiene matrícula, permitir elegir entre "Nuevo" o "Externo"
+                this.matricula.tipoMa = ''; // Dejar vacío para que el usuario elija
+                // El monto se establecerá al seleccionar el tipo
+              }
+            },
+            (error) => {
+              console.error('Error al verificar matrícula', error);
+            }
+          );
+        },
+        (error) => {
+          console.error('Error al obtener estudiante', error);
+          this.loading = false;
         }
-      )
+      );
     } else {
-      this.nombreEstudiante = ''
+      this.nombreEstudiante = '';
     }
   }
+  
 
   formatDateTime(date: Date, time: string) {
     const [hours, minutes, seconds] = time.split(':').map(Number)

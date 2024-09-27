@@ -14,6 +14,7 @@
           [(ngModel)]="matricula.tipoMa"
           (selectionChange)="actualizarMonto($event.value)"
           [ngModelOptions]="{standalone: true}"
+          [disabled]="matricula.tipoMa === 'Regular'"
         >
           <mat-option *ngFor="let e of listaTiposMatricula" [value]="e.nombre">
             {{ e.nombre }}

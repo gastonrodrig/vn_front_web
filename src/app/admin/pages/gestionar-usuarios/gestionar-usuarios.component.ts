@@ -30,7 +30,8 @@ export class GestionarUsuariosComponent {
   columns = [
     { header: 'Usuario', field: 'usuario' },
     { header: 'Correo', field: 'email' },
-    { header: 'Rol', field: 'rol' }
+    { header: 'Rol', field: 'rol' },
+    { header: 'Estado', field: 'estado'}
   ]
 
   constructor(

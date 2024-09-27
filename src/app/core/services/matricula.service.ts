@@ -14,4 +14,7 @@ export class MatriculaService {
   agregarMatricula(matricula: any){
     return this.http.post(`${baseUrl}/matricula/`, matricula);
   }
+  obtenerMatricula(id: string) {
+    return this.http.get(`${baseUrl}/matricula/${id}`);
+  }
 }

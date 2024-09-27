@@ -8,7 +8,6 @@ import { GradoService } from '../../../core/services/grado.service';
 import { PeriodoService } from '../../../core/services/periodo.service';
 import { EstudianteService } from '../../../core/services/estudiante.service';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { VacanteService } from '../../../core/services/vacante.service';
 import { InputComponent } from '../../../shared/components/UI/input/input.component';
 import { combineLatest } from 'rxjs';

@@ -16,6 +16,7 @@ import { EstudianteService } from '../../../../core/services/estudiante.service'
 import { PeriodoService } from '../../../../core/services/periodo.service';
 import { combineLatest } from 'rxjs';
 import Swal from 'sweetalert2';
+import { error } from 'console';
 
 @Component({
   selector: 'app-modal-vacante',
@@ -59,17 +60,13 @@ export class ModalVacanteComponent {
   ngOnInit() {
     this.loading = true;
 
-    // Solo combinar los servicios de grados y periodos
     combineLatest([
       this.gradoService.listarGrados(),
       this.periodoService.listarPeriodos()
     ]).subscribe(
       ([grados, periodos]) => {
-        // Asigna los datos a las variables correspondientes
         this.grados = grados;
         this.periodos = periodos;
-
-        // Detener el indicador de carga después de que ambos servicios hayan respondido
         this.loading = false;
       },
       (error) => {
@@ -78,7 +75,6 @@ export class ModalVacanteComponent {
       }
     );
 
-    // Aquí le das estructura a vacantes, por ejemplo, como un arreglo vacío
     this.vacante = {
       estudiante_id: '',
       grado_id: '',
@@ -93,13 +89,29 @@ export class ModalVacanteComponent {
       periodo_id: this.vacante.periodo_id,
     }
 
-    // if(this.matricula.monto === '') {
-    //   this.snack.open('El nombre del docente es requerido', '', {
-    //     duration: 3000
-    //   })
-    //   this.loading = false
-    //   return
-    // }
+    if(this.estudianteId === null || this.estudianteId === undefined) {
+      this.snack.open('El dni del estudiante es requerido', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+
+    if(vacanteData.grado_id === '') {
+      this.snack.open('El grado es requerido', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+
+    if(vacanteData.periodo_id === '') {
+      this.snack.open('El periodo es requerido', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
 
     this.vacanteService.agregarVacantes(vacanteData).subscribe(
       (data) => {
@@ -112,7 +124,10 @@ export class ModalVacanteComponent {
         );
       },
       (error) => {
-        console.log(error)
+        this.loading = false
+        this.snack.open(error.error.message, '', {
+          duration: 3000
+        })
       }
     )
   }
@@ -125,6 +140,12 @@ export class ModalVacanteComponent {
           this.loading = false
           this.nombreEstudiante = `${data.apellido}, ${data.nombre}`
           this.estudianteId = data._id
+        },
+        (error) => {
+          this.loading = false
+          this.snack.open('No se encontró al estudiante', '', {
+            duration: 3000
+          })
         }
       )
     } else {

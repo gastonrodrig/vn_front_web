@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { SoloNumerosDirective } from '../../../directives/solo-numeros.directive';
 import { ApoderadoService } from '../../../../core/services/apoderado.service';
 import Swal from 'sweetalert2';
+import e from 'express';
 
 @Component({
   selector: 'app-modal-apoderado',
@@ -92,8 +93,75 @@ export class ModalApoderadoComponent {
   }
 
   agregarApoderado() {
-    // FALTA VALIDACIONES
-
+   // VALIDACIONES NOMBRE
+   if (!this.apoderado.nombre || this.apoderado.nombre.trim() === '') {
+    this.snack.open('El nombre no puede estar vacío', '', {
+      duration: 3000
+    });
+    return;
+  }
+   if (!isNaN(Number(this.apoderado.nombre))) {
+    this.snack.open('El nombre no puede contener solo números', '', {
+      duration: 3000
+    });
+    return;
+  }
+  // VALIDACIONES APELLIDO
+   if (!this.apoderado.apellido || this.apoderado.apellido.trim() === '') {
+    this.snack.open('El apellido no puede estar vacío', '', {
+      duration: 3000
+    });
+    return;
+  }
+   if (!isNaN(Number(this.apoderado.apellido))) {
+    this.snack.open('El apellido no puede contener solo números', '', {
+      duration: 3000
+    });
+    return;
+  }
+  // VALIDACIONES DOCUMENTO
+   if (!this.apoderado.documento._id) {
+    this.snack.open('Debe seleccionar un tipo de documento', '', {
+      duration: 3000
+    });
+    return;
+  }
+   if (this.apoderado.numero_documento.length < 8) {
+    this.snack.open('El número de documento debe tener al menos 8 dígitos', '', {
+      duration: 3000
+    });
+    return;
+  }
+  // VALIDACIONES TELÉFONO
+   if (isNaN(Number(this.apoderado.numero))) {
+    this.snack.open('El número de teléfono debe contener solo números', '', {
+      duration: 3000
+    });
+    return;
+  }
+   if (this.apoderado.numero.length !== 9) {
+    this.snack.open('El número de teléfono debe tener exactamente 9 dígitos', '', {
+      duration: 3000
+    });
+    return;
+  }
+  // VALIDACIONES DIRECCION
+  if (!this.apoderado.direccion|| this.apoderado.direccion.trim() === '') {
+    this.snack.open('La direccion no puede estar vacío', '', {
+      duration: 3000
+    });
+    return;
+  }
+  // VALIDACIONES CORREO
+  if (!this.apoderado.correo|| this.apoderado.correo.trim() === '') {
+    this.snack.open('El Correo no puede estar vacío', '', {
+      duration: 3000
+    });
+    return;
+  }
+  //VALIDACIONES TERMINADAS
+  
+      // Si todas las validaciones pasan, se crea el nuevo apoderado
     const nuevoApoderado = { 
       ...this.apoderado, 
       _id: this.generarIdUnico()
@@ -119,14 +187,82 @@ export class ModalApoderadoComponent {
   }
 
   guardarInformacion() {
+     // VALIDACIONES NOMBRE
+    if (!this.apoderado.nombre || this.apoderado.nombre.trim() === '') {
+      this.snack.open('El nombre no puede estar vacío', '', {
+      duration: 3000
+    });
+    return;
+    }
+    if (!isNaN(Number(this.apoderado.nombre))) {
+      this.snack.open('El nombre no puede contener solo números', '', {
+      duration: 3000
+    });
+    return;
+    }
+
+    // VALIDACIONES APELLIDO
+    if (!this.apoderado.apellido || this.apoderado.apellido.trim() === '') {
+      this.snack.open('El apellido no puede estar vacío', '', {
+      duration: 3000
+    });
+    return;
+    }
+    if (!isNaN(Number(this.apoderado.apellido))) {
+      this.snack.open('El apellido no puede contener solo números', '', {
+      duration: 3000
+    });
+    return;
+    }
+    // VALIDACIONES DOCUMENTO
+    if (!this.apoderado.documento._id) {
+      this.snack.open('Debe seleccionar un tipo de documento', '', {
+      duration: 3000
+    });
+    return;
+    }
+    if (this.apoderado.numero_documento.length < 8) {
+      this.snack.open('El número de documento debe tener al menos 8 dígitos', '', {
+      duration: 3000
+    });
+    return;
+    }
+  // VALIDACIONES TELÉFONO
+    if (isNaN(Number(this.apoderado.numero))) {
+      this.snack.open('El número de teléfono debe contener solo números', '', {
+      duration: 3000
+    });
+    return;
+    }
+    if (this.apoderado.numero.length !== 9) {
+      this.snack.open('El número de teléfono debe tener exactamente 9 dígitos', '', {
+      duration: 3000
+    });
+    return;
+    }
+    // VALIDACIONES DIRECCION
+    if (!this.apoderado.direccion|| this.apoderado.direccion.trim() === '') {
+      this.snack.open('La direccion no puede estar vacío', '', {
+      duration: 3000
+    });
+    return;
+    }
+    // VALIDACIONES CORREO
+    if (!this.apoderado.correo|| this.apoderado.correo.trim() === '') {
+      this.snack.open('El Correo no puede estar vacío', '', {
+      duration: 3000
+    });
+    return;
+    }
+    //VALIDACIONES TERMINADAS
+
     if(this.data.isCreate) {
       if (this.apoderadoList.length < 1) {
         this.snack.open('Debe incluir como mínimo 1 apoderado', 'Cerrar', {
           duration: 3000
         })
         return
-      }
-    
+      } 
       this.loading = true
       this.apoderadoList.forEach((e) => {
         const apoderado = {
@@ -160,8 +296,6 @@ export class ModalApoderadoComponent {
     }
 
     if(this.data.isCreateOnEdit) {
-      // VALIDACIONES
-
       const apoderado = {
         nombre: this.apoderado.nombre,
         apellido: this.apoderado.apellido,
@@ -172,6 +306,76 @@ export class ModalApoderadoComponent {
         estudiante_id: this.apoderado.estudiante_id,
         correo: this.apoderado.correo
       }
+         // VALIDACIONES NOMBRE
+      if (!this.apoderado.nombre || this.apoderado.nombre.trim() === '') {
+        this.snack.open('El nombre no puede estar vacío', '', {
+        duration: 3000
+        });
+        return;
+        }
+      if (!isNaN(Number(this.apoderado.nombre))) {
+        this.snack.open('El nombre no puede contener solo números', '', {
+        duration: 3000
+        });
+        return;
+        }
+
+        // VALIDACIONES APELLIDO
+      if (!this.apoderado.apellido || this.apoderado.apellido.trim() === '') {
+        this.snack.open('El apellido no puede estar vacío', '', {
+        duration: 3000
+        });
+        return;
+        }
+        if (!isNaN(Number(this.apoderado.apellido))) {
+        this.snack.open('El apellido no puede contener solo números', '', {
+        duration: 3000
+        });
+        return;
+        }
+        // VALIDACIONES DOCUMENTO
+      if (!this.apoderado.documento._id) {
+        this.snack.open('Debe seleccionar un tipo de documento', '', {
+        duration: 3000
+        });
+        return;
+        }
+      if (this.apoderado.numero_documento.length < 8) {
+        this.snack.open('El número de documento debe tener al menos 8 dígitos', '', {
+        duration: 3000
+        });
+        return;
+        }
+
+      // VALIDACIONES TELÉFONO
+      if (isNaN(Number(this.apoderado.numero))) {
+        this.snack.open('El número de teléfono debe contener solo números', '', {
+        duration: 3000
+        });
+        return;
+        }
+      if (this.apoderado.numero.length !== 9) {
+        this.snack.open('El número de teléfono debe tener exactamente 9 dígitos', '', {
+        duration: 3000
+        });
+        return;
+        }
+      // VALIDACIONES DIRECCION
+      if (!this.apoderado.direccion|| this.apoderado.direccion.trim() === '') {
+        this.snack.open('La direccion no puede estar vacío', '', {
+        duration: 3000
+        });
+        return;
+        }
+      // VALIDACIONES CORREO
+      if (!this.apoderado.correo|| this.apoderado.correo.trim() === '') {
+        this.snack.open('El Correo no puede estar vacío', '', {
+        duration: 3000
+        });
+        return;
+        }
+      //VALIDACIONES TERMINADAS
+  
       this.loading = true
       this.apoderadoService.agregarApoderado(apoderado).subscribe(
         (data: any) => {
@@ -197,6 +401,7 @@ export class ModalApoderadoComponent {
         estudiante_id: this.data.estudiante_id,
         correo: this.apoderado.correo
       }
+
       this.loading = true
       this.apoderadoService.modificarApoderado(this.apoderadoId, apoderado).subscribe(
         (data) => {

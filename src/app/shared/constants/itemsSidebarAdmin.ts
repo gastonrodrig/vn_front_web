@@ -67,8 +67,21 @@ export const listaModulosAdmin = [
     },
     {
         id: 12,
+        route: 'gestionar-vacantes',
+        titulo: 'Vacantes',
+        icon: 'user-graduate'
+    },
+    {
+        id: 13,
         route: 'gestionar-pagos',
         titulo: 'Pagos',
         icon: 'money-bill'
+    },
+    {
+        id: 14,
+        route: 'gestionar-pension',
+        titulo: 'Pension',
+        icon: 'money-check-dollar'
     }
+
 ]

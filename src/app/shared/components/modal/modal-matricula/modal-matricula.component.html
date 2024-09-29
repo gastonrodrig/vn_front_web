@@ -7,9 +7,25 @@
   <form (ngSubmit)="guardarInformacion()">
     <p class="pl-0.5 pb-4 font-medium">Datos de la Matrícula:</p>
     <div class="grid grid-cols-2 gap-x-4">
+
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <mat-label>Tipos de Matricula</mat-label>
+        <mat-select 
+          [(ngModel)]="matricula.tipoMa"
+          (selectionChange)="actualizarMonto($event.value)"
+          [ngModelOptions]="{standalone: true}"
+          [disabled]="matricula.tipoMa === 'Regular'"
+        >
+          <mat-option *ngFor="let e of listaTiposMatricula" [value]="e.nombre">
+            {{ e.nombre }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      
       <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
         <mat-label>Monto (S/.)</mat-label>
         <input
+          disabled
           [(ngModel)]="matricula.monto"
           type="text"
           placeholder="Ingrese el monto"
@@ -23,6 +39,7 @@
           <mat-label>Metodo de Pago</mat-label>
           <mat-select 
               [(ngModel)]="matricula.metodo_pago"
+              (selectionChange)="verificarTipoPago($event.value)"
               [ngModelOptions]="{standalone: true}"
           >
               <mat-option 
@@ -34,6 +51,8 @@
           </mat-select>
       </mat-form-field>
 
+      
+
       <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
         <mat-label>Número de Operacion</mat-label>
         <input
@@ -42,9 +61,11 @@
           placeholder="Ingrese el nro. de operación"
           matInput
           appSoloNumeros
+          [disabled]="nOperacionDisabled" 
           [ngModelOptions]="{standalone: true}"
         >
       </mat-form-field>
+      
 
       <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
         <mat-label>Periodo</mat-label>
@@ -75,7 +96,7 @@
         <mat-icon matSuffix>badge</mat-icon>
       </mat-form-field>
 
-      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+      <mat-form-field appearance="fill" class="col-span-2">
         <mat-label>Nombre del Estudiante</mat-label>
         <input
           [(ngModel)]="nombreEstudiante"

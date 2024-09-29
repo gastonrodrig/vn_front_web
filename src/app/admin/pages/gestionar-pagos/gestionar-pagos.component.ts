@@ -71,8 +71,12 @@ export class GestionarPagosComponent {
           metadata: {
             ...pago.metadata,
             tipoDocumento: this.documentos[pago.metadata.tipoDocumento] || 'Desconocido' // Si no existe, muestra 'Desconocido'
-          }
-        }));
+          },
+          paymentDate: this.formatFecha(pago.paymentDate),
+          monto: this.convertMonto(pago.monto)
+
+        }))
+        .sort((a: any, b: any) => new Date(b.paymentDate).getTime() - new Date(a.paymentDate).getTime());
         this.loading = false;
         this.loadedComplete = true;
       },
@@ -81,6 +85,32 @@ export class GestionarPagosComponent {
         Swal.fire('Error', 'Error al cargar los datos', 'error');
       }
     );
+  }
+
+  convertMonto(monto: number): string {
+    const montoConvertido = monto * (300 / 1000);
+    return montoConvertido.toFixed(2);
+  }
+
+  formatFecha(fecha: any) {
+    const date = new Date(fecha)
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    const seconds = String(date.getSeconds()).padStart(2, '0')
+  
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+  }
+
+  ordenarFechas(data: any) {
+    return data.map((vacante: any) => {
+      vacante.fecha = this.formatFecha(vacante.fecha)
+      return vacante
+    }).sort((a: any, b: any) => {
+      return new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
+    })
   }
 
   displayedPagos() {

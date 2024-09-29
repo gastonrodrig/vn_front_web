@@ -1,59 +1,59 @@
 import { Component } from '@angular/core';
+import { PensionService } from '../../../core/services/pension.service';
+import { MatDialog } from '@angular/material/dialog';
+import { TableComponent } from '../../../shared/components/table/table.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { TableComponent } from '../../../shared/components/table/table.component';
 import { InputComponent } from '../../../shared/components/UI/input/input.component';
-import { MatriculaService } from '../../../core/services/matricula.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ModalMatriculaComponent } from '../../../shared/components/modal/modal-matricula/modal-matricula.component';
 import Swal from 'sweetalert2';
+import { ModalPensionComponent } from '../../../shared/components/modal/modal-pension/modal-pension.component';
 
 @Component({
-  selector: 'app-gestionar-matricula',
+  selector: 'app-gestionar-pension',
   standalone: true,
   imports: [TableComponent, MatProgressBarModule, FormsModule, InputComponent, MatButtonModule],
-  templateUrl: './gestionar-matricula.component.html',
-  styleUrl: './gestionar-matricula.component.css'
+  templateUrl: './gestionar-pension.component.html',
+  styleUrl: './gestionar-pension.component.css'
 })
-export class GestionarMatriculaComponent {
-  matriculas = []
-  matricula = []
+export class GestionarPensionComponent {
+  pensiones = []
+  pension = []
   trackByField = '_id'
   loading = false
   loadedComplete: any
   searchTerm: string = ''
-
-  columns = [
+  
+  columns= [
     { header: 'Nro. Documento', field: 'estudiante.numero_documento' },
     { header: 'Nombre', field: 'estudiante' },
     { header: 'Monto', field: 'monto' },
     { header: 'Método de Pago', field: 'metodo_pago' },
     { header: 'Nro. Operacion', field: 'n_operacion' },
-    { header: 'Periodo del estudiante', field: 'periodo.anio' },
-    { header: 'Tipo Modalidad', field: 'tipo' },
-    { header: 'Tipo Matricula', field: 'tipoMa' },
-    { header: 'Fecha', field: 'fecha' }
+    { header: 'Estado', field: 'estado' },
+    { header: 'Mes', field: 'mes' },
+    { header: 'Fecha de Inicio', field: 'fecha_inicio' },
+    { header: 'Fecha Limite', field: 'fecha_limite' },
   ]
 
   constructor(
-    private matriculaService: MatriculaService,
+    private pensionService: PensionService,
     public dialog: MatDialog
   ){}
 
-  ngOnInit() {
+  ngOnInit(){
     this.loading = true
-    this.listarMatriculas()
+    this.listarPension()
   }
 
-  listarMatriculas() {
-    this.matriculaService.listarMatriculas().subscribe(
+  listarPension(){
+    this.pensionService.listarPension().subscribe(
       (data: any) => {
         console.log(data)
-        this.matriculas = data.map((matricula: any) => {
-          matricula.monto = this.formatMonto(matricula.monto)
-          matricula.fecha = this.formatFecha(matricula.fecha);
-          return matricula;
+        this.pensiones = data.map((pension: any) => {
+          pension.monto = this.formatMonto(pension.monto)
+          pension.n_operacion = this.formatOperacion(pension.n_operacion) 
+          return pension;
         });
         this.loading = false
         this.loadedComplete = true
@@ -64,25 +64,22 @@ export class GestionarMatriculaComponent {
       }
     )
   }
-
-  agregarMatricula() {
-    const dialogRef = this.dialog.open(ModalMatriculaComponent, {
+  agregarPension() {
+    const dialogRef = this.dialog.open(ModalPensionComponent, {
       width: '70%'
     })
 
     dialogRef.afterClosed().subscribe(
       (data) => {
-        this.listarMatriculas()
+        this.listarPension()
       }
     )
   }
-
-  displayedMatriculas() {
-    return this.matriculas.filter((matricula: any) => 
-      matricula.estudiante.numero_documento.includes(this.searchTerm)
+  displayedPension() {
+    return this.pensiones.filter((pension: any) => 
+      pension.estudiante.numero_documento.includes(this.searchTerm)
     )
   }
-
   getFullName(estudiante: any) {
     return `${estudiante.nombre} ${estudiante.apellido}`
   }
@@ -90,7 +87,17 @@ export class GestionarMatriculaComponent {
   formatMonto(monto: any) {
     return `S/. ${monto.toFixed(2)}`
   }
-
+  formatOperacion(n_operacion: any){
+    if( n_operacion === null ){
+      return '-'
+    }
+    return n_operacion;
+  }
+  formatmes(fecha: any) {
+    const date = new Date(fecha)
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    return `${month}`
+  }
   formatFecha(fecha: any) {
     const date = new Date(fecha)
     const year = date.getFullYear()
@@ -102,4 +109,5 @@ export class GestionarMatriculaComponent {
   
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
   }
+
 }

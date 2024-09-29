@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { EstudianteService } from '../../../core/services/estudiante.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Swal from 'sweetalert2';
+import { VacanteService } from '../../../core/services/vacante.service';
 
 @Component({
   selector: 'app-gestionar-solicitud',
@@ -53,6 +54,7 @@ export class GestionarSolicitudComponent {
   constructor(
     private solicitudService: SolicitudService,
     private estudianteService: EstudianteService,
+    private vacanteService: VacanteService,
     private snack: MatSnackBar,
     public dialog: MatDialog
   ) {}
@@ -135,7 +137,7 @@ export class GestionarSolicitudComponent {
           cancelButtonText: 'Cerrar'
         }).then((result) => {
           if (result.isConfirmed) {
-            this.cambiarEstadoGeneral(id, 'Aprobado')
+            this.cambiarEstadoAprobado(id)
           }
         });
         break;
@@ -151,7 +153,12 @@ export class GestionarSolicitudComponent {
           cancelButtonText: 'Cerrar'
         }).then((result) => {
           if (result.isConfirmed) {
-            this.cambiarEstadoGeneral(id, 'Cancelado')
+            this.solicitudService.cambiarEstadoCancelado(id).subscribe(
+              (data: any) => {
+                this.mostrarMensaje('La Solcitud ha sido cancelada')
+                this.listarSolicitudes()
+              }
+            )
           }
         });
         break;
@@ -169,7 +176,7 @@ export class GestionarSolicitudComponent {
           (data: any) => {
             this.solicitudService.cambiarEstadoEnProceso(id).subscribe(
               (data: any) => {
-                console.log(data);
+                this.mostrarMensaje('La Solcitud ha sido cambiada a En Proceso')
                 this.listarSolicitudes();
               }
             )
@@ -183,17 +190,49 @@ export class GestionarSolicitudComponent {
     )
   }
 
-  cambiarEstadoGeneral(id: any, estado: any) {
+  cambiarEstadoAprobado(id: any) {
     this.loading = true
-    const data = {
-      estado: estado
-    }
-    this.solicitudService.cambiarEstadoGeneral(id, data).subscribe(
+
+    this.solicitudService.obtenerSolicitud(id).subscribe(
       (data: any) => {
-        console.log(data)
-        this.listarSolicitudes()
+        this.solicitudDni = data.dni_hijo;
+
+        this.estudianteService.obtenerEstudiantePorNroDoc(this.solicitudDni).subscribe(
+          (data: any) => {
+            this.solicitudService.cambiarEstadoAprobado(id).subscribe(
+              (data: any) => {
+                this.mostrarMensaje('La Solcitud ha sido aprobada')
+                this.listarSolicitudes()
+              }
+            )
+
+            const dataEstado = {
+              estado: 'No pagó'
+            }
+            this.estudianteService.cambiarEstadoEstudiante(data._id, dataEstado).subscribe(
+              (data: any) => {
+                console.log(data)
+              }
+            )
+
+            const dataVacante = {
+              estudiante_id: data._id,
+              grado_id: data.grado._id,
+              periodo_id: data.periodo._id,
+            }
+            this.vacanteService.agregarVacantes(dataVacante).subscribe(
+              (data: any) => {
+                console.log(data)
+              }
+            )
+          },
+          (error) => {
+            this.loading = false
+            this.mostrarMensaje('No existe un estudiante con el DNI proporcionado')
+          }
+        )
       }
-    )
+    )  
   }
 
   mostrarMensaje(mensaje: any) {

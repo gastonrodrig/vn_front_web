@@ -7,10 +7,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { UserService } from '../../../core/services/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalUsuarioComponent } from '../../../shared/components/modal/modal-usuario/modal-usuario.component';
-import Swal from 'sweetalert2';
 import { EstudianteService } from '../../../core/services/estudiante.service';
 import { ApoderadoService } from '../../../core/services/apoderado.service';
 import { DocenteService } from '../../../core/services/docente.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestionar-usuarios',
@@ -30,7 +30,8 @@ export class GestionarUsuariosComponent {
   columns = [
     { header: 'Usuario', field: 'usuario' },
     { header: 'Correo', field: 'email' },
-    { header: 'Rol', field: 'rol' }
+    { header: 'Rol', field: 'rol' },
+    { header: 'Estado', field: 'estado'}
   ]
 
   constructor(
@@ -49,8 +50,9 @@ export class GestionarUsuariosComponent {
     this.loading = load
     this.userService.listarUsuarios().subscribe(
       (data: any) => {
-        console.log(data)
-        this.usuarios = data.sort((a: any, b: any) => {
+        this.usuarios = data
+        .filter((user: any) => user.rol !== 'Temporal')
+        .sort((a: any, b: any) => {
           if (a.usuario.toLowerCase() < b.usuario.toLowerCase()) {
             return -1
           }
@@ -153,6 +155,9 @@ export class GestionarUsuariosComponent {
           this.loading = true
           this.userService.obtenerUsuario(id).subscribe(
             (data: any) => {
+              if(data.rol === 'Admin' || data.rol === 'Temporal') {
+                this.eliminarUsuario(data._id)
+              }
               if(data.estudiante !== null) {
                 this.estudianteService.eliminarUsuario(data.estudiante._id).subscribe(
                   (data: any) => {
@@ -173,9 +178,6 @@ export class GestionarUsuariosComponent {
                     this.eliminarUsuario(id)
                   }
                 )
-              }
-              if(data.estudiante === null && data.docente === null && data.apoderado === null) {
-                this.eliminarUsuario(data._id)
               }
             }
           )

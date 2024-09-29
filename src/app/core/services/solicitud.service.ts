@@ -23,7 +23,13 @@ export class SolicitudService {
   cambiarEstadoEnProceso(id: string) {
     return this.http.patch(`${baseUrl}/solicitud/process/${id}`, null);
   }
-  cambiarEstadoGeneral(id: string, solicitud: any) {
-    return this.http.patch(`${baseUrl}/solicitud/change-state/${id}`, solicitud);
+  cambiarEstadoAprobado(id: string) {
+    return this.http.patch(`${baseUrl}/solicitud/approve/${id}`, null);
+  }
+  cambiarEstadoCancelado(id: string) {
+    return this.http.patch(`${baseUrl}/solicitud/cancel/${id}`, null);
+  }
+  obtenerSolicitudPorDni(dni: string) {
+    return this.http.get(`${baseUrl}/solicitud/documento/${dni}`);
   }
 }

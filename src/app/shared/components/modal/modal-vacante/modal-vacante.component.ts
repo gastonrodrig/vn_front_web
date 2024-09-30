@@ -16,7 +16,6 @@ import { EstudianteService } from '../../../../core/services/estudiante.service'
 import { PeriodoService } from '../../../../core/services/periodo.service';
 import { combineLatest } from 'rxjs';
 import Swal from 'sweetalert2';
-import { error } from 'console';
 
 @Component({
   selector: 'app-modal-vacante',

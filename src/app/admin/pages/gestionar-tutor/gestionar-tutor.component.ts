@@ -31,7 +31,6 @@ export class GestionarTutorComponent {
       columns = [
         { header: 'Apellido ', field: 'apellido' },
         { header: 'Nombre ', field: 'nombre' },
-        { header: 'Direccion', field: 'direccion' },
         { header: 'Telefono', field: 'telefono' },
         { header: 'Nro. Documento', field: 'numero_documento' },
         { header: 'Grado', field: 'grado.nombre' },
@@ -41,7 +40,6 @@ export class GestionarTutorComponent {
       ]
       constructor(
         private tutorService:TutorService,
-        private estudianteService: EstudianteService,
         private snack: MatSnackBar,
         public dialog: MatDialog,
         private router: Router
@@ -52,9 +50,18 @@ export class GestionarTutorComponent {
       }
 
       listarTutores() {
+        this.loading = true
         this.tutorService.listarTutores().subscribe(
           (data: any) => { 
-            this.tutores=data
+            this.tutores = data.sort((a: any, b: any) => {
+              if (a.apellido.toLowerCase() < b.apellido.toLowerCase()) {
+                return -1;
+              }
+              if (a.apellido.toLowerCase() > b.apellido.toLowerCase()) {
+                return 1;
+              }
+              return 0;
+            });
             this.loading = false
             this.loadedComplete = true
           },
@@ -80,22 +87,7 @@ export class GestionarTutorComponent {
     
         dialogRef.afterClosed().subscribe(
           (data) => {
-            this.tutorService.listarTutores().subscribe(
-              (data: any) => {
-                this.tutores = data.sort((a: any, b: any) => {
-                  if (a.apellido.toLowerCase() < b.apellido.toLowerCase()) {
-                    return -1;
-                  }
-                  if (a.apellido.toLowerCase() > b.apellido.toLowerCase()) {
-                    return 1;
-                  }
-                  return 0;
-                });
-              },
-              (error) => {
-                console.log(error)
-              }
-            )
+            this.listarTutores()
           }
         )
       }
@@ -116,22 +108,7 @@ export class GestionarTutorComponent {
     
                dialogRef.afterClosed().subscribe(
                  (data) => {
-                   this.tutorService.listarTutores().subscribe(
-                     (data: any) => {
-                       this.tutores = data.sort((a: any, b: any) => {
-                         if (a.apellido.toLowerCase() < b.apellido.toLowerCase()) {
-                           return -1;
-                         }
-                         if (a.apellido.toLowerCase() > b.apellido.toLowerCase()) {
-                           return 1;
-                         }
-                         return 0;
-                       });
-                     },
-                     (error) => {
-                       console.log(error)
-                     }
-                   )
+                  this.listarTutores()
                  }
                )
              },
@@ -163,22 +140,7 @@ export class GestionarTutorComponent {
                this.loading = false
                Swal.fire('Tutor eliminado', 'El tutor ha sido eliminado de la base de datos', 'success').then(
                  (e)=> {
-                   this.tutorService.listarTutores().subscribe(
-                     (data: any) => {
-                       this.tutores = data.sort((a: any, b: any) => {
-                         if (a.apellido.toLowerCase() < b.apellido.toLowerCase()) {
-                           return -1;
-                         }
-                         if (a.apellido.toLowerCase() > b.apellido.toLowerCase()) {
-                           return 1;
-                         }
-                         return 0;
-                       });
-                     },
-                     (error) => {
-                       console.log(error)
-                     }
-                   )
+                   this.listarTutores()
                  }
                );
              },

@@ -14,7 +14,7 @@ export class AuthService {
   constructor(private http: HttpClient) {}
   
   login(identificador: string, contrasena: string) {
-    const rolesPermitidos = ['Docente', 'Admin', 'Temporal']
+    const rolesPermitidos = ['Admin', 'Temporal']
     
     return this.http.post<any>(`${baseUrl}/auth/login`, { identificador, contrasena })
       .pipe(
@@ -30,11 +30,8 @@ export class AuthService {
               const user: any = {
                 email: data.email,
                 rol: data.rol,
-                usuario: data.usuario
-              }
-
-              if (data.rol === 'Docente') {
-                user.docente = data.docente
+                usuario: data.usuario,
+                perfil: null
               }
 
               this.usuarioActual = user

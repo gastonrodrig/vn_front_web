@@ -60,6 +60,17 @@
                             <i class="fa-solid fa-file-pdf"></i>
                           </div>
                         }
+                        @if(userActive) {
+                          @for(action of getActionsState(row.estado); track action.icon) {
+                            <div 
+                              class="hover:cursor-pointer hover:scale-125 duration-200"
+                              (click)="handleActionState(row[trackByField], action.action)"
+                              [ngClass]="action.style"
+                            >
+                              <i class="fa-solid {{  action.icon }}"></i>
+                            </div>
+                          }
+                        }
                         @if(editActive) {
                           <div 
                             class="hover:text-blue-500 hover:cursor-pointer hover:scale-125 duration-200"
@@ -77,10 +88,10 @@
                           </div>
                         }
                         @if(requestActive || vacantActive) {
-                          @for(action of getActions(row.estado); track action.icon) {
+                          @for(action of getActionsState(row.estado); track action.icon) {
                             <div 
                               class="hover:cursor-pointer hover:scale-125 duration-200"
-                              (click)="handleAction(row[trackByField], action.action)"
+                              (click)="handleActionState(row[trackByField], action.action)"
                               [ngClass]="action.style"
                             >
                               <i class="fa-solid {{ action.icon }}"></i>

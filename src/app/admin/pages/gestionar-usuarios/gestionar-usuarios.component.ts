@@ -34,6 +34,15 @@ export class GestionarUsuariosComponent {
     { header: 'Estado', field: 'estado'}
   ]
 
+  actionsByState = {
+    'Deshabilitado': [
+      { icon: 'fa-unlock', action: 'deshabilitado', style: 'hover:text-stone-500' }
+    ],
+    'Habilitado': [
+      { icon: 'fa-lock', action: 'habilitado', style: 'hover:text-stone-500' }
+    ]
+  }
+
   constructor(
     private userService: UserService,
     private estudianteService: EstudianteService,
@@ -184,5 +193,59 @@ export class GestionarUsuariosComponent {
         }
       })
     }
+  }
+
+  handleTableAction(event: { id: any, action: string }) {
+    const { id, action } = event
+    switch (action) {
+      case 'deshabilitado':
+        Swal.fire({
+          title: 'Habilitar usuario',
+          text: '¿Estás seguro de habilitar el usuario?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Habilitar',
+          cancelButtonText: 'Cerrar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.loading = false
+            this.userService.habilitarUsuario(id).subscribe(
+              (data: any) => {
+                this.listarUsuarios(true)
+              }
+            )
+          }
+        });
+        break;
+      case 'habilitado':
+        Swal.fire({
+          title: 'Deshabilitar usuario',
+          text: '¿Estás seguro de deshabilitar el usuario?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Deshabilitar',
+          cancelButtonText: 'Cerrar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.loading = false
+            this.userService.deshabilitarUsuario(id).subscribe(
+              (data: any) => {
+                this.listarUsuarios(true)
+              }
+            )
+          }
+        });
+        break;
+    }
+  }
+
+  handleIconClick(id: any, action: string) {
+    // Lógica para cambiar el estado o icono
+    console.log('Icon clicked', id, action);
+    // Aquí puedes actualizar el estado correspondiente en el arreglo de usuarios o cambiar el icono
   }
 }

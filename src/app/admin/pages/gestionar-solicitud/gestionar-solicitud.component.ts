@@ -153,8 +153,10 @@ export class GestionarSolicitudComponent {
           cancelButtonText: 'Cerrar'
         }).then((result) => {
           if (result.isConfirmed) {
+            this.loading = true
             this.solicitudService.cambiarEstadoCancelado(id).subscribe(
               (data: any) => {
+                this.loading = false
                 this.mostrarMensaje('La Solcitud ha sido cancelada')
                 this.listarSolicitudes()
               }

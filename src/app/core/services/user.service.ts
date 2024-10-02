@@ -32,4 +32,7 @@ export class UserService {
   deshabilitarUsuario(id: string) {
     return this.http.patch(`${baseUrl}/user/${id}/deactivate`, null)
   }
+  eliminarPerfil(id: string){
+    return this.http.patch(`${baseUrl}/user/${id}/remove-profile`, null);
+  }
 }

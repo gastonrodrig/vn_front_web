@@ -44,10 +44,13 @@ export class ModalCambiarContraComponent {
   }
 
   cambiarContra() {
-
-    // VALIDACIONES
-
     this.loading = true
+    if (this.contra.newPassword === '') {
+      this.snack.open('El rol del usuario es requerido', 'Cerrar', {
+        duration: 3000,
+      })
+      return
+    }
     this.userService.modificarContrasenia(this.usuarioId, this.contra).subscribe(
       (data: any) => {
         this.snack.open('Contraseña cambiada con éxito.', 'Cerrar', {

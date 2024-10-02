@@ -8,8 +8,7 @@ import { UserService } from '../../../core/services/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalUsuarioComponent } from '../../../shared/components/modal/modal-usuario/modal-usuario.component';
 import { EstudianteService } from '../../../core/services/estudiante.service';
-import { ApoderadoService } from '../../../core/services/apoderado.service';
-import { DocenteService } from '../../../core/services/docente.service';
+import { TutorService } from '../../../core/services/tutor.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -20,7 +19,7 @@ import Swal from 'sweetalert2';
   styleUrl: './gestionar-usuarios.component.css'
 })
 export class GestionarUsuariosComponent {
-  usuarios = []
+  usuarios: any[] = []
   usuario = []
   trackByField = '_id'
   loading = false
@@ -31,6 +30,7 @@ export class GestionarUsuariosComponent {
     { header: 'Usuario', field: 'usuario' },
     { header: 'Correo', field: 'email' },
     { header: 'Rol', field: 'rol' },
+    { header: 'Nro. Documento', field: 'perfil' },
     { header: 'Estado', field: 'estado'}
   ]
 
@@ -46,8 +46,7 @@ export class GestionarUsuariosComponent {
   constructor(
     private userService: UserService,
     private estudianteService: EstudianteService,
-    private docenteService: DocenteService,
-    private apoderadoService: ApoderadoService,
+    private tutorService: TutorService,
     public dialog: MatDialog
   ){}
 
@@ -56,34 +55,45 @@ export class GestionarUsuariosComponent {
   }
 
   listarUsuarios(load: any) {
-    this.loading = load
+    this.loading = load;
     this.userService.listarUsuarios().subscribe(
       (data: any) => {
-        this.usuarios = data
-        .filter((user: any) => user.rol !== 'Temporal')
-        .sort((a: any, b: any) => {
-          if (a.usuario.toLowerCase() < b.usuario.toLowerCase()) {
-            return -1
-          }
-          if (a.usuario.toLowerCase() > b.usuario.toLowerCase()) {
-            return 1
-          }
-          return 0
-        })
-        this.loading = false
-        this.loadedComplete = true
+        const usuariosFiltrados = data
+          .filter((user: any) => user.rol !== 'Temporal')
+          .sort((a: any, b: any) => {
+            if (a.usuario.toLowerCase() < b.usuario.toLowerCase()) return -1;
+            if (a.usuario.toLowerCase() > b.usuario.toLowerCase()) return 1;
+            return 0;
+          });
+  
+        // Inicializamos la lista de usuarios vacía antes de formatear
+        this.usuarios = [];
+        
+        // Recorremos cada usuario para formatearlos
+        usuariosFiltrados.forEach((usuario: any) => {
+          this.formatearUsuarios(usuario).then((usuarioFormateado: any) => {
+            this.usuarios.push(usuarioFormateado);
+            // Si todos los usuarios han sido formateados, finalizamos el loading
+            if (this.usuarios.length === usuariosFiltrados.length) {
+              this.loading = false;
+              this.loadedComplete = true;
+            }
+          });
+        });
       },
       (error) => {
-        this.loading = false
-        Swal.fire('Error', 'Error al cargar los datos', 'error')
-        console.log(error)
+        this.loading = false;
+        Swal.fire('Error', 'Error al cargar los datos', 'error');
+        console.log(error);
       }
-    )
+    );
   }
+  
 
   displayedUsuarios() {
     return this.usuarios.filter((usuario: any) =>
-      usuario.usuario.toLowerCase().includes(this.searchTerm.toLowerCase())
+      usuario.usuario.toLowerCase().includes(this.searchTerm.toLowerCase()) || 
+      usuario.perfil.toString().includes(this.searchTerm)
     )
   }
 
@@ -148,7 +158,7 @@ export class GestionarUsuariosComponent {
     )
   }
 
-  eliminarUsuarioDeUsuarioYEstudiante(isDeleted: any, id: any) {
+  eliminarUsuarioAvanzado(isDeleted: any, id: any) {
     if(isDeleted){
       Swal.fire({
         title: 'Eliminar usuario',
@@ -167,22 +177,15 @@ export class GestionarUsuariosComponent {
               if(data.rol === 'Admin' || data.rol === 'Temporal') {
                 this.eliminarUsuario(data._id)
               }
-              if(data.estudiante !== null) {
-                this.estudianteService.eliminarUsuario(data.estudiante._id).subscribe(
+              if(data.rol === 'Estudiante') {
+                this.estudianteService.eliminarUsuario(data.perfil).subscribe(
                   (data: any) => {
                     this.eliminarUsuario(id)
                   }
                 )
               }
-              if(data.docente !== null) {
-                this.docenteService.eliminarUsuario(data.docente._id).subscribe(
-                  (data: any) => {
-                    this.eliminarUsuario(id)
-                  }
-                )
-              }
-              if(data.apoderado !== null) {
-                this.apoderadoService.eliminarUsuario(data.apoderado._id).subscribe(
+              if(data.rol === 'Tutor') {
+                this.tutorService.eliminarUsuario(data.perfil).subscribe(
                   (data: any) => {
                     this.eliminarUsuario(id)
                   }
@@ -243,9 +246,30 @@ export class GestionarUsuariosComponent {
     }
   }
 
-  handleIconClick(id: any, action: string) {
-    // Lógica para cambiar el estado o icono
-    console.log('Icon clicked', id, action);
-    // Aquí puedes actualizar el estado correspondiente en el arreglo de usuarios o cambiar el icono
+  formatearUsuarios(usuario: any): Promise<any> {
+    return new Promise((resolve) => {
+      if (usuario.rol === 'Admin' || usuario.rol === 'Temporal') {
+        usuario.perfil = '-';
+        resolve(usuario);
+      }
+      
+      if (usuario.rol === 'Estudiante') {
+        this.estudianteService.obtenerEstudiante(usuario.perfil).subscribe(
+          (data: any) => {
+            usuario.perfil = data.numero_documento;
+            resolve(usuario);
+          }
+        );
+      }
+      
+      if (usuario.rol === 'Tutor') {
+        this.tutorService.obtenerTutor(usuario.perfil).subscribe(
+          (data: any) => {
+            usuario.perfil = data.numero_documento;
+            resolve(usuario);
+          }
+        );
+      }
+    });
   }
 }

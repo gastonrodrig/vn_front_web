@@ -6,8 +6,8 @@ import { baseUrl } from '../helpers/baseUrl';
   providedIn: 'root'
 })
 export class TutorService {
+  constructor(private http:HttpClient) {}
 
-  constructor(private http:HttpClient) { }
   listarTutores() {
     return this.http.get(`${baseUrl}/tutor/`);
   }
@@ -23,7 +23,16 @@ export class TutorService {
   obtenerTutor(id: string) {
     return this.http.get(`${baseUrl}/tutor/${id}`);
   }
+  asignarUsuario(id: string, usuario: any) {
+    return this.http.patch(`${baseUrl}/tutor/assign-user/${id}`, usuario);
+  }
+  eliminarUsuario(id: string) {
+    return this.http.put(`${baseUrl}/tutor/remove-user/${id}`, null);
+  }
   modificarPerfilTutor(id: string, data: FormData) {
     return this.http.patch(`${baseUrl}/tutor/${id}/profile-picture/`, data);
+  }
+  obtenerTutorPorNroDoc(numero_documento: string) {
+    return this.http.get(`${baseUrl}/tutor/documento/${numero_documento}`)
   }
 }

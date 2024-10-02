@@ -28,7 +28,20 @@
                     [ngModelOptions]="{standalone: true}"
                 >
             </mat-form-field>
-            <mat-form-field appearance="fill" class="col-span-2" [ngClass]="{ 'sm:col-span-1' : data.isEdit }">
+
+            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+                <mat-label>Telefono</mat-label>
+                <input
+                    [(ngModel)]="tutor.telefono"
+                    type="text"
+                    placeholder="Ingrese su Telefono"
+                    matInput
+                    [ngModelOptions]="{standalone: true}"
+                >
+                <mat-icon matSuffix>phone</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Direccion</mat-label>
                 <input
                     [(ngModel)]="tutor.direccion"
@@ -38,18 +51,6 @@
                     [ngModelOptions]="{standalone: true}"
                 >
                 <mat-icon matSuffix>location_on</mat-icon>
-            </mat-form-field>
-
-            <mat-form-field appearance="fill" class="col-span-2" [ngClass]="{ 'sm:col-span-1' : data.isEdit }">
-                <mat-label>telefono</mat-label>
-                <input
-                    [(ngModel)]="tutor.telefono"
-                    type="text"
-                    placeholder="Ingrese su Telefono"
-                    matInput
-                    [ngModelOptions]="{standalone: true}"
-                >
-                <mat-icon matSuffix>phone</mat-icon>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
@@ -78,7 +79,7 @@
                     [ngModelOptions]="{standalone: true}"
                 >
             </mat-form-field>
-            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+            <mat-form-field appearance="fill" class="col-span-2">
                 <mat-label>Periodo</mat-label>
                 <mat-select 
                     [(ngModel)]="tutor.periodo._id"
@@ -126,8 +127,7 @@
                         {{ e.seccion.nombre }}
                     </mat-option>
                 </mat-select>
-                </mat-form-field>
-            
+            </mat-form-field>     
         </div>
 
 
@@ -136,9 +136,7 @@
                 <button mat-flat-button color="custom-color" class="me-2" (click)="guardarInformacion()">
                     {{ data.isEdit ? 'Editar' : '+ Añadir Tutor' }}
                 </button>
-                @if(data.isCreate) {
-                    <button mat-button mat-dialog-close color="custom-color">Cancelar</button>
-                }
+                <button mat-button mat-dialog-close color="custom-color">Cancelar</button>
             </div>
         </div>
     </form>

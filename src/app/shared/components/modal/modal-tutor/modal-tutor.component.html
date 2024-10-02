@@ -45,7 +45,7 @@
                 <input
                     [(ngModel)]="tutor.telefono"
                     type="text"
-                    placeholder="Ingrese su Direccion"
+                    placeholder="Ingrese su Telefono"
                     matInput
                     [ngModelOptions]="{standalone: true}"
                 >
@@ -55,7 +55,7 @@
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Tipo de Documento</mat-label>
                 <mat-select 
-                    [(ngModel)]="tutor.documento_id"
+                    [(ngModel)]="tutor.documento._id"
                     [ngModelOptions]="{standalone: true}"
                 >
                     <mat-option 
@@ -81,9 +81,11 @@
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Periodo</mat-label>
                 <mat-select 
-                    [(ngModel)]="tutor.periodo_id"
+                    [(ngModel)]="tutor.periodo._id"
                     [ngModelOptions]="{standalone: true}"
-                    
+                    (ngModelChange)="listarGrados()"
+                    [disabled]="periodoBlocked"
+                   
                 >
                     <mat-option 
                         *ngFor="let e of periodo" 
@@ -97,15 +99,12 @@
             <mat-form-field appearance="fill" class="col-span-3 md:col-span-1">
                 <mat-label>Grado</mat-label>
                 <mat-select 
-                  [(ngModel)]="tutor.grado_id"
+                  [(ngModel)]="tutor.grado._id"
                   [ngModelOptions]="{standalone: true}"
-                
-                  
+                  [disabled]="!gradosLoaded"
+                  (ngModelChange)="listarSeccionesPorPeriodoGrado()"
                 >
-                  <mat-option 
-                    *ngFor="let e of grado" 
-                    [value]="e._id"
-                  >
+                  <mat-option *ngFor="let e of grado" [value]="e._id">
                     {{ e.nombre }}
                   </mat-option>
                 </mat-select>
@@ -116,15 +115,15 @@
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                     <mat-label>Seccion</mat-label>
                     <mat-select 
-                    [(ngModel)]="tutor.seccion_id"
+                    [(ngModel)]="tutor.seccion._id"
                     [ngModelOptions]="{standalone: true}"
-                    
+                    [disabled]="!seccionLoaded"
                 >
                     <mat-option 
                         *ngFor="let e of seccion" 
-                        [value]="e._id"
+                        [value]="e.seccion._id"
                     >
-                        {{ e.nombre }}
+                        {{ e.seccion.nombre }}
                     </mat-option>
                 </mat-select>
                 </mat-form-field>

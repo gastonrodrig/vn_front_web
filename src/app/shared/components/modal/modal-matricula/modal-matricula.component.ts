@@ -86,6 +86,31 @@ export class ModalMatriculaComponent {
   }
 
   guardarInformacion() {
+    if(!this.matricula.tipoMa){
+      this.snack.open('Debe seleccionar un tipo de matricula','', {
+        duration: 3000
+      })
+      return;
+    }
+    if(!this.matricula.metodo_pago){
+      this.snack.open('Debe seleccionar un metodo de pago','', {
+        duration: 3000
+      })
+      return;
+    }
+    if(!this.matricula.periodo_id){
+      this.snack.open('Debe seleccionar periodo','', {
+        duration: 3000
+      })
+      return;
+    }
+    if (this.matricula.metodo_pago !== 'Efectivo' && (!this.matricula.n_operacion || this.matricula.n_operacion.trim() === '')) {
+      this.snack.open('El número de operación no puede estar vacío','', {
+        duration: 3000
+      });
+      return;
+    }
+    
     this.loading = true
     const matriculaData = {
       monto: Number(this.matricula.monto),
@@ -96,14 +121,6 @@ export class ModalMatriculaComponent {
       tipo: 'Presencial',
       tipoMa: this.matricula.tipoMa,
       fecha: this.formatDateTime(this.fecha, this.tiempo)
-    }
-
-    if(this.matricula.monto === '') {
-      this.snack.open('El nombre del docente es requerido', '', {
-        duration: 3000
-      })
-      this.loading = false
-      return
     }
 
     this.matriculaService.agregarMatricula(matriculaData).subscribe(
@@ -123,6 +140,15 @@ export class ModalMatriculaComponent {
   }
 
   validarDNI(dni: string) {
+
+    if (dni.length > 8) {
+      this.snack.open('El DNI no puede tener más de 8 dígitos', '', {
+        duration: 3000
+      });
+      this.nombreEstudiante = '';
+      return;
+    }
+
     if (dni.length === 8) {
       this.loading = true;
   

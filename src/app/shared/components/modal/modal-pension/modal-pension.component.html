@@ -14,7 +14,7 @@
             disabled
             [(ngModel)]="pension.monto"
             type="text"
-            placeholder="Ingrese el monto"
+            placeholder="Monto"
             matInput
             appSoloNumeros
             [ngModelOptions]="{standalone: true}"
@@ -24,6 +24,7 @@
           <mat-label>Mes</mat-label>
           <mat-select 
               [(ngModel)]="pension.mes"
+              (selectionChange)="onMesChange($event.value)"
               [ngModelOptions]="{standalone: true}"
           >
               <mat-option 
@@ -65,7 +66,8 @@
   
         <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
           <mat-label>Fecha Inicio</mat-label>
-          <input 
+          <input
+            
             [(ngModel)]="pension.fecha_inicio"
             matInput  
             [matDatepicker]="pickerInicio"
@@ -78,7 +80,8 @@
         
         <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
           <mat-label>Fecha Limite</mat-label>
-          <input 
+          <input
+             
             [(ngModel)]="pension.fecha_limite"
             matInput  
             [matDatepicker]="pickerLimite"
@@ -104,7 +107,6 @@
               </mat-option>
           </mat-select>
       </mat-form-field>
-
       <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
         <mat-label>Número de Operacion</mat-label>
         <input
@@ -117,6 +119,21 @@
           [ngModelOptions]="{standalone: true}"
         >
       </mat-form-field>
+
+      <mat-form-field appearance="fill" class="col-span-2 ">
+        <mat-label>Estado</mat-label>
+        <mat-select 
+            [(ngModel)]="pension.estado"
+            [ngModelOptions]="{standalone: true}" 
+            required
+        >
+            <mat-option *ngFor="let estado of listaEstado" 
+            [value]="estado.nombre">
+                {{ estado.nombre }}
+            </mat-option>
+        </mat-select>
+      </mat-form-field>
+      
   
       </div>
       <div class="flex justify-end w-full">

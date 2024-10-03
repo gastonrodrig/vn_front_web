@@ -5,7 +5,7 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,6 +18,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([]),
       withFetch()
     ),
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}    
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    { provide: MAT_DATE_LOCALE, useValue: 'es-PE' }
   ]
 };

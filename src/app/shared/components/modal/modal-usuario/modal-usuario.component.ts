@@ -232,7 +232,18 @@ export class ModalUsuarioComponent {
       this.loading = true
   
       if(this.usuario.rol === 'Estudiante') {
-        this.estudianteService.obtenerEstudiantePorNroDoc(dni).subscribe(
+
+          const exists = this.estudiantes.some((e: any) => e._id === dni);
+
+          if (exists) {
+            this.snack.open('El estudiante ya está registrado.', 'Cerrar', {
+              duration: 3000
+            });
+            this.searchTerm = '';
+            return;
+          }
+
+        this.estudianteService.obtenerEstudiantePorNroDoc(dni, true).subscribe(
           (data: any) => {
             this.loading = false
             this.nombreCompleto = `${data.apellido}, ${data.nombre}`
@@ -247,7 +258,7 @@ export class ModalUsuarioComponent {
       }
 
       if(this.usuario.rol === 'Tutor') {
-        this.tutorService.obtenerTutorPorNroDoc(dni).subscribe(
+        this.tutorService.obtenerTutorPorNroDoc(dni, true).subscribe(
           (data: any) => {
             this.loading = false
             this.nombreCompleto = `${data.apellido}, ${data.nombre}`

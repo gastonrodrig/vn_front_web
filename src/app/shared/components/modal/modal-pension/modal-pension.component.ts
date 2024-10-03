@@ -75,7 +75,7 @@ export class ModalPensionComponent {
       n_operacion: '',
       fecha_inicio: '',
       fecha_limite: '',
-      estado: 'Pendiente', // Valor por defecto
+      estado: 'Pagado', // Valor por defecto
       mes: ''
     };
   }
@@ -150,7 +150,7 @@ export class ModalPensionComponent {
     if (dni.length === 8) {
       this.loading = true;
   
-      this.estudianteService.obtenerEstudiantePorNroDoc(dni).subscribe(
+      this.estudianteService.obtenerEstudiantePorNroDoc(dni, false).subscribe(
         (data: any) => {
           this.loading = false;
           this.nombreEstudiante = `${data.apellido}, ${data.nombre}`;

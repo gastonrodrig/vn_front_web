@@ -126,7 +126,6 @@ else{
     this.gradoService.listarGrados().subscribe(
       (data: any) => {
         if (data && data.length > 0) {
-          console.log('Datos de grados recibidos:', data);
           this.grado = data;
           this.gradosLoaded = true;
         } else {
@@ -151,30 +150,28 @@ else{
     }
   
     this.loading = true;
-    console.log('ID del Grado:', this.tutor.grado._id);
-    console.log('ID del Periodo:', this.tutor.periodo._id);
     
     this.sgpService.listarSeccionesPorGradoPeriodo(
       this.tutor.grado._id, 
       this.tutor.periodo._id
-  ).subscribe(
-      (data: any) => {
-        this.seccion = data// Si `sgp.seccion` es donde está el ID correcto
-          console.log('Secciones cargadas:', this.seccion); // Asegúrate de que aquí haya datos
-          this.loading = false;
-          this.seccionLoaded = true;
-  
-          if (this.seccion.length === 0) {
-              this.snack.open('No se encontraron secciones', 'Cerrar', { duration: 3000 });
-              this.seccionLoaded = false;
-          }
-      },
-      (error) => {
-          console.error('Error al cargar secciones:', error);
-          this.loading = false;
-          this.snack.open('Error al cargar secciones', 'Cerrar', { duration: 3000 });
-      }
-  );
+    ).subscribe(
+        (data: any) => {
+          this.seccion = data// Si `sgp.seccion` es donde está el ID correcto
+            console.log('Secciones cargadas:', this.seccion); // Asegúrate de que aquí haya datos
+            this.loading = false;
+            this.seccionLoaded = true;
+    
+            if (this.seccion.length === 0) {
+                this.snack.open('No se encontraron secciones', 'Cerrar', { duration: 3000 });
+                this.seccionLoaded = false;
+            }
+        },
+        (error) => {
+            console.error('Error al cargar secciones:', error);
+            this.loading = false;
+            this.snack.open('Error al cargar secciones', 'Cerrar', { duration: 3000 });
+        }
+    );
   }
   
   closeModel() {
@@ -182,12 +179,12 @@ else{
   }
 
   guardarInformacion() {
-    if (!this.tutor.nombre || !this.tutor.periodo._id || !this.tutor.grado._id || !this.tutor.seccion._id) {
-      this.snack.open('Faltan datos en el formulario', 'Cerrar', {
-        duration: 3000,
-      });
-      return;
-    }
+    // if (!this.tutor.nombre || !this.tutor.periodo._id || !this.tutor.grado._id || !this.tutor.seccion._id) {
+    //   this.snack.open('Faltan datos en el formulario', 'Cerrar', {
+    //     duration: 3000,
+    //   });
+    //   return;
+    // }
     console.log('Sección ID:', this.tutor.seccion._id);
     this.loading = true
     const dataTutor = {
@@ -217,39 +214,31 @@ else{
       this.loading = false
       return
     }
-       //validacion documento 
-      if (!this.tutor.documento._id) {
-        this.snack.open('Tiene que elegir un tipo de Documento', '', {
-          duration: 3000
-        });
-        this.loading = false;
-        return;
-      }
-     //validacion eleccion de documento
-     if(isNaN(dataTutor.numero_documento) || dataTutor.numero_documento.length !== 8) {
-       this.snack.open('El Numero de Documento tiene que ser numerico y de 8 digitos', '', {
-         duration: 3000
-       })
-       this.loading = false
-       return
-     }
-     //validacion periodo
-     if (!this.tutor.periodo._id) {
-       this.snack.open('Tiene que elegir un tipo de Periodo', '', {
-         duration: 3000
-       });
-       this.loading = false;
-       return;
-     }
-     //validacion grado
-     if (!this.tutor.grado._id) {
-       this.snack.open('Tiene que elegir un tipo de grado', '', {
-         duration: 3000
-       });
-       this.loading = false;
-       return;
-     }
-    
+
+    if(dataTutor.nombre === '') {
+      this.snack.open('El nombre del tutor es requerido', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+
+    if(dataTutor.telefono === '') {
+      this.snack.open('El telefono del tutor es requerido', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+
+    if(dataTutor.telefono.length !== 9) {
+      this.snack.open('El telefono debe incluir 9 digitos', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+
     //VALIDACIONES TERMINADA
     if (dataTutor.direccion ==='') {
       this.snack.open('La Direccion es requerida', '', {
@@ -259,12 +248,37 @@ else{
       return;
     }
 
-    if(dataTutor.nombre === '') {
-      this.snack.open('El nombre del tutor es requerido', '', {
+      //validacion documento 
+    if (!this.tutor.documento._id) {
+      this.snack.open('Tiene que elegir un tipo de Documento', '', {
+        duration: 3000
+      });
+      this.loading = false;
+      return;
+    }
+    //validacion eleccion de documento
+    if(isNaN(dataTutor.numero_documento) || dataTutor.numero_documento.length !== 8) {
+      this.snack.open('El Numero de Documento tiene que ser numerico y de 8 digitos', '', {
         duration: 3000
       })
       this.loading = false
       return
+    }
+    //validacion periodo
+    if (!this.tutor.periodo._id) {
+      this.snack.open('Tiene que elegir un tipo de Periodo', '', {
+        duration: 3000
+      });
+      this.loading = false;
+      return;
+    }
+    //validacion grado
+    if (!this.tutor.grado._id) {
+      this.snack.open('Tiene que elegir un tipo de grado', '', {
+        duration: 3000
+      });
+      this.loading = false;
+      return;
     }
 
     if(this.data.isCreate) {

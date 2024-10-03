@@ -32,7 +32,7 @@ export class TutorService {
   modificarPerfilTutor(id: string, data: FormData) {
     return this.http.patch(`${baseUrl}/tutor/${id}/profile-picture/`, data);
   }
-  obtenerTutorPorNroDoc(numero_documento: string) {
-    return this.http.get(`${baseUrl}/tutor/documento/${numero_documento}`)
+  obtenerTutorPorNroDoc(numero_documento: string, validarUsuario: any) {
+    return this.http.get(`${baseUrl}/tutor/documento/${numero_documento}?validarUsuarioAsignado=${validarUsuario}`);
   }
 }

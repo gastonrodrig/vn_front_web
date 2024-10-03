@@ -174,7 +174,7 @@ export class GestionarSolicitudComponent {
       (data: any) => {
         this.solicitudDni = data.dni_hijo;
 
-        this.estudianteService.obtenerEstudiantePorNroDoc(this.solicitudDni).subscribe(
+        this.estudianteService.obtenerEstudiantePorNroDoc(this.solicitudDni, false).subscribe(
           (data: any) => {
             this.solicitudService.cambiarEstadoEnProceso(id).subscribe(
               (data: any) => {
@@ -199,7 +199,7 @@ export class GestionarSolicitudComponent {
       (data: any) => {
         this.solicitudDni = data.dni_hijo;
 
-        this.estudianteService.obtenerEstudiantePorNroDoc(this.solicitudDni).subscribe(
+        this.estudianteService.obtenerEstudiantePorNroDoc(this.solicitudDni, false).subscribe(
           (data: any) => {
             this.solicitudService.cambiarEstadoAprobado(id).subscribe(
               (data: any) => {

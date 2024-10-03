@@ -134,7 +134,7 @@ export class ModalVacanteComponent {
   validarDNI(dni: string) {
     if (dni.length === 8) {
       this.loading = true
-      this.estudianteService.obtenerEstudiantePorNroDoc(dni).subscribe(
+      this.estudianteService.obtenerEstudiantePorNroDoc(dni, false).subscribe(
         (data: any) => {
           this.loading = false
           this.nombreEstudiante = `${data.apellido}, ${data.nombre}`

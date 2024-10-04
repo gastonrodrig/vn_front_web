@@ -232,17 +232,6 @@ export class ModalUsuarioComponent {
       this.loading = true
   
       if(this.usuario.rol === 'Estudiante') {
-
-          const exists = this.estudiantes.some((e: any) => e._id === dni);
-
-          if (exists) {
-            this.snack.open('El estudiante ya está registrado.', 'Cerrar', {
-              duration: 3000
-            });
-            this.searchTerm = '';
-            return;
-          }
-
         this.estudianteService.obtenerEstudiantePorNroDoc(dni, true).subscribe(
           (data: any) => {
             this.loading = false

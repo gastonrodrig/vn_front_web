@@ -1,12 +1,12 @@
 <div class="p-4">
     <div class="flex flex-col items-center">
-        <div class="text-base mt-2 mb-6 font-medium">
+        <div class="text-base mt-2 mb-6 font-medium ">
             <p>{{ data.isEdit ? 'Editar Tutor' : 'Agregar Tutor' }}</p> 
         </div> 
     </div>
     <form>
         <p class="pl-0.5 pb-4 font-medium">Datos del Tutor:</p>
-        <div class="grid grid-cols-2 gap-x-4">
+        <div class="grid grid-cols-2 gap-x-4 ">
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Nombre</mat-label>
                 <input
@@ -98,7 +98,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field appearance="fill" class="col-span-3 md:col-span-1">
+            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
                 <mat-label>Grado</mat-label>
                 <mat-select 
                   [(ngModel)]="tutor.grado._id"

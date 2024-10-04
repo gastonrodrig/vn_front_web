@@ -120,6 +120,11 @@ else{
       console.log(error)
     }
   )
+   // Si estamos editando, cargar grados y secciones iniciales
+   if (this.data.isEdit) {
+    this.listarGrados(); // Cargar grados basados en el periodo del tutor
+    this.listarSeccionesPorPeriodoGrado(); // Cargar secciones basadas en el grado del tutor
+}
   }
   listarGrados() {
     this.loading = true;
@@ -179,12 +184,6 @@ else{
   }
 
   guardarInformacion() {
-    // if (!this.tutor.nombre || !this.tutor.periodo._id || !this.tutor.grado._id || !this.tutor.seccion._id) {
-    //   this.snack.open('Faltan datos en el formulario', 'Cerrar', {
-    //     duration: 3000,
-    //   });
-    //   return;
-    // }
     console.log('Sección ID:', this.tutor.seccion._id);
     this.loading = true
     const dataTutor = {
@@ -280,6 +279,7 @@ else{
       this.loading = false;
       return;
     }
+    
 
     if(this.data.isCreate) {
       console.log('Sección ID:', this.tutor.seccion._id);

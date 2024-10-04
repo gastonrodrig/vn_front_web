@@ -17,6 +17,7 @@ import { PeriodoService } from '../../../../core/services/periodo.service';
 import { GradoService } from '../../../../core/services/grado.service';
 import { SeccionService } from '../../../../core/services/seccion.service';
 import { SeccionGradoPeriodoService } from '../../../../core/services/seccion-grado-periodo.service';
+import { UserService } from '../../../../core/services/user.service';
 
 @Component({
   selector: 'app-modal-tutor',
@@ -62,7 +63,8 @@ export class ModalTutorComponent {
     public dialog: MatDialog,
     private gradoService: GradoService,
     private sgpService: SeccionGradoPeriodoService,
-    private seccionService: SeccionService
+    private seccionService: SeccionService,
+    private userService: UserService
   ) {dialogRef.disableClose = true}
 
   ngOnInit() {
@@ -92,6 +94,7 @@ else{
       seccion: {  // Inicializa seccion para evitar errores
         _id: ''
     }
+    
     }
   }
   
@@ -282,21 +285,40 @@ else{
     
 
     if(this.data.isCreate) {
-      console.log('Sección ID:', this.tutor.seccion._id);
       this.tutorService.agregarTutor(dataTutor).subscribe(
-        (data) => {
+        (data: any) => {
           Swal.fire('Tutor guardado', 'El Tutor ha sido guardado con éxito', 'success').then(
             (e)=> {
-              this.closeModel()
-              
+              this.closeModel();
             }
           );
+      
+       // Asignar el ID del tutor desde la respuesta del servidor
+      const tutorId = data._id; // Suponiendo que el backend te devuelve el ID del tutor
+
+      const newdataUser = {
+        usuario : this.tutor.numero_documento,
+        email : this.tutor.numero_documento + "@vn.com",
+        contrasena: "0000000",
+        rol: "Tutor",
+        perfil_id: tutorId,  // Aquí utilizamos el tutorId de la respuesta
+      };
+       // Crear el usuario ahora que ya tenemos el tutorId correcto
+       this.userService.agregarUsuario(newdataUser).subscribe(
+        (data) => {
+          console.log('Usuario creado con éxito', data);
         },
         (error) => {
-          this.loading = false
-          console.log(error)
+          console.log('Error al crear el usuario', error);
         }
-      )
+      );
+    },
+    (error) => {
+      this.loading = false;
+      console.log('Error al crear el tutor:', error);
+    }
+  );
+
     }
 
     if(this.data.isEdit) {
@@ -315,5 +337,5 @@ else{
       )
     }
   }
-  
+ 
 }

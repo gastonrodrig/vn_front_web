@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { SeccionGradoPeriodoService } from '../../../core/services/seccion-grado-periodo.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { SeccionCursoService } from '../../../core/services/seccion-curso.service';
 
 @Component({
   selector: 'app-gestionar-secciones',
@@ -43,6 +44,7 @@ export class GestionarSeccionesComponent {
     private gradoService: GradoService,
     private periodoService: PeriodoService,
     private sgpService: SeccionGradoPeriodoService,
+    private scService: SeccionCursoService,
     public dialog: MatDialog,
     private router: Router
   ){}
@@ -95,11 +97,17 @@ export class GestionarSeccionesComponent {
 
   displayedSecciones() {
     return this.seccionGradoPeriodo.filter((e: any) => {
-      const matchSearchTerm = e.seccion.aula.toLowerCase().includes(this.searchTerm.toLowerCase())
-      const matchGrado = this.gradoSelected === 'all' || e.grado._id === this.gradoSelected
-      const matchPeriodo = this.periodoSelected === 'all' || e.periodo._id === this.periodoSelected
-      return matchSearchTerm && matchGrado && matchPeriodo
-    })
+      // Check if e and e.seccion are valid
+      if (!e || !e.seccion) {
+        return false; // Skip this entry if it's invalid
+      }
+      
+      const matchSearchTerm = e.seccion.aula.toLowerCase().includes(this.searchTerm.toLowerCase());
+      const matchGrado = this.gradoSelected === 'all' || e.grado._id === this.gradoSelected;
+      const matchPeriodo = this.periodoSelected === 'all' || e.periodo._id === this.periodoSelected;
+  
+      return matchSearchTerm && matchGrado && matchPeriodo;
+    });
   }
 
   agregarSeccionGradoPeriodo() {
@@ -176,28 +184,33 @@ export class GestionarSeccionesComponent {
       }).then((result) => {
         if (result.isConfirmed) {
           this.loading = true
-          this.sgpService.eliminarSeccionGradoPeriodo(id).subscribe(
-            (data) => {
-              this.loading = false
-              Swal.fire('Sección eliminada', 'La sección ha sido eliminada de la base de datos', 'success').then(
-                (e)=> {
-                  this.sgpService.listarSeccionGradoPeriodo().subscribe(
-                    (data: any) => {
-                      this.seccionGradoPeriodo = this.ordenarDatosPorGrado(data)
-                    },
-                    (error) => {
-                      console.log(error)
+          
+          // this.scService.eliminarSeccionCursoPorSeccion(id).subscribe(
+          //   (data: any) => {
+              this.sgpService.eliminarSeccionGradoPeriodo(id).subscribe(
+                (data) => {
+                  this.loading = false
+                  Swal.fire('Sección eliminada', 'La sección ha sido eliminada de la base de datos', 'success').then(
+                    (e)=> {
+                      this.sgpService.listarSeccionGradoPeriodo().subscribe(
+                        (data: any) => {
+                          this.seccionGradoPeriodo = this.ordenarDatosPorGrado(data)
+                        },
+                        (error) => {
+                          console.log(error)
+                        }
+                      )
                     }
-                  )
+                  );
+                },
+                (error) => {
+                  this.loading = false
+                  console.log(error);
+                  Swal.fire('Error', 'Error al eliminar la sección de la base de datos', 'error');
                 }
               );
-            },
-            (error) => {
-              this.loading = false
-              console.log(error);
-              Swal.fire('Error', 'Error al eliminar la sección de la base de datos', 'error');
-            }
-          );
+          //   }
+          // )
         }
       });
     }

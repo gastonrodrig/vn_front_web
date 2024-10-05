@@ -14,6 +14,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { SeccionGradoPeriodoService } from '../../../../core/services/seccion-grado-periodo.service';
 import Swal from 'sweetalert2';
+import { GradoCursosHorasService } from '../../../../core/services/grado-cursos-horas.service';
+import { SeccionCursoService } from '../../../../core/services/seccion-curso.service';
 
 @Component({
   selector: 'app-modal-seccion',
@@ -36,6 +38,7 @@ export class ModalSeccionComponent {
   grados: any[] = []
   periodos: any[] = []
   seccion: any
+  cursos: any[] = []
   seccionGradoPeriodo: any
   seccionId: any
   seccionCreated = false
@@ -48,7 +51,9 @@ export class ModalSeccionComponent {
     private gradoService: GradoService,
     private periodoService: PeriodoService,
     private seccionService: SeccionService,
-    private sgpService: SeccionGradoPeriodoService
+    private gchService: GradoCursosHorasService,
+    private sgpService: SeccionGradoPeriodoService,
+    private scService: SeccionCursoService
   ) {
     dialogRef.disableClose = true
   }
@@ -141,30 +146,50 @@ export class ModalSeccionComponent {
       }
   
       // VALIDACIONES
- if (!this.seccionGradoPeriodo.seccion || !this.seccionGradoPeriodo.seccion._id) {
-  Swal.fire('Error', 'Debe elegir una sección.', 'error');
-  this.loading = false;
-  return;
-}
+      if (!this.seccionGradoPeriodo.seccion || !this.seccionGradoPeriodo.seccion._id) {
+        Swal.fire('Error', 'Debe elegir una sección.', 'error');
+        this.loading = false;
+        return;
+      }
 
-if (!this.seccionGradoPeriodo.grado || !this.seccionGradoPeriodo.grado._id) {
-  Swal.fire('Error', 'Debe elegir un grado.', 'error');
-  this.loading = false;
-  return;
-}
+      if (!this.seccionGradoPeriodo.grado || !this.seccionGradoPeriodo.grado._id) {
+        Swal.fire('Error', 'Debe elegir un grado.', 'error');
+        this.loading = false;
+        return;
+      }
 
       this.sgpService.agregarSeccionGradoPeriodo(dataSGP).subscribe(
         (data) => {
-          Swal.fire('Seccion guardada', 'La sección ha sido guardado con éxito', 'success').then(
-            (e)=> {
-              this.closeModel()
+          this.gchService.listarGradoCursosHorasPorGrado(dataSGP.grado_id).subscribe(
+            (data: any) => {
+              data.forEach((item: any) => {
+                this.cursos.push(item.curso);
+
+                const dataNueva = {
+                  seccion_id: dataSGP.seccion_id,
+                  curso_id: item.curso._id,
+                }
+                this.scService.agregarSeccionCurso(dataNueva).subscribe(
+                  (data: any) => {
+                    console.log(data)
+                  }
+                )
+              });
+            }
+          );
+      
+          console.log(data);
+          Swal.fire('Sección guardada', 'La sección ha sido guardada con éxito', 'success').then(
+            (e) => {
+              this.closeModel();
             }
           );
         },
         (error) => {
-          console.log(error)
+          console.log(error);
         }
-      )
+      );
+
     }
  
     if(this.data.isEdit) {
@@ -174,17 +199,17 @@ if (!this.seccionGradoPeriodo.grado || !this.seccionGradoPeriodo.grado._id) {
       }
       const nombreValido = /^[a-zA-Z\s]+$/.test(data.nombre);
 
- if (data.nombre === '' || data.aula === '') {
-   Swal.fire('Error', 'El nombre de la sección y el aula son requeridos', 'error');
-   this.loading = false;
-   return;
- }
+      if (data.nombre === '' || data.aula === '') {
+        Swal.fire('Error', 'El nombre de la sección y el aula son requeridos', 'error');
+        this.loading = false;
+        return;
+      }
 
- if (!nombreValido) {
-   Swal.fire('Error', 'El nombre no puede contener números', 'error');
-   this.loading = false;
-   return;
- }
+      if (!nombreValido) {
+        Swal.fire('Error', 'El nombre no puede contener números', 'error');
+        this.loading = false;
+        return;
+      }
 
       // VALIDACIONES
 

@@ -19,6 +19,8 @@ import Swal from 'sweetalert2';
 import { listaMeses } from '../../../constants/itemsMonths';
 import moment from 'moment';
 import { listaEstado } from '../../../constants/iteamsStatus';
+import { PeriodoService } from '../../../../core/services/periodo.service';
+import { error } from 'console';
 
 @Component({
   selector: 'app-modal-pension',
@@ -62,6 +64,7 @@ export class ModalPensionComponent {
     private snack: MatSnackBar,
     private estudianteService: EstudianteService,
     private pensionService: PensionService,
+    private periodoService: PeriodoService,
   ){}
 
   ngOnInit() {
@@ -142,8 +145,28 @@ export class ModalPensionComponent {
       // Asigna a la vista (agregando 1 día para mostrar)
       this.pension.fecha_limite = fechaLimite.add(1, 'days').format('YYYY-MM-DD'); // Agregar un día para mostrar
       console.log("Fecha límite para mostrar:", this.pension.fecha_limite);
+  
+      // Validación para marzo y diciembre
+      if (mes === 'Marzo') {
+        const currentYear = new Date().getFullYear(); // Obtiene el año actual
+        this.periodoService.obtenerPeriodoporanio(currentYear.toString()).subscribe(
+          (data) => {
+            console.log(data)
+            const currentDate = new Date();
+            const formattedDate = currentDate.toISOString(); // Devuelve la fecha en formato 'YYYY-MM-DDTHH:mm:ss.sssZ'
+      
+            this.pension.fecha_inicio = formattedDate;
+          },
+          (error) => {
+            console.error(error); 
+          }
+        ); // Llama a la función con el año actual
+      } else if (mes === 'diciembre') {
+        console.log('Has seleccionado diciembre.');
+      }      
     }
   }
+  
   
 
   validarDNI(dni: string) {

@@ -23,4 +23,7 @@ export class PeriodoService {
   obtenerPeriodo(id: string) {
     return this.http.get(`${baseUrl}/periodo-escolar/${id}`);
   }
+  obtenerPeriodoporanio( anio: string){
+    return this.http.get(`${baseUrl}/periodo-escolar/anio/${anio}`)
+  }
 }

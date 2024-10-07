@@ -13,9 +13,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { SeccionGradoPeriodoService } from '../../../../core/services/seccion-grado-periodo.service';
-import Swal from 'sweetalert2';
 import { GradoCursosHorasService } from '../../../../core/services/grado-cursos-horas.service';
 import { SeccionCursoService } from '../../../../core/services/seccion-curso.service';
+import { SoloNumerosDirective } from '../../../directives/solo-numeros.directive';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal-seccion',
@@ -29,7 +30,8 @@ import { SeccionCursoService } from '../../../../core/services/seccion-curso.ser
     MatButtonModule, 
     CommonModule, 
     MatProgressBarModule,
-    MatIconModule
+    MatIconModule,
+    SoloNumerosDirective
   ],
   templateUrl: './modal-seccion.component.html',
   styleUrl: './modal-seccion.component.css'
@@ -107,20 +109,20 @@ export class ModalSeccionComponent {
     }
     const nombreValido = /^[a-zA-Z\s]+$/.test(dataSeccion.nombre);
    
-  
-    if (dataSeccion.nombre === '' || dataSeccion.aula === '') {
+    if(dataSeccion.nombre === '') {
+      this.mostrarMensaje('El nombre de la sección es requerido')
+      return
+    }
 
-      Swal.fire('Error', 'El nombre de la sección y el aula son requeridos', 'error');
+    if (!nombreValido) {
+      this.mostrarMensaje('El nombre de la sección debe incluir solo letras');
       this.loading = false;
       return;
     }
-  
-    if (!nombreValido) {
-      Swal.fire('Error', 'El nombre no puede contener números', 'error');
-      this.loading = false;
-      return;
 
-      
+    if(dataSeccion.aula === '') {
+      this.mostrarMensaje('El nombre de la sección es requerido')
+      return
     }
 
     this.seccionService.agregarSeccion(dataSeccion).subscribe(
@@ -144,18 +146,15 @@ export class ModalSeccionComponent {
         grado_id : this.seccionGradoPeriodo.grado._id,
         periodo_id : this.seccionGradoPeriodo.periodo._id
       }
-  
-      // VALIDACIONES
-      if (!this.seccionGradoPeriodo.seccion || !this.seccionGradoPeriodo.seccion._id) {
-        Swal.fire('Error', 'Debe elegir una sección.', 'error');
-        this.loading = false;
-        return;
+
+      if (this.seccionGradoPeriodo.grado._id === '') {
+        this.mostrarMensaje('El grado de la sección es requerido')
+        return
       }
 
-      if (!this.seccionGradoPeriodo.grado || !this.seccionGradoPeriodo.grado._id) {
-        Swal.fire('Error', 'Debe elegir un grado.', 'error');
-        this.loading = false;
-        return;
+      if (this.seccionGradoPeriodo.periodo._id === '') {
+        this.mostrarMensaje('El periodo escolar de la sección es requerido')
+        return
       }
 
       this.sgpService.agregarSeccionGradoPeriodo(dataSGP).subscribe(
@@ -169,16 +168,11 @@ export class ModalSeccionComponent {
                   seccion_id: dataSGP.seccion_id,
                   curso_id: item.curso._id,
                 }
-                this.scService.agregarSeccionCurso(dataNueva).subscribe(
-                  (data: any) => {
-                    console.log(data)
-                  }
-                )
+                this.scService.agregarSeccionCurso(dataNueva).subscribe(() => {})
               });
             }
           );
       
-          console.log(data);
           Swal.fire('Sección guardada', 'La sección ha sido guardada con éxito', 'success').then(
             (e) => {
               this.closeModel();
@@ -227,6 +221,13 @@ export class ModalSeccionComponent {
         }
       )
     }
+  }
+
+  mostrarMensaje(mensaje: string) {
+    this.snack.open(mensaje, 'Cerrar', {
+      duration: 3000,
+    })
+    this.loading = false
   }
 
   closeModel() {

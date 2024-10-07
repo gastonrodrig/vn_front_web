@@ -18,6 +18,8 @@ import { SolicitudService } from '../../../core/services/solicitud.service';
 import { VacanteService } from '../../../core/services/vacante.service';
 import { MatriculaService } from '../../../core/services/matricula.service';
 import { UserService } from '../../../core/services/user.service';
+import { PensionService } from '../../../core/services/pension.service';
+import { listaMeses } from '../../../shared/constants/itemsMonths';
 
 @Component({
   selector: 'app-pagar-matricula',
@@ -56,6 +58,7 @@ export class PagarMatriculaComponent implements OnInit {
   n_doc = '';
 
   isDisabled = true;
+  listaMeses: any
 
   constructor(
     private stripeService: StripeService,
@@ -67,10 +70,12 @@ export class PagarMatriculaComponent implements OnInit {
     private vacanteService: VacanteService,
     private matriculaService: MatriculaService,
     private usuarioService: UserService,
+    private pensionService: PensionService,
     private snack: MatSnackBar
   ) {}
 
   ngOnInit() {
+    this.listaMeses = listaMeses;
     this.estudianteService.listarEstudiantes().subscribe(
       (data: any) => {
         this.estudiantes = data;
@@ -212,7 +217,29 @@ export class PagarMatriculaComponent implements OnInit {
 
           this.matriculaService.agregarMatricula(dataMatricula).subscribe(
             (data: any) => {
-              console.log(data)
+              const currentYear = new Date().getFullYear();
+
+              this.listaMeses.forEach((mes: any) => {
+                const monthIndex = mes.indice;
+              
+                const fechaInicio = new Date(currentYear, monthIndex, 1);
+                const fechaFin = new Date(currentYear, monthIndex + 1, 0);
+              
+                const pensionData = {
+                  estudiante_id: this.estudianteId,
+                  monto: 150,
+                  fecha_inicio: fechaInicio.toISOString(),
+                  fecha_limite: fechaFin.toISOString(),
+                  mes: mes.nombre
+                };
+              
+                this.pensionService.agregarPension(pensionData).subscribe(
+                  (data: any) => {
+                    console.log('Pensión agregada:', data);
+                    this.loading = false
+                  }
+                );
+              });
             },
             (error) => {
               this.mostrarMensaje(error.error.message, 3000)

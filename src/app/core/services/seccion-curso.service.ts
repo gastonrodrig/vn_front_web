@@ -20,4 +20,7 @@ export class SeccionCursoService {
   listarSeccionesPorCurso(id: string) {
     return this.http.get(`${baseUrl}/seccion-curso/${id}`);
   }
+  eliminarSeccionCursoPorSeccion(id: string) {
+    return this.http.delete(`${baseUrl}/seccion-curso/seccion/${id}`);
+  }
 }

@@ -184,33 +184,36 @@ export class GestionarSeccionesComponent {
       }).then((result) => {
         if (result.isConfirmed) {
           this.loading = true
-          
-          // this.scService.eliminarSeccionCursoPorSeccion(id).subscribe(
-          //   (data: any) => {
-              this.sgpService.eliminarSeccionGradoPeriodo(id).subscribe(
-                (data) => {
-                  this.loading = false
-                  Swal.fire('Sección eliminada', 'La sección ha sido eliminada de la base de datos', 'success').then(
-                    (e)=> {
-                      this.sgpService.listarSeccionGradoPeriodo().subscribe(
-                        (data: any) => {
-                          this.seccionGradoPeriodo = this.ordenarDatosPorGrado(data)
-                        },
-                        (error) => {
-                          console.log(error)
+          this.sgpService.obtenerSeccionGradoPeriodo(id).subscribe(
+            (data: any) => {
+              this.scService.eliminarSeccionCursoPorSeccion(data.seccion._id).subscribe(
+                () => {
+                  this.sgpService.eliminarSeccionGradoPeriodo(id).subscribe(
+                    (data) => {
+                      this.loading = false
+                      Swal.fire('Sección eliminada', 'La sección ha sido eliminada de la base de datos', 'success').then(
+                        (e)=> {
+                          this.sgpService.listarSeccionGradoPeriodo().subscribe(
+                            (data: any) => {
+                              this.seccionGradoPeriodo = this.ordenarDatosPorGrado(data)
+                            },
+                            (error) => {
+                              console.log(error)
+                            }
+                          )
                         }
-                      )
+                      );
+                    },
+                    (error) => {
+                      this.loading = false
+                      console.log(error);
+                      Swal.fire('Error', 'Error al eliminar la sección de la base de datos', 'error');
                     }
                   );
-                },
-                (error) => {
-                  this.loading = false
-                  console.log(error);
-                  Swal.fire('Error', 'Error al eliminar la sección de la base de datos', 'error');
                 }
-              );
-          //   }
-          // )
+              )
+            }
+          )
         }
       });
     }

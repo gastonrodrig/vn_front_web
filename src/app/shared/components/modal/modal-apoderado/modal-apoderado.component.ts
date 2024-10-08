@@ -146,18 +146,18 @@ export class ModalApoderadoComponent {
     return;
   }
 
-  // VALIDACIÓN NÚMERO DE DOCUMENTO (debe ser numérico y de 8 dígitos)
-  if (isNaN(Number(this.apoderado.numero_documento)) || this.apoderado.numero_documento.length !== 8) {
-    this.snack.open('El número de documento debe ser numérico y tener 8 dígitos', '', {
+  // VALIDACIÓN NÚMERO DE DOCUMENTO (debe ser de 8 dígitos)
+  if (this.apoderado.numero_documento.length !== 8) {
+    this.snack.open('El número de documento debe tener 8 dígitos', '', {
       duration: 3000
     });
     this.loading = false;
     return;
   }
 
-  // VALIDACIÓN TELÉFONO (debe ser numérico y de 9 dígitos)
-  if (isNaN(Number(this.apoderado.numero)) || this.apoderado.numero.length !== 9) {
-    this.snack.open('El número de teléfono debe ser numérico y tener 9 dígitos', '', {
+  // VALIDACIÓN TELÉFONO (debe ser de 9 dígitos)
+  if (this.apoderado.numero.length !== 9) {
+    this.snack.open('El número de teléfono debe tener 9 dígitos', '', {
       duration: 3000
     });
     this.loading = false;
@@ -267,9 +267,9 @@ export class ModalApoderadoComponent {
         return;
       }
     
-      // VALIDACIÓN NÚMERO DE DOCUMENTO (debe ser numérico y de 8 dígitos)
-      if (isNaN(Number(this.apoderado.numero_documento)) || this.apoderado.numero_documento.length !== 8) {
-        this.snack.open('El número de documento debe ser numérico y tener 8 dígitos', '', {
+      // VALIDACIÓN NÚMERO DE DOCUMENTO (debe ser  de 8 dígitos)
+      if (this.apoderado.numero_documento.length !== 8) {
+        this.snack.open('El número de documento debe tener 8 dígitos', '', {
           duration: 3000
         });
         this.loading = false;
@@ -277,8 +277,8 @@ export class ModalApoderadoComponent {
       }
     
       // VALIDACIÓN TELÉFONO (debe ser numérico y de 9 dígitos)
-      if (isNaN(Number(this.apoderado.numero)) || this.apoderado.numero.length !== 9) {
-        this.snack.open('El número de teléfono debe ser numérico y tener 9 dígitos', '', {
+      if (this.apoderado.numero.length !== 9) {
+        this.snack.open('El número de teléfono debe tener 9 dígitos', '', {
           duration: 3000
         });
         this.loading = false;

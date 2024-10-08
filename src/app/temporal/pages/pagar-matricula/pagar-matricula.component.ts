@@ -20,6 +20,7 @@ import { MatriculaService } from '../../../core/services/matricula.service';
 import { UserService } from '../../../core/services/user.service';
 import { PensionService } from '../../../core/services/pension.service';
 import { listaMeses } from '../../../shared/constants/itemsMonths';
+import { SoloNumerosDirective } from '../../../shared/directives/solo-numeros.directive';
 
 @Component({
   selector: 'app-pagar-matricula',
@@ -32,7 +33,8 @@ import { listaMeses } from '../../../shared/constants/itemsMonths';
     MatButtonModule,
     CommonModule,
     MatSelectModule,
-    MatIconModule
+    MatIconModule,
+    SoloNumerosDirective
   ],
   templateUrl: './pagar-matricula.component.html',
   styleUrls: ['./pagar-matricula.component.css']
@@ -147,7 +149,7 @@ export class PagarMatriculaComponent implements OnInit {
     if (!this.card) {
       return;
     }
-
+    
     const stripe = await this.stripeService.getStripe();
     const { paymentMethod, error } = await stripe!.createPaymentMethod({
       type: 'card',
@@ -164,7 +166,7 @@ export class PagarMatriculaComponent implements OnInit {
         phone: this.number
       },
     });
-
+    
     if (error) {
       console.error(error);
       this.mostrarMensaje(error.message, 3000);
@@ -181,7 +183,31 @@ export class PagarMatriculaComponent implements OnInit {
           estudiante_id: this.estudianteId
         },
       };
-
+     
+      //VALIDACIONES
+      if(this.name === ''){
+        this.mostrarMensaje('el nombre es requerido',3000);
+        return;
+     }
+     if(this.number === ''){
+      this.mostrarMensaje('el numero es requerido',3000);
+      return;
+     }
+     if(this.email ===''){
+      this.mostrarMensaje('El correo se encuentra vacio',3000);
+      return;
+     }
+     if(this.tipoDoc === ''){
+        this.mostrarMensaje('Tiene que elegir el tipo de documento',3000);
+     }
+     if(this.n_doc === ''){
+       this.mostrarMensaje('Numero de Documento Vacio',3000);
+       return;
+    }
+    if(this.line1 === ''){
+      this.mostrarMensaje('La Direccion se encuentra vacia',3000);
+      return;
+   }
       this.stripeService.procesarPago(paymentData).subscribe(
         async (response: any) => {
           console.log('Payment successful:', response);

@@ -179,7 +179,7 @@ export class PagarMatriculaComponent implements OnInit {
           tipoDocumento: this.tipoDoc,
           nroDocumento: this.n_doc,
           estudiante_id: this.estudianteId
-        }
+        },
       };
 
       this.stripeService.procesarPago(paymentData).subscribe(

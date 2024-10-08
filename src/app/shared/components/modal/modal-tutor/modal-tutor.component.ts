@@ -72,63 +72,58 @@ export class ModalTutorComponent {
       console.log(this.data)
       this.tutor = this.data.tutor;
       this.tutorId = this.data.tutor._id
-      
     }
-else{
-  
-    this.tutor = {
-      nombre: '',
-      apellido: '',
-      direccion: '',
-      telefono: '',
-      numero_documento: '',
-      documento: {
-        _id: ''
-      },
-      periodo: {
-        _id: ''
-      },
-      grado: {
-        _id: ''
-      },
-      seccion: {  // Inicializa seccion para evitar errores
-        _id: ''
+    else{
+      this.tutor = {
+        nombre: '',
+        apellido: '',
+        direccion: '',
+        telefono: '',
+        numero_documento: '',
+        documento: {
+          _id: ''
+        },
+        periodo: {
+          _id: ''
+        },
+        grado: {
+          _id: ''
+        },
+        seccion: { 
+          _id: ''
+        }
+      }
     }
-    
+    this.tipoDocumentService.listarTiposDocumento().subscribe(
+      (data: any) => {
+        this.tipoDocumento = data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    this.periodoService.listarPeriodos().subscribe(
+      (data: any) => {
+        this.periodo = data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    this.gradoService.listarGrados().subscribe(
+      (data: any) => {
+        this.grado = data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    if (this.data.isEdit) {
+      this.listarGrados();
+      this.listarSeccionesPorPeriodoGrado();
     }
   }
-  
-  this.tipoDocumentService.listarTiposDocumento().subscribe(
-    (data: any) => {
-      this.tipoDocumento = data
-    },
-    (error) => {
-      console.log(error)
-    },
-  )
-  this.periodoService.listarPeriodos().subscribe(
-    (data: any) => {
-      this.periodo = data
-    },
-    (error) => {
-      console.log(error)
-    }
-    
-  )
-  this.gradoService.listarGrados().subscribe(
-    (data: any) => {
-      this.grado = data
-    },
-    (error) => {
-      console.log(error)
-    }
-  )
-   // Si estamos editando, cargar grados y secciones iniciales
-   if (this.data.isEdit) {
-    this.listarGrados(); // Cargar grados basados en el periodo del tutor
-    this.listarSeccionesPorPeriodoGrado(); // Cargar secciones basadas en el grado del tutor
-}
-  }
+
   listarGrados() {
     this.loading = true;
     this.gradoService.listarGrados().subscribe(
@@ -147,6 +142,7 @@ else{
       }
     );
   }
+
   listarSeccionesPorPeriodoGrado() {
     if (!this.tutor.grado || !this.tutor.grado._id) {
       console.error('El grado está vacío');
@@ -163,22 +159,22 @@ else{
       this.tutor.grado._id, 
       this.tutor.periodo._id
     ).subscribe(
-        (data: any) => {
-          this.seccion = data// Si `sgp.seccion` es donde está el ID correcto
-            console.log('Secciones cargadas:', this.seccion); // Asegúrate de que aquí haya datos
-            this.loading = false;
-            this.seccionLoaded = true;
-    
-            if (this.seccion.length === 0) {
-                this.snack.open('No se encontraron secciones', 'Cerrar', { duration: 3000 });
-                this.seccionLoaded = false;
-            }
-        },
-        (error) => {
-            console.error('Error al cargar secciones:', error);
-            this.loading = false;
-            this.snack.open('Error al cargar secciones', 'Cerrar', { duration: 3000 });
+      (data: any) => {
+        this.seccion = data
+        console.log('Secciones cargadas:', this.seccion);
+        this.loading = false;
+        this.seccionLoaded = true;
+
+        if (this.seccion.length === 0) {
+          this.snack.open('No se encontraron secciones', 'Cerrar', { duration: 3000 });
+          this.seccionLoaded = false;
         }
+      },
+      (error) => {
+        console.error('Error al cargar secciones:', error);
+        this.loading = false;
+        this.snack.open('Error al cargar secciones', 'Cerrar', { duration: 3000 });
+      }
     );
   }
   
@@ -195,10 +191,10 @@ else{
       direccion : this.tutor.direccion,
       telefono : this.tutor.telefono,
       numero_documento : this.tutor.numero_documento,
-      documento_id : this.tutor.documento._id, // Cambiado a tutor.documento._id
-      periodo_id : this.tutor.periodo._id, // Cambiado a tutor.periodo._id
-      grado_id : this.tutor.grado._id, // Cambiado a tutor.grado._id
-      seccion_id : this.tutor.seccion._id, // Cambiado a tutor.seccion._id
+      documento_id : this.tutor.documento._id,
+      periodo_id : this.tutor.periodo._id,
+      grado_id : this.tutor.grado._id,
+      seccion_id : this.tutor.seccion._id,
       
     }
     //VALIDACIONES 
@@ -292,33 +288,31 @@ else{
               this.closeModel();
             }
           );
-      
-       // Asignar el ID del tutor desde la respuesta del servidor
-      const tutorId = data._id; // Suponiendo que el backend te devuelve el ID del tutor
 
-      const newdataUser = {
-        usuario : this.tutor.numero_documento,
-        email : this.tutor.numero_documento + "@vn.com",
-        contrasena: "0000000",
-        rol: "Tutor",
-        perfil_id: tutorId,  // Aquí utilizamos el tutorId de la respuesta
-      };
-       // Crear el usuario ahora que ya tenemos el tutorId correcto
-       this.userService.agregarUsuario(newdataUser).subscribe(
-        (data) => {
-          console.log('Usuario creado con éxito', data);
+          const tutorId = data._id;
+
+          const newdataUser = {
+            usuario : this.tutor.numero_documento,
+            email : this.tutor.numero_documento + "@vn.com",
+            contrasena: "0000000",
+            rol: "Tutor",
+            perfil_id: tutorId,
+          };
+
+          this.userService.agregarUsuario(newdataUser).subscribe(
+            (data) => {
+              console.log('Usuario creado con éxito', data);
+            },
+            (error) => {
+              console.log('Error al crear el usuario', error);
+            }
+          );
         },
         (error) => {
-          console.log('Error al crear el usuario', error);
+          this.loading = false;
+          console.log('Error al crear el tutor:', error);
         }
       );
-    },
-    (error) => {
-      this.loading = false;
-      console.log('Error al crear el tutor:', error);
-    }
-  );
-
     }
 
     if(this.data.isEdit) {

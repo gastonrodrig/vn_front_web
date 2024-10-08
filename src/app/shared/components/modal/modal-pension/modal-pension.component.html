@@ -1,42 +1,13 @@
 <div class="p-4">
     <div class="flex flex-col items-center">
       <div class="text-base mt-2 mb-6 font-medium">
-        <p>Agregar Pension</p> 
+        <p>Pagar Pension</p> 
       </div>
     </div>
-    <form (ngSubmit)="guardarInformacion()">
+    <form (ngSubmit)="PagarPension()">
       <p class="pl-0.5 pb-4 font-medium">Datos de la Pension:</p>
       <div class="grid grid-cols-2 gap-x-4">
-        
-        <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-          <mat-label>Monto: S/.150</mat-label>
-          <input
-            disabled
-            [(ngModel)]="pension.monto"
-            type="text"
-            placeholder="Monto"
-            matInput
-            appSoloNumeros
-            [ngModelOptions]="{standalone: true}"
-          >
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-          <mat-label>Mes</mat-label>
-          <mat-select 
-              [(ngModel)]="pension.mes"
-              (selectionChange)="onMesChange($event.value)"
-              [ngModelOptions]="{standalone: true}"
-          >
-              <mat-option 
-                  *ngFor="let e of listaMeses" 
-                  [value]="e.nombre"
-              >
-                  {{ e.nombre }}
-              </mat-option>
-          </mat-select>
-        </mat-form-field>
-        
-    
+
         <mat-form-field appearance="fill" class="col-span-2">
           <mat-label>Dni del Estudiante</mat-label>
           <input
@@ -50,53 +21,40 @@
           >
           <mat-icon matSuffix>badge</mat-icon>
         </mat-form-field>
-  
         <mat-form-field appearance="fill" class="col-span-2">
           <mat-label>Nombre del Estudiante</mat-label>
           <input
             [(ngModel)]="nombreEstudiante"
             type="text"
             matInput
-            disabled
+            disabled="true"
             [ngModelOptions]="{standalone: true}"
           >
           <mat-icon matSuffix>person</mat-icon>
-
         </mat-form-field>
-  
-        <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-          <mat-label>Fecha Inicio</mat-label>
-          <input
-            
-            [(ngModel)]="pension.fecha_inicio"
-            matInput  
-            [matDatepicker]="pickerInicio"
-            [ngModelOptions]="{standalone: true}"
-          >
-          <mat-hint>MM/DD/YYYY</mat-hint>
-          <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
-          <mat-datepicker #pickerInicio></mat-datepicker>
-        </mat-form-field> 
-        
-        <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-          <mat-label>Fecha Limite</mat-label>
-          <input
-             
-            [(ngModel)]="pension.fecha_limite"
-            matInput  
-            [matDatepicker]="pickerLimite"
-            [ngModelOptions]="{standalone: true}"
-          >
-          <mat-hint>MM/DD/YYYY</mat-hint>
-          <mat-datepicker-toggle matIconSuffix [for]="pickerLimite"></mat-datepicker-toggle>
-          <mat-datepicker #pickerLimite></mat-datepicker>
-        </mat-form-field>        
 
+        <mat-form-field appearance="fill" class="col-span-2 ">
+          <mat-label>Mes</mat-label>
+          <mat-select 
+              [(ngModel)]="pension.mes"
+              (selectionChange)="setPension($event.value)"
+              [disabled]="isMesDisabled"
+              [ngModelOptions]="{standalone: true}"
+          >
+              <mat-option 
+                  *ngFor="let e of listaMesesPendientes" 
+                  [value]="{ mes: e.mes, id: e.id }"
+              >
+                  {{ e.mes }}
+              </mat-option>
+          </mat-select>
+        </mat-form-field>
+    
         <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
           <mat-label>Metodo de Pago</mat-label>
           <mat-select 
               [(ngModel)]="pension.metodo_pago"
-              (selectionChange)="verificarTipoPago($event.value)"
+              [disabled]="isMetodoPagoDisabled"
               [ngModelOptions]="{standalone: true}"
           >
               <mat-option 
@@ -115,30 +73,15 @@
           placeholder="Ingrese el nro. de operación"
           matInput
           appSoloNumeros
-          [disabled]="nOperacionDisabled" 
+          [disabled]="isMetodoPagoDisabled" 
           [ngModelOptions]="{standalone: true}"
         >
       </mat-form-field>
 
-      <mat-form-field appearance="fill" class="col-span-2 ">
-        <mat-label>Estado</mat-label>
-        <mat-select 
-            [(ngModel)]="pension.estado"
-            [ngModelOptions]="{standalone: true}" 
-            required
-        >
-            <mat-option *ngFor="let estado of listaEstado" 
-            [value]="estado.nombre">
-                {{ estado.nombre }}
-            </mat-option>
-        </mat-select>
-      </mat-form-field>
-      
-  
       </div>
       <div class="flex justify-end w-full">
         <div class="p-2">
-          <button mat-flat-button color="custom-color" class="me-2">Guardar</button>
+          <button mat-flat-button color="custom-color" class="me-2"[disabled]="loading">Pagar</button>
           <button mat-button mat-dialog-close color="custom-color">Cancelar</button>
         </div>
       </div>

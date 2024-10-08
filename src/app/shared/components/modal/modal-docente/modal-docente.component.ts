@@ -109,16 +109,16 @@ export class ModalDocenteComponent {
       return;
     }
       
-    if(isNaN(dataDocente.numero_documento) || dataDocente.numero_documento.length !== 8) {
-      this.snack.open('El Numero de Documento tiene que ser numerico y de 8 digitos', '', {
+    if(dataDocente.numero_documento.length !== 8) {
+      this.snack.open('El Numero de Documento tiene que de 8 digitos', '', {
         duration: 3000
       })
       this.loading = false
       return
     }
 
-    if(isNaN(dataDocente.telefono) || dataDocente.telefono.length !== 9) {
-      this.snack.open('El telefono tiene que ser tipo numerico y de 9 digitos', '', {
+    if(dataDocente.telefono.length !== 9) {
+      this.snack.open('El telefono tiene que ser de 9 digitos', '', {
         duration: 3000
       })
       this.loading = false

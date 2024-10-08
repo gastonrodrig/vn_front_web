@@ -26,14 +26,10 @@ export class GestionarPensionComponent {
   
   columns= [
     { header: 'Nro. Documento', field: 'estudiante.numero_documento' },
-    { header: 'Nombre', field: 'estudiante' },
-    { header: 'Monto', field: 'monto' },
     { header: 'Método de Pago', field: 'metodo_pago' },
     { header: 'Nro. Operacion', field: 'n_operacion' },
-    { header: 'Estado', field: 'estado' },
     { header: 'Mes', field: 'mes' },
-    { header: 'Fecha de Inicio', field: 'fecha_inicio' },
-    { header: 'Fecha Limite', field: 'fecha_limite' },
+    { header: 'Tiempo de pago', field: 'tiempo_pago' },
   ]
 
   constructor(
@@ -51,8 +47,9 @@ export class GestionarPensionComponent {
       (data: any) => {
         console.log(data)
         this.pensiones = data.map((pension: any) => {
-          pension.monto = this.formatMonto(pension.monto)
           pension.n_operacion = this.formatOperacion(pension.n_operacion) 
+          pension.metodo_pago = this.formatMetodoPago(pension.metodo_pago)
+          pension.tiempo_pago = this.formatFecha(pension.tiempo_pago) 
           return pension;
         });
         this.loading = false
@@ -83,15 +80,17 @@ export class GestionarPensionComponent {
   getFullName(estudiante: any) {
     return `${estudiante.nombre} ${estudiante.apellido}`
   }
-
-  formatMonto(monto: any) {
-    return `S/. ${monto.toFixed(2)}`
-  }
   formatOperacion(n_operacion: any){
     if( n_operacion === null ){
       return '-'
     }
     return n_operacion;
+  }
+  formatMetodoPago(metodoPago: any){
+    if( metodoPago === null ){
+      return '-'
+    }
+    return metodoPago;
   }
   formatmes(fecha: any) {
     const date = new Date(fecha)
@@ -99,15 +98,20 @@ export class GestionarPensionComponent {
     return `${month}`
   }
   formatFecha(fecha: any) {
-    const date = new Date(fecha)
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
-    const hours = String(date.getHours()).padStart(2, '0')
-    const minutes = String(date.getMinutes()).padStart(2, '0')
-    const seconds = String(date.getSeconds()).padStart(2, '0')
+    if (fecha === null) {
+      return '-';
+    }
+    
+    const date = new Date(fecha);
+    date.setHours(date.getHours()); 
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
   
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 
 }

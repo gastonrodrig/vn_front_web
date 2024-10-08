@@ -42,10 +42,9 @@ export class LoginComponent {
 
   navigateToRole() {
     const usuario = this.authService.getUser()
-    const rolesNoPermitidos = ['Estudiante', 'Apoderado']
+    const rolesNoPermitidos = ['Estudiante', 'Tutor']
     const rutasPorRol: { [clave: string]: string } = {
       'Admin': '/admin',
-      'Docente': '/docente',
       'Temporal': '/temporal'
     }
 

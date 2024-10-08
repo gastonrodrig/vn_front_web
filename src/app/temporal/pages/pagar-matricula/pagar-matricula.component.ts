@@ -14,6 +14,12 @@ import { DocumentoService } from '../../../core/services/documento.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { GmailService } from '../../../core/services/gmail.service';
+import { SolicitudService } from '../../../core/services/solicitud.service';
+import { VacanteService } from '../../../core/services/vacante.service';
+import { MatriculaService } from '../../../core/services/matricula.service';
+import { UserService } from '../../../core/services/user.service';
+import { PensionService } from '../../../core/services/pension.service';
+import { listaMeses } from '../../../shared/constants/itemsMonths';
 
 @Component({
   selector: 'app-pagar-matricula',
@@ -52,6 +58,7 @@ export class PagarMatriculaComponent implements OnInit {
   n_doc = '';
 
   isDisabled = true;
+  listaMeses: any
 
   constructor(
     private stripeService: StripeService,
@@ -59,10 +66,16 @@ export class PagarMatriculaComponent implements OnInit {
     private authService: AuthService,
     private documentoService: DocumentoService,
     private gmailService: GmailService,
+    private solicitudService: SolicitudService,
+    private vacanteService: VacanteService,
+    private matriculaService: MatriculaService,
+    private usuarioService: UserService,
+    private pensionService: PensionService,
     private snack: MatSnackBar
   ) {}
 
   ngOnInit() {
+    this.listaMeses = listaMeses;
     this.estudianteService.listarEstudiantes().subscribe(
       (data: any) => {
         this.estudiantes = data;
@@ -92,22 +105,27 @@ export class PagarMatriculaComponent implements OnInit {
     }
 
     if (this.nombreUsuario !== user.usuario) {
-      this.mostrarMensaje('El nombre de usuario ingresado es incorrecto.', 3000);
-      return;
+      this.mostrarMensaje('El nombre de usuario ingresado es incorrecto.', 3000)
+      return
     }
 
-    this.estudianteId = this.estudiante._id;
+    this.estudianteId = this.estudiante._id
 
     this.estudianteService.obtenerEstudiante(this.estudianteId).subscribe(
       (data: any) => {
-        if (data.estado !== 'Aprobado') {
-          this.mostrarMensaje('Los documentos del estudiante aún no han sido aprobados.', 3000);
-        } else {
-          this.isDisabled = false;
-          this.loading = false;
-        }
+        this.estudiante = data
+        this.solicitudService.obtenerSolicitudPorDni(data.numero_documento).subscribe(
+          (data: any) => {
+            if (data.estado !== 'Aprobado') {
+              this.mostrarMensaje('Los documentos del estudiante aún no han sido aprobados.', 3000)
+            } else {
+              this.isDisabled = false
+              this.loading = false
+            }
+          }
+        )
       }
-    );
+    )
   }
 
   async cargarElementosStripe() {
@@ -125,6 +143,7 @@ export class PagarMatriculaComponent implements OnInit {
   }
 
   async pagar() {
+    this.loading = true
     if (!this.card) {
       return;
     }
@@ -158,17 +177,80 @@ export class PagarMatriculaComponent implements OnInit {
         paymentMethodId: paymentMethod.id,
         metadata: {
           tipoDocumento: this.tipoDoc,
-          nroDocumento: this.n_doc
-        }
+          nroDocumento: this.n_doc,
+          estudiante_id: this.estudianteId
+        },
       };
 
       this.stripeService.procesarPago(paymentData).subscribe(
         async (response: any) => {
           console.log('Payment successful:', response);
-          const stripeOperationId  = response.stripeOperationId ;
+          const stripeOperationId  = response.stripeOperationId;
+
+          this.estudianteService.cambiarEstadoEstudiante(this.estudianteId, { estado: 'Pagó' }).subscribe(
+            (data: any) => {
+              console.log(data);
+            }
+          )
+
+          this.vacanteService.obtenerVacantePorEstudiante(this.estudianteId).subscribe(
+            (data: any) => {
+              const vacanteId = data[0]._id
+              this.vacanteService.cambiarEstado(vacanteId, { estado: 'Confirmado' }).subscribe(
+                (data: any) => {
+                  console.log(data)
+                }
+              )
+            }
+          )
+
+          const dataMatricula = {
+            monto: 300,
+            metodo_pago: 'Tarjeta',
+            n_operacion: Math.floor(10000000 + Math.random() * 90000000).toString(),
+            periodo_id: this.estudiante.periodo._id,
+            estudiante_id: this.estudianteId,
+            tipo: 'Virtual',
+            tipoMa: 'Nuevo',
+            fecha: new Date()
+          }
+
+          this.matriculaService.agregarMatricula(dataMatricula).subscribe(
+            (data: any) => {
+              const currentYear = new Date().getFullYear();
+
+              this.listaMeses.forEach((mes: any) => {
+                const monthIndex = mes.indice;
+              
+                const fechaInicio = new Date(currentYear, monthIndex, 1);
+                const fechaFin = new Date(currentYear, monthIndex + 1, 0);
+              
+                const pensionData = {
+                  estudiante_id: this.estudianteId,
+                  monto: 150,
+                  fecha_inicio: fechaInicio.toISOString(),
+                  fecha_limite: fechaFin.toISOString(),
+                  mes: mes.nombre
+                };
+              
+                this.pensionService.agregarPension(pensionData).subscribe(
+                  (data: any) => {
+                    console.log('Pensión agregada:', data);
+                    this.loading = false
+                  }
+                );
+              });
+            },
+            (error) => {
+              this.mostrarMensaje(error.error.message, 3000)
+            }
+          )
+
           await this.enviarCorreoConBoleta(stripeOperationId);
+          this.loading = false
         },
         (error) => {
+          this.loading = false
           console.error('Payment failed:', error);
         }
       );
@@ -184,10 +266,15 @@ export class PagarMatriculaComponent implements OnInit {
 
     try {
       await this.gmailService.sendEmailPdf(operationId, correoData).toPromise();
-      this.mostrarMensaje('Correo enviado exitosamente con la boleta.', 3000);
+      this.mostrarMensaje('Se le ha enviado la boleta a su correo adjuntado en el pago.', 3000);
+
+      
+      // this.usuarioService.eliminarUsuario()
+      this.loading = false
     } catch (error) {
       console.error('Error al enviar el correo:', error);
       this.mostrarMensaje('Error al enviar el correo.', 3000);
+      this.loading = false
     }
   }
 

@@ -85,6 +85,46 @@ export class ModalDocenteComponent {
       documento_id : this.docente.documento._id,
       
     }
+    //VALIDACIONES 
+    if(!isNaN(dataDocente.nombre)) {
+      this.snack.open('El nombre tiene que ser en letras', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+    if(!isNaN(dataDocente.apellido)) {
+      this.snack.open('El apellido tiene que ser en letras', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+     //validacion documento 
+     if (!this.docente.documento._id) {
+      this.snack.open('Tiene que elegir un tipo de Documento', '', {
+        duration: 3000
+      });
+      this.loading = false;
+      return;
+    }
+      
+    if(isNaN(dataDocente.numero_documento) || dataDocente.numero_documento.length !== 8) {
+      this.snack.open('El Numero de Documento tiene que ser numerico y de 8 digitos', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+
+    if(isNaN(dataDocente.telefono) || dataDocente.telefono.length !== 9) {
+      this.snack.open('El telefono tiene que ser tipo numerico y de 9 digitos', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+    //VALIDACIONES TERMINADA
 
     if(dataDocente.nombre === '') {
       this.snack.open('El nombre del docente es requerido', '', {

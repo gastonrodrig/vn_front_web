@@ -16,6 +16,7 @@ import { EstudianteService } from '../../../../core/services/estudiante.service'
 import { PeriodoService } from '../../../../core/services/periodo.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import Swal from 'sweetalert2';
+import { listaTiposMatricula } from '../../../constants/itemsRegistration';
 
 @Component({
   selector: 'app-modal-matricula',
@@ -39,8 +40,10 @@ import Swal from 'sweetalert2';
 export class ModalMatriculaComponent {
   periodos: any[] = []
   listaMetodosPago: any
+  listaTiposMatricula: any
   matricula: any
   loading = false
+  nOperacionDisabled = false
 
   dni: any
   fecha: any
@@ -48,6 +51,7 @@ export class ModalMatriculaComponent {
 
   nombreEstudiante: any
   estudianteId: any
+  alumnoNuevo = false
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -59,7 +63,9 @@ export class ModalMatriculaComponent {
   ) {}
 
   ngOnInit() {
+    this.nOperacionDisabled = true;  
     this.listaMetodosPago = listaMetodosPago
+    this.listaTiposMatricula = listaTiposMatricula
     this.matricula = {
       monto: '',
       metodo_pago: '',
@@ -67,6 +73,7 @@ export class ModalMatriculaComponent {
       periodo_id: '',
       estudiante_id: '',
       tipo: '',
+      tipoMa:'',
       fecha: ''
     }
     this.periodoService.listarPeriodos().subscribe(
@@ -88,55 +95,175 @@ export class ModalMatriculaComponent {
       periodo_id: this.matricula.periodo_id,
       estudiante_id: this.estudianteId,
       tipo: 'Presencial',
+      tipoMa: this.matricula.tipoMa,
       fecha: this.formatDateTime(this.fecha, this.tiempo)
     }
 
-    if(this.matricula.monto === '') {
-      this.snack.open('El nombre del docente es requerido', '', {
-        duration: 3000
-      })
-      this.loading = false
+    if(matriculaData.metodo_pago === ''){
+      this.mostrarMensaje('El metodo de pago es requerido')
       return
+    }
+
+    if(matriculaData.metodo_pago !== 'Efectivo' && matriculaData.n_operacion === ''){
+      this.mostrarMensaje('El nro. de operacion es requerido')
+      return
+    }
+
+    if(matriculaData.metodo_pago !== 'Efectivo' && matriculaData.n_operacion.length !== 8){
+      this.mostrarMensaje('El nro. de operacion debe tener 8 digitos')
+      return
+    }
+
+    if(matriculaData.periodo_id === ''){
+      this.mostrarMensaje('El periodo escolar es requerido')
+      return
+    }
+
+    if(matriculaData.estudiante_id === ''){
+      this.mostrarMensaje('El estudiante es requerido')
+      return
+    }
+
+    if(matriculaData.tipoMa === ''){
+      this.mostrarMensaje('El tipo de matricula es requerido')
+      return
+    }
+
+    if(this.fecha === ''){
+      this.mostrarMensaje('La fecha del pago es requerida')
+      return
+    }
+
+    if(this.tiempo === ''){
+      this.mostrarMensaje('La hora del pago es requerida')
+      return
+    }
+
+    const fechaIngresada = this.formatDateTime(this.fecha, this.tiempo);
+
+    if (!fechaIngresada) {
+      this.mostrarMensaje('La fecha y hora del pago es requerida');
+      return;
+    }
+    
+    const fechaActual = new Date();
+    
+    if (new Date(fechaIngresada).getTime() > fechaActual.getTime()) {
+      this.mostrarMensaje('La fecha y hora del pago no puede ser mayor a la fecha y hora actual');
+      return;
     }
 
     this.matriculaService.agregarMatricula(matriculaData).subscribe(
       (data) => {
-        console.log(data)
         this.loading = false
         Swal.fire('Matricula agregada', 'La matricula ha sido guardada con éxito', 'success').then(
           (e)=> {
             this.closeModel()
           }
-        );
+        )
       },
       (error) => {
+        this.loading = false
         console.log(error)
+        this.mostrarMensaje(error.error.message)
+        return
       }
     )
   }
 
   validarDNI(dni: string) {
+    if (dni.length > 8) {
+      this.snack.open('El DNI no puede tener más de 8 dígitos', '', {
+        duration: 3000
+      });
+      this.nombreEstudiante = ''
+      return;
+    }
+
     if (dni.length === 8) {
-      this.loading = true
-      this.estudianteService.obtenerEstudiantePorNroDoc(dni).subscribe(
+      this.loading = true;
+  
+      this.estudianteService.obtenerEstudiantePorNroDoc(dni, false).subscribe(
         (data: any) => {
           this.loading = false
           this.nombreEstudiante = `${data.apellido}, ${data.nombre}`
           this.estudianteId = data._id
+
+          this.matriculaService.listarMatriculasPorEstudiante(data._id).subscribe(
+            (data: any) => {
+              if(data.length >= 1) {
+                this.matricula.tipoMa = 'Regular'
+                this.alumnoNuevo = true
+                this.matricula.monto = 300
+              }
+              else {
+                this.matricula.tipoMa = ''
+              }
+            }
+          )
+        },
+        (error) => {
+          this.mostrarMensaje(error.error.message)
+          return
         }
       )
     } else {
       this.nombreEstudiante = ''
+      this.matricula.monto = ''
+      this.alumnoNuevo = false
+      this.matricula.tipoMa = ''
     }
   }
+  
 
-  formatDateTime(date: Date, time: string) {
-    const [hours, minutes, seconds] = time.split(':').map(Number)
+  formatDateTime(date: Date, time: string): string | null {
+    if (!this.fecha) {
+      this.mostrarMensaje('La fecha del pago es requerida');
+      return null;
+    }
+    
+    if (!this.tiempo) {
+      this.mostrarMensaje('La hora del pago es requerida');
+      return null;
+    }
+  
+    const [hours, minutes, seconds = 0] = time.split(':').map(Number);
+  
+    if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
+      this.mostrarMensaje('La hora no tiene un formato válido');
+      return null;
+    }
+  
     date.setHours(hours, minutes, seconds);
     return formatDate(date, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", 'en-US', '+0000');
   }
 
+  actualizarMonto(tipoMatricula: string) {
+    if (tipoMatricula === 'Nuevo' || tipoMatricula === 'Regular') {
+      this.matricula.monto = 300
+    } else if (tipoMatricula === 'Traslado Externo') {
+      this.matricula.monto = 350
+    } else {
+      this.matricula.monto = ''
+    }
+  }
+
+  mostrarMensaje(mensaje: string) {
+    this.snack.open(mensaje, 'Cerrar', {
+      duration: 3000,
+    })
+    this.loading = false
+  }
+
   closeModel() {
     this.dialogRef.close()
+  }
+
+  verificarTipoPago(tipoPago: string) {
+    if (tipoPago === 'Transferencia' || tipoPago === 'Tarjeta') {
+      this.nOperacionDisabled = false;  
+    } else if (tipoPago === 'Efectivo') {
+      this.nOperacionDisabled = true;  
+    }
   }
 }

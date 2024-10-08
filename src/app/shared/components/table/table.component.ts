@@ -22,6 +22,8 @@ export class TableComponent {
   @Input() filesActive: any
   @Input() noActions: any
   @Input() requestActive: any
+  @Input() vacantActive: any
+  @Input() userActive: any
   @Input() actionsByState: { [key: string]: { icon: string, action: string, style: string }[] } = {};
 
   @Output() editAction = new EventEmitter<{ isEdit: boolean, id: any }>();
@@ -31,6 +33,7 @@ export class TableComponent {
   @Output() pfpAction = new EventEmitter<{ isPfp: boolean, id: any }>();
   @Output() filesAction = new EventEmitter<{ isFiles: boolean, id: any }>();
   @Output() requestAction = new EventEmitter<{ isRequest: boolean, id: any }>();
+  @Output() vacantAction = new EventEmitter<{ isVacant: boolean, id: any }>();
   @Output() actionEvent = new EventEmitter<{ id: any, action: string }>();
 
   p: number = 1
@@ -69,15 +72,15 @@ export class TableComponent {
     this.filesAction.emit({ isFiles: true, id });
   }
 
-  request(id: any) {
-    this.requestAction.emit({ isRequest: true, id });
+  vacant(id: any) {
+    this.vacantAction.emit({ isVacant: true, id });
   }
-
-  handleAction(id: any, action: string) {
+  
+  handleActionState(id: any, action: string) {
     this.actionEvent.emit({ id, action });
   }
 
-  getActions(state: string) {
+  getActionsState(state: string) {
     return this.actionsByState[state] || [];
   }
   

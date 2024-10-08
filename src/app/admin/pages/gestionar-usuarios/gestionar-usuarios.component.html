@@ -24,7 +24,9 @@
   [loadedComplete]="loadedComplete"
   [editActive]="true"
   [deleteActive]="true"
-  [asignActive]="false"
+  [userActive]="true"
+  [actionsByState]="actionsByState"
   (editAction)="editarUsuario($event.isEdit, $event.id)"
-  (deleteAction)="eliminarUsuarioDeUsuarioYEstudiante($event.isDeleted, $event.id)"
+  (deleteAction)="eliminarUsuarioAvanzado($event.isDeleted, $event.id)"
+  (actionEvent)="handleTableAction($event)"
 ></app-table>

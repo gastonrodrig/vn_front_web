@@ -6,9 +6,6 @@ export const listaRoles = [
     nombre: 'Estudiante'
   },
   {
-    nombre: 'Docente'
-  },
-  {
-    nombre: 'Apoderado'
+    nombre: 'Tutor'
   }
 ]

@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { SoloNumerosDirective } from '../../../directives/solo-numeros.directive';
 import { ApoderadoService } from '../../../../core/services/apoderado.service';
 import Swal from 'sweetalert2';
+import e from 'express';
 
 @Component({
   selector: 'app-modal-apoderado',
@@ -92,8 +93,7 @@ export class ModalApoderadoComponent {
   }
 
   agregarApoderado() {
-    // FALTA VALIDACIONES
-
+      // Si todas las validaciones pasan, se crea el nuevo apoderado
     const nuevoApoderado = { 
       ...this.apoderado, 
       _id: this.generarIdUnico()
@@ -119,14 +119,59 @@ export class ModalApoderadoComponent {
   }
 
   guardarInformacion() {
+  if (this.apoderadoList.length === 0){
+   if (!isNaN(Number(this.apoderado.nombre))) {
+    this.snack.open('El nombre debe contener solo letras', '', {
+      duration: 3000
+    });
+    this.loading = false;
+    return;
+  }
+
+  // VALIDACIÓN APELLIDO (debe contener solo letras)
+  if (!isNaN(Number(this.apoderado.apellido))) {
+    this.snack.open('El apellido debe contener solo letras', '', {
+      duration: 3000
+    });
+    this.loading = false;
+    return;
+  }
+
+  // VALIDACIÓN TIPO DE DOCUMENTO (debe estar seleccionado)
+  if (!this.apoderado.documento._id) {
+    this.snack.open('Debe seleccionar un tipo de documento', '', {
+      duration: 3000
+    });
+    this.loading = false;
+    return;
+  }
+
+  // VALIDACIÓN NÚMERO DE DOCUMENTO (debe ser numérico y de 8 dígitos)
+  if (isNaN(Number(this.apoderado.numero_documento)) || this.apoderado.numero_documento.length !== 8) {
+    this.snack.open('El número de documento debe ser numérico y tener 8 dígitos', '', {
+      duration: 3000
+    });
+    this.loading = false;
+    return;
+  }
+
+  // VALIDACIÓN TELÉFONO (debe ser numérico y de 9 dígitos)
+  if (isNaN(Number(this.apoderado.numero)) || this.apoderado.numero.length !== 9) {
+    this.snack.open('El número de teléfono debe ser numérico y tener 9 dígitos', '', {
+      duration: 3000
+    });
+    this.loading = false;
+    return;
+  }
+}
+
     if(this.data.isCreate) {
       if (this.apoderadoList.length < 1) {
         this.snack.open('Debe incluir como mínimo 1 apoderado', 'Cerrar', {
           duration: 3000
         })
         return
-      }
-    
+      } 
       this.loading = true
       this.apoderadoList.forEach((e) => {
         const apoderado = {
@@ -160,8 +205,6 @@ export class ModalApoderadoComponent {
     }
 
     if(this.data.isCreateOnEdit) {
-      // VALIDACIONES
-
       const apoderado = {
         nombre: this.apoderado.nombre,
         apellido: this.apoderado.apellido,
@@ -172,6 +215,7 @@ export class ModalApoderadoComponent {
         estudiante_id: this.apoderado.estudiante_id,
         correo: this.apoderado.correo
       }
+      
       this.loading = true
       this.apoderadoService.agregarApoderado(apoderado).subscribe(
         (data: any) => {
@@ -196,6 +240,49 @@ export class ModalApoderadoComponent {
         documento_id: this.apoderado.documento._id,
         estudiante_id: this.data.estudiante_id,
         correo: this.apoderado.correo
+      }
+      if (!isNaN(Number(this.apoderado.nombre))) {
+        this.snack.open('El nombre debe contener solo letras', '', {
+          duration: 3000
+        });
+        this.loading = false;
+        return;
+      }
+    
+      // VALIDACIÓN APELLIDO (debe contener solo letras)
+      if (!isNaN(Number(this.apoderado.apellido))) {
+        this.snack.open('El apellido debe contener solo letras', '', {
+          duration: 3000
+        });
+        this.loading = false;
+        return;
+      }
+    
+      // VALIDACIÓN TIPO DE DOCUMENTO (debe estar seleccionado)
+      if (!this.apoderado.documento._id) {
+        this.snack.open('Debe seleccionar un tipo de documento', '', {
+          duration: 3000
+        });
+        this.loading = false;
+        return;
+      }
+    
+      // VALIDACIÓN NÚMERO DE DOCUMENTO (debe ser numérico y de 8 dígitos)
+      if (isNaN(Number(this.apoderado.numero_documento)) || this.apoderado.numero_documento.length !== 8) {
+        this.snack.open('El número de documento debe ser numérico y tener 8 dígitos', '', {
+          duration: 3000
+        });
+        this.loading = false;
+        return;
+      }
+    
+      // VALIDACIÓN TELÉFONO (debe ser numérico y de 9 dígitos)
+      if (isNaN(Number(this.apoderado.numero)) || this.apoderado.numero.length !== 9) {
+        this.snack.open('El número de teléfono debe ser numérico y tener 9 dígitos', '', {
+          duration: 3000
+        });
+        this.loading = false;
+        return;
       }
       this.loading = true
       this.apoderadoService.modificarApoderado(this.apoderadoId, apoderado).subscribe(

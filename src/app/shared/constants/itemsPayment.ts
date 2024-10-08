@@ -4,5 +4,9 @@ export const listaMetodosPago = [
   },
   {
     nombre: 'Efectivo'
+  },
+  {
+    nombre: 'Transferencia'
   }
+
 ]

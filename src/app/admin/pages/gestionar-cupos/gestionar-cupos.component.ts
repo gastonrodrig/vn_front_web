@@ -3,17 +3,13 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TableComponent } from '../../../shared/components/table/table.component';
-import { InputComponent } from '../../../shared/components/UI/input/input.component';
 import { CuposService } from '../../../core/services/cupos.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
-import { ModalDocenteComponent } from '../../../shared/components/modal/modal-docente/modal-docente.component';
-import { ModalEstudianteComponent } from '../../../shared/components/modal/modal-estudiante/modal-estudiante.component';
 import { ModalCuposComponent } from '../../../shared/components/modal/modal-cupos/modal-cupos.component';
 import { SelectComponent } from '../../../shared/components/UI/select/select.component';
 import { GradoService } from '../../../core/services/grado.service';
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestionar-cupos',

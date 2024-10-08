@@ -136,14 +136,69 @@ export class ModalEstudianteComponent {
       grado_id: this.estudiante.grado._id,
       seccion_id : null
     }
-
+    //validaciones
+    if(!isNaN(dataEstudiante.nombre)) {
+      this.snack.open('El nombre tiene que ser en letras', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+    if(!isNaN(dataEstudiante.apellido)) {
+      this.snack.open('El apellido tiene que ser en letras', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+    //validacion documento 
+    if (!this.estudiante.documento._id) {
+      this.snack.open('Tiene que elegir un tipo de Documento', '', {
+        duration: 3000
+      });
+      this.loading = false;
+      return;
+    }
+    //validacion eleccion de documento
+    if(isNaN(dataEstudiante.numero_documento) || dataEstudiante.numero_documento.length !== 8) {
+      this.snack.open('El Numero de Documento tiene que ser numerico y de 8 digitos', '', {
+        duration: 3000
+      })
+      this.loading = false
+      return
+    }
+    //validacion periodo
+    if (!this.estudiante.periodo._id) {
+      this.snack.open('Tiene que elegir un tipo de Periodo', '', {
+        duration: 3000
+      });
+      this.loading = false;
+      return;
+    }
+    //validacion grado
+    if (!this.estudiante.grado._id) {
+      this.snack.open('Tiene que elegir un tipo de grado', '', {
+        duration: 3000
+      });
+      this.loading = false;
+      return;
+    }
+    
+    if (dataEstudiante.direccion ==='') {
+      this.snack.open('La Direccion es requerida', '', {
+        duration: 3000
+      });
+      this.loading = false;
+      return;
+    }
+    
     if(dataEstudiante.nombre === '') {
       this.snack.open('El nombre del estudiante es requerido', 'Cerrar', {
         duration: 3000
       })
       this.loading = false
       return
-    }
+    }   
 
     if(this.data.isCreate) {
       this.estudianteService.agregarEstudiante(dataEstudiante).subscribe(

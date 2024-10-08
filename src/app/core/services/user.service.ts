@@ -26,13 +26,13 @@ export class UserService {
   modificarContrasenia(id: string, password: any) {
     return this.http.patch(`${baseUrl}/user/${id}/change-password`, password)
   }
-  eliminarEstudianteDeUsuario(id: string) {
-    return this.http.put(`${baseUrl}/user/remove-estudiante/${id}`, null);
+  habilitarUsuario(id: string) {
+    return this.http.patch(`${baseUrl}/user/${id}/activate`, null)
   }
-  eliminarApoderadoDeUsuario(id: string) {
-    return this.http.put(`${baseUrl}/user/remove-apoderado/${id}`, null);
+  deshabilitarUsuario(id: string) {
+    return this.http.patch(`${baseUrl}/user/${id}/deactivate`, null)
   }
-  eliminarDocenteDeUsuario(id: string) {
-    return this.http.put(`${baseUrl}/user/remove-docente/${id}`, null);
+  eliminarPerfil(id: string){
+    return this.http.patch(`${baseUrl}/user/${id}/remove-profile`, null);
   }
 }

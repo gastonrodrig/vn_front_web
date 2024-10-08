@@ -15,7 +15,11 @@ import { GestionarDocumentosComponent } from './pages/gestionar-documentos/gesti
 import { GestionarPerfilDocenteComponent } from './pages/gestionar-perfil-docente/gestionar-perfil-docente.component';
 import { GestionarCuposComponent } from './pages/gestionar-cupos/gestionar-cupos.component';
 import { GestionarPeriodosComponent } from './pages/gestionar-periodos/gestionar-periodos.component';
+import { GestionarVacantesComponent } from './pages/gestionar-vacantes/gestionar-vacantes.component';
 import { GestionarPagosComponent } from './pages/gestionar-pagos/gestionar-pagos.component';
+import { GestionarPensionComponent } from './pages/gestionar-pension/gestionar-pension.component';
+import { GestionarTutorComponent } from './pages/gestionar-tutor/gestionar-tutor.component';
+import { GestionarPerfilTutorComponent } from './pages/gestionar-perfil-tutor/gestionar-perfil-tutor.component';
 
 export const ADMIN_ROUTES: Routes = [
   { 
@@ -83,9 +87,25 @@ export const ADMIN_ROUTES: Routes = [
         component: GestionarPeriodosComponent
       },
       {
+        path: 'gestionar-vacantes',
+        component: GestionarVacantesComponent
+      },
+      {
         path: 'gestionar-pagos',
         component: GestionarPagosComponent
-      }
+      },
+      {
+        path: 'gestionar-pension',
+        component: GestionarPensionComponent
+      },
+      {
+        path:'gestionar-tutor',
+        component: GestionarTutorComponent
+      },
+      {
+        path:'gestionar-perfil-tutor/:id',
+        component: GestionarPerfilTutorComponent
+      },
     ]
   },
 ]

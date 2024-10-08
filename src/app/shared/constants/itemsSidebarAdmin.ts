@@ -1,3 +1,5 @@
+import { routes } from "../../app.routes";
+
 export const listaModulosAdmin = [
     {
         id: 1,
@@ -19,62 +21,75 @@ export const listaModulosAdmin = [
     },
     {
         id: 4,
+        route: 'gestionar-tutor',
+        titulo: 'Tutores',
+        icon: 'people-group'
+    },
+    {
+        id: 5,
         route: 'gestionar-secciones',
         titulo: 'Secciones',
         icon: 'font'
     },
     {
-        id: 5,
+        id: 6,
         route: 'gestionar-cursos',
         titulo: 'Cursos',
         icon: 'book'
     },
     {
-        id: 6,
+        id: 7,
         route: 'gestionar-horarios',
         titulo: 'Horarios',
         icon: 'calendar-days'
     },
     {
-        id: 7,
+        id: 8,
         route: 'gestionar-matricula',
         titulo: 'Matricula',
         icon: 'file-invoice'
     },
     {
-        id: 8,
+        id: 9,
         route: 'gestionar-usuarios',
         titulo: 'Usuarios',
         icon: 'user-pen'
     },
     {
-        id: 9,
+        id: 10,
         route: 'gestionar-solicitud',
         titulo: 'Solicitudes',
         icon: 'id-card'
     },
     {
-        id: 10,
+        id: 11,
         route: 'gestionar-cupos',
         titulo: 'Cupos',
         icon: 'users'
     },
     {
-        id: 11,
+        id: 12,
         route: 'gestionar-periodos',
         titulo: 'Periodos',
         icon: '1'
     },
     {
-        id: 12,
+        id: 13,
+        route: 'gestionar-vacantes',
+        titulo: 'Vacantes',
+        icon: 'user-graduate'
+    },
+    {
+        id: 14,
         route: 'gestionar-pagos',
         titulo: 'Pagos',
         icon: 'money-bill'
     },
     {
-        id: 13,
-        route: 'gestionar-pagos',
-        titulo: 'Semanas',
-        icon: 'calendar-week'
+        id: 15,
+        route: 'gestionar-pension',
+        titulo: 'Pension',
+        icon: 'money-check-dollar'
     }
+
 ]

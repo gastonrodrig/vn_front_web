@@ -7,10 +7,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { UserService } from '../../../core/services/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalUsuarioComponent } from '../../../shared/components/modal/modal-usuario/modal-usuario.component';
-import Swal from 'sweetalert2';
 import { EstudianteService } from '../../../core/services/estudiante.service';
-import { ApoderadoService } from '../../../core/services/apoderado.service';
-import { DocenteService } from '../../../core/services/docente.service';
+import { TutorService } from '../../../core/services/tutor.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestionar-usuarios',
@@ -20,7 +19,7 @@ import { DocenteService } from '../../../core/services/docente.service';
   styleUrl: './gestionar-usuarios.component.css'
 })
 export class GestionarUsuariosComponent {
-  usuarios = []
+  usuarios: any[] = []
   usuario = []
   trackByField = '_id'
   loading = false
@@ -30,14 +29,24 @@ export class GestionarUsuariosComponent {
   columns = [
     { header: 'Usuario', field: 'usuario' },
     { header: 'Correo', field: 'email' },
-    { header: 'Rol', field: 'rol' }
+    { header: 'Rol', field: 'rol' },
+    { header: 'Nro. Documento', field: 'perfil' },
+    { header: 'Estado', field: 'estado'}
   ]
+
+  actionsByState = {
+    'Deshabilitado': [
+      { icon: 'fa-unlock', action: 'deshabilitado', style: 'hover:text-stone-500' }
+    ],
+    'Habilitado': [
+      { icon: 'fa-lock', action: 'habilitado', style: 'hover:text-stone-500' }
+    ]
+  }
 
   constructor(
     private userService: UserService,
     private estudianteService: EstudianteService,
-    private docenteService: DocenteService,
-    private apoderadoService: ApoderadoService,
+    private tutorService: TutorService,
     public dialog: MatDialog
   ){}
 
@@ -46,33 +55,45 @@ export class GestionarUsuariosComponent {
   }
 
   listarUsuarios(load: any) {
-    this.loading = load
+    this.loading = load;
     this.userService.listarUsuarios().subscribe(
       (data: any) => {
-        console.log(data)
-        this.usuarios = data.sort((a: any, b: any) => {
-          if (a.usuario.toLowerCase() < b.usuario.toLowerCase()) {
-            return -1
-          }
-          if (a.usuario.toLowerCase() > b.usuario.toLowerCase()) {
-            return 1
-          }
-          return 0
-        })
-        this.loading = false
-        this.loadedComplete = true
+        const usuariosFiltrados = data
+          .filter((user: any) => user.rol !== 'Temporal')
+          .sort((a: any, b: any) => {
+            if (a.usuario.toLowerCase() < b.usuario.toLowerCase()) return -1;
+            if (a.usuario.toLowerCase() > b.usuario.toLowerCase()) return 1;
+            return 0;
+          });
+  
+        // Inicializamos la lista de usuarios vacía antes de formatear
+        this.usuarios = [];
+        
+        // Recorremos cada usuario para formatearlos
+        usuariosFiltrados.forEach((usuario: any) => {
+          this.formatearUsuarios(usuario).then((usuarioFormateado: any) => {
+            this.usuarios.push(usuarioFormateado);
+            // Si todos los usuarios han sido formateados, finalizamos el loading
+            if (this.usuarios.length === usuariosFiltrados.length) {
+              this.loading = false;
+              this.loadedComplete = true;
+            }
+          });
+        });
       },
       (error) => {
-        this.loading = false
-        Swal.fire('Error', 'Error al cargar los datos', 'error')
-        console.log(error)
+        this.loading = false;
+        Swal.fire('Error', 'Error al cargar los datos', 'error');
+        console.log(error);
       }
-    )
+    );
   }
+  
 
   displayedUsuarios() {
     return this.usuarios.filter((usuario: any) =>
-      usuario.usuario.toLowerCase().includes(this.searchTerm.toLowerCase())
+      usuario.usuario.toLowerCase().includes(this.searchTerm.toLowerCase()) || 
+      usuario.perfil.toString().includes(this.searchTerm)
     )
   }
 
@@ -137,7 +158,7 @@ export class GestionarUsuariosComponent {
     )
   }
 
-  eliminarUsuarioDeUsuarioYEstudiante(isDeleted: any, id: any) {
+  eliminarUsuarioAvanzado(isDeleted: any, id: any) {
     if(isDeleted){
       Swal.fire({
         title: 'Eliminar usuario',
@@ -153,34 +174,102 @@ export class GestionarUsuariosComponent {
           this.loading = true
           this.userService.obtenerUsuario(id).subscribe(
             (data: any) => {
-              if(data.estudiante !== null) {
-                this.estudianteService.eliminarUsuario(data.estudiante._id).subscribe(
-                  (data: any) => {
-                    this.eliminarUsuario(id)
-                  }
-                )
-              }
-              if(data.docente !== null) {
-                this.docenteService.eliminarUsuario(data.docente._id).subscribe(
-                  (data: any) => {
-                    this.eliminarUsuario(id)
-                  }
-                )
-              }
-              if(data.apoderado !== null) {
-                this.apoderadoService.eliminarUsuario(data.apoderado._id).subscribe(
-                  (data: any) => {
-                    this.eliminarUsuario(id)
-                  }
-                )
-              }
-              if(data.estudiante === null && data.docente === null && data.apoderado === null) {
+              if(data.rol === 'Admin' || data.rol === 'Temporal') {
                 this.eliminarUsuario(data._id)
+              }
+              if(data.rol === 'Estudiante') {
+                this.estudianteService.eliminarUsuario(data.perfil).subscribe(
+                  (data: any) => {
+                    this.eliminarUsuario(id)
+                  }
+                )
+              }
+              if(data.rol === 'Tutor') {
+                this.tutorService.eliminarUsuario(data.perfil).subscribe(
+                  (data: any) => {
+                    this.eliminarUsuario(id)
+                  }
+                )
               }
             }
           )
         }
       })
     }
+  }
+
+  handleTableAction(event: { id: any, action: string }) {
+    const { id, action } = event
+    switch (action) {
+      case 'deshabilitado':
+        Swal.fire({
+          title: 'Habilitar usuario',
+          text: '¿Estás seguro de habilitar el usuario?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Habilitar',
+          cancelButtonText: 'Cerrar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.loading = false
+            this.userService.habilitarUsuario(id).subscribe(
+              (data: any) => {
+                this.listarUsuarios(true)
+              }
+            )
+          }
+        });
+        break;
+      case 'habilitado':
+        Swal.fire({
+          title: 'Deshabilitar usuario',
+          text: '¿Estás seguro de deshabilitar el usuario?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Deshabilitar',
+          cancelButtonText: 'Cerrar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.loading = false
+            this.userService.deshabilitarUsuario(id).subscribe(
+              (data: any) => {
+                this.listarUsuarios(true)
+              }
+            )
+          }
+        });
+        break;
+    }
+  }
+
+  formatearUsuarios(usuario: any): Promise<any> {
+    return new Promise((resolve) => {
+      if (usuario.rol === 'Admin' || usuario.rol === 'Temporal') {
+        usuario.perfil = '-';
+        resolve(usuario);
+      }
+      
+      if (usuario.rol === 'Estudiante') {
+        this.estudianteService.obtenerEstudiante(usuario.perfil).subscribe(
+          (data: any) => {
+            usuario.perfil = data.numero_documento;
+            resolve(usuario);
+          }
+        );
+      }
+      
+      if (usuario.rol === 'Tutor') {
+        this.tutorService.obtenerTutor(usuario.perfil).subscribe(
+          (data: any) => {
+            usuario.perfil = data.numero_documento;
+            resolve(usuario);
+          }
+        );
+      }
+    });
   }
 }

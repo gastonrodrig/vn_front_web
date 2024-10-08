@@ -13,6 +13,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { SeccionGradoPeriodoService } from '../../../../core/services/seccion-grado-periodo.service';
+import { GradoCursosHorasService } from '../../../../core/services/grado-cursos-horas.service';
+import { SeccionCursoService } from '../../../../core/services/seccion-curso.service';
+import { SoloNumerosDirective } from '../../../directives/solo-numeros.directive';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -27,7 +30,8 @@ import Swal from 'sweetalert2';
     MatButtonModule, 
     CommonModule, 
     MatProgressBarModule,
-    MatIconModule
+    MatIconModule,
+    SoloNumerosDirective
   ],
   templateUrl: './modal-seccion.component.html',
   styleUrl: './modal-seccion.component.css'
@@ -36,6 +40,7 @@ export class ModalSeccionComponent {
   grados: any[] = []
   periodos: any[] = []
   seccion: any
+  cursos: any[] = []
   seccionGradoPeriodo: any
   seccionId: any
   seccionCreated = false
@@ -48,7 +53,9 @@ export class ModalSeccionComponent {
     private gradoService: GradoService,
     private periodoService: PeriodoService,
     private seccionService: SeccionService,
-    private sgpService: SeccionGradoPeriodoService
+    private gchService: GradoCursosHorasService,
+    private sgpService: SeccionGradoPeriodoService,
+    private scService: SeccionCursoService
   ) {
     dialogRef.disableClose = true
   }
@@ -102,20 +109,20 @@ export class ModalSeccionComponent {
     }
     const nombreValido = /^[a-zA-Z\s]+$/.test(dataSeccion.nombre);
    
-  
-    if (dataSeccion.nombre === '' || dataSeccion.aula === '') {
+    if(dataSeccion.nombre === '') {
+      this.mostrarMensaje('El nombre de la sección es requerido')
+      return
+    }
 
-      Swal.fire('Error', 'El nombre de la sección y el aula son requeridos', 'error');
+    if (!nombreValido) {
+      this.mostrarMensaje('El nombre de la sección debe incluir solo letras');
       this.loading = false;
       return;
     }
-  
-    if (!nombreValido) {
-      Swal.fire('Error', 'El nombre no puede contener números', 'error');
-      this.loading = false;
-      return;
 
-      
+    if(dataSeccion.aula === '') {
+      this.mostrarMensaje('El nombre de la sección es requerido')
+      return
     }
 
     this.seccionService.agregarSeccion(dataSeccion).subscribe(
@@ -139,32 +146,44 @@ export class ModalSeccionComponent {
         grado_id : this.seccionGradoPeriodo.grado._id,
         periodo_id : this.seccionGradoPeriodo.periodo._id
       }
-  
-      // VALIDACIONES
- if (!this.seccionGradoPeriodo.seccion || !this.seccionGradoPeriodo.seccion._id) {
-  Swal.fire('Error', 'Debe elegir una sección.', 'error');
-  this.loading = false;
-  return;
-}
 
-if (!this.seccionGradoPeriodo.grado || !this.seccionGradoPeriodo.grado._id) {
-  Swal.fire('Error', 'Debe elegir un grado.', 'error');
-  this.loading = false;
-  return;
-}
+      if (this.seccionGradoPeriodo.grado._id === '') {
+        this.mostrarMensaje('El grado de la sección es requerido')
+        return
+      }
+
+      if (this.seccionGradoPeriodo.periodo._id === '') {
+        this.mostrarMensaje('El periodo escolar de la sección es requerido')
+        return
+      }
 
       this.sgpService.agregarSeccionGradoPeriodo(dataSGP).subscribe(
         (data) => {
-          Swal.fire('Seccion guardada', 'La sección ha sido guardado con éxito', 'success').then(
-            (e)=> {
-              this.closeModel()
+          this.gchService.listarGradoCursosHorasPorGrado(dataSGP.grado_id).subscribe(
+            (data: any) => {
+              data.forEach((item: any) => {
+                this.cursos.push(item.curso);
+
+                const dataNueva = {
+                  seccion_id: dataSGP.seccion_id,
+                  curso_id: item.curso._id,
+                }
+                this.scService.agregarSeccionCurso(dataNueva).subscribe(() => {})
+              });
+            }
+          );
+      
+          Swal.fire('Sección guardada', 'La sección ha sido guardada con éxito', 'success').then(
+            (e) => {
+              this.closeModel();
             }
           );
         },
         (error) => {
-          console.log(error)
+          console.log(error);
         }
-      )
+      );
+
     }
  
     if(this.data.isEdit) {
@@ -174,17 +193,17 @@ if (!this.seccionGradoPeriodo.grado || !this.seccionGradoPeriodo.grado._id) {
       }
       const nombreValido = /^[a-zA-Z\s]+$/.test(data.nombre);
 
- if (data.nombre === '' || data.aula === '') {
-   Swal.fire('Error', 'El nombre de la sección y el aula son requeridos', 'error');
-   this.loading = false;
-   return;
- }
+      if (data.nombre === '' || data.aula === '') {
+        Swal.fire('Error', 'El nombre de la sección y el aula son requeridos', 'error');
+        this.loading = false;
+        return;
+      }
 
- if (!nombreValido) {
-   Swal.fire('Error', 'El nombre no puede contener números', 'error');
-   this.loading = false;
-   return;
- }
+      if (!nombreValido) {
+        Swal.fire('Error', 'El nombre no puede contener números', 'error');
+        this.loading = false;
+        return;
+      }
 
       // VALIDACIONES
 
@@ -202,6 +221,13 @@ if (!this.seccionGradoPeriodo.grado || !this.seccionGradoPeriodo.grado._id) {
         }
       )
     }
+  }
+
+  mostrarMensaje(mensaje: string) {
+    this.snack.open(mensaje, 'Cerrar', {
+      duration: 3000,
+    })
+    this.loading = false
   }
 
   closeModel() {

@@ -113,9 +113,33 @@ export class GestionarPerfilEstudianteComponent {
   volverEstudiantes() {
     this.router.navigate([`/admin/gestionar-estudiantes`])
   }
-
+  eliminarFoto() {
+    
+    if (this.estudiante && this.estudiante.multimedia && this.estudiante.multimedia.url) {
+      this.loading = true
+      this.estudiante.multimedia.url = '../../../../assets/images/default.jpg';
+      this.files = [];
+      
+      const formData = new FormData();
+      formData.append('imageFile', ''); 
+      
+      this.estudianteService.modificarPerfilEstudiante(this.estudianteId, formData).subscribe(
+        (data: any) => {
+          this.mostrarMensaje('La foto de perfil ha sido eliminada', 3000);
+          this.obtenerEstudiante(); 
+         
+        },
+        (error) => {
+          console.log(error);
+          this.obtenerEstudiante(); 
+        }
+      );
+    }
+  }
   onFileSelect(event: Event) {
     const input = event.target as HTMLInputElement
+    const maxSizeInBytes = 20 * 1024 * 1024;
+    
     if (input.files) {
       if (this.files.length + input.files.length > 1) {
         this.mostrarMensaje('Máximo de 1 archivo permitido.', 3000)
@@ -126,9 +150,13 @@ export class GestionarPerfilEstudianteComponent {
         if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
           this.mostrarMensaje('Solo se permiten archivos JPG o PNG.', 3000)
           return
-        } else {
-          this.files.push(file)
+        } 
+        if (file.size > maxSizeInBytes) {
+          this.mostrarMensaje('El tamaño del archivo no debe ser mayor a 20 MB.', 3000);
+          return;
         }
+          this.files.push(file)
+        
       }
     }
     this.resetEstadoArrastrado()

@@ -70,5 +70,11 @@ export const listaModulosAdmin = [
         route: 'gestionar-pagos',
         titulo: 'Pagos',
         icon: 'money-bill'
+    },
+    {
+        id: 13,
+        route: 'gestionar-pagos',
+        titulo: 'Semanas',
+        icon: 'calendar-week'
     }
 ]

@@ -9,6 +9,7 @@ import { SoloNumerosDirective } from '../../../shared/directives/solo-numeros.di
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DocenteService } from '../../../core/services/docente.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestionar-perfil-docente',
@@ -110,27 +111,39 @@ export class GestionarPerfilDocenteComponent {
     this.router.navigate([`/admin/gestionar-docentes`])
   }
   eliminarFoto() {
-    
-    if (this.docente && this.docente.multimedia && this.docente.multimedia.url) {
-      this.loading = true
-      this.docente.multimedia.url = '../../../../assets/images/default.jpg';
-      this.files = [];
-      
-      const formData = new FormData();
-      formData.append('imageFile', ''); 
-      
-      this.docenteService.modificarPerfilDocente(this.docenteId, formData).subscribe(
-        (data: any) => {
-          this.mostrarMensaje('La foto de perfil ha sido eliminada', 3000);
-          this.obtenerDocente(); 
-         
-        },
-        (error) => {
-          console.log(error);
-          this.obtenerDocente(); 
+    Swal.fire({
+      title: 'Eliminar foto de perfil',
+      text: '¿Estás seguro de eliminar la foto de perfil?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (this.docente && this.docente.multimedia && this.docente.multimedia.url) {
+          this.loading = true
+          this.docente.multimedia.url = '../../../../assets/images/default.jpg';
+          this.files = [];
+          
+          const formData = new FormData();
+          formData.append('imageFile', ''); 
+          
+          this.docenteService.modificarPerfilDocente(this.docenteId, formData).subscribe(
+            (data: any) => {
+              this.mostrarMensaje('La foto de perfil ha sido eliminada', 3000);
+              this.obtenerDocente(); 
+            
+            },
+            (error) => {
+              console.log(error);
+              this.obtenerDocente(); 
+            }
+          );
         }
-      );
-    }
+      }
+    });
   }
   onFileSelect(event: Event) {
     const input = event.target as HTMLInputElement

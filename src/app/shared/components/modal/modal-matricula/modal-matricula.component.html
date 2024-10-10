@@ -65,7 +65,6 @@
           <mat-label>Metodo de Pago</mat-label>
           <mat-select 
               [(ngModel)]="matricula.metodo_pago"
-              (selectionChange)="verificarTipoPago($event.value)"
               [ngModelOptions]="{standalone: true}"
           >
               <mat-option 
@@ -87,7 +86,6 @@
           placeholder="Ingrese el nro. de operación"
           matInput
           appSoloNumeros
-          [disabled]="nOperacionDisabled" 
           [ngModelOptions]="{standalone: true}"
         >
       </mat-form-field>

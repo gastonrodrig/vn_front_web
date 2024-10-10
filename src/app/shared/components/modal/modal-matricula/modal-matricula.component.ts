@@ -17,6 +17,8 @@ import { PeriodoService } from '../../../../core/services/periodo.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import Swal from 'sweetalert2';
 import { listaTiposMatricula } from '../../../constants/itemsRegistration';
+import { listaMeses } from '../../../constants/itemsMonths';
+import { PensionService } from '../../../../core/services/pension.service';
 
 @Component({
   selector: 'app-modal-matricula',
@@ -41,9 +43,9 @@ export class ModalMatriculaComponent {
   periodos: any[] = []
   listaMetodosPago: any
   listaTiposMatricula: any
+  listaMeses: any
   matricula: any
   loading = false
-  nOperacionDisabled = false
 
   dni: any
   fecha: any
@@ -52,6 +54,7 @@ export class ModalMatriculaComponent {
   nombreEstudiante: any
   estudianteId: any
   alumnoNuevo = false
+  anioActual: any
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -59,11 +62,12 @@ export class ModalMatriculaComponent {
     private snack: MatSnackBar,
     private estudianteService: EstudianteService,
     private periodoService: PeriodoService,
+    private pensionService: PensionService,
     private matriculaService: MatriculaService
   ) {}
 
   ngOnInit() {
-    this.nOperacionDisabled = true;  
+    this.listaMeses = listaMeses
     this.listaMetodosPago = listaMetodosPago
     this.listaTiposMatricula = listaTiposMatricula
     this.matricula = {
@@ -159,6 +163,37 @@ export class ModalMatriculaComponent {
         Swal.fire('Matricula agregada', 'La matricula ha sido guardada con éxito', 'success').then(
           (e)=> {
             this.closeModel()
+            this.periodoService.obtenerPeriodo(this.matricula.periodo_id).subscribe(
+              (data: any) => {
+                const pensionRequests = listaMeses.map((mes: any) => {
+                  const monthIndex = mes.indice;
+                  
+                  const fechaInicio = new Date(Number(data.anio), monthIndex, 1);
+                  const fechaFin = new Date(Number(data.anio), monthIndex + 1, 0);
+                  
+                  const pensionData = {
+                    estudiante_id: this.estudianteId,
+                    monto: 150,
+                    fecha_inicio: fechaInicio.toISOString(),
+                    fecha_limite: fechaFin.toISOString(),
+                    mes: mes.nombre
+                  };
+                  
+                  return this.pensionService.agregarPension(pensionData).toPromise();
+                });
+            
+                Promise.all(pensionRequests)
+                  .then((responses) => {
+                    console.log('Todas las pensiones agregadas:', responses);
+                    this.loading = false;
+                  })
+                  .catch((error) => {
+                    console.error('Error al agregar pensiones:', error);
+                    this.loading = false;
+                    this.mostrarMensaje(error.error.message);
+                  });
+              }
+            )
           }
         )
       },
@@ -215,7 +250,6 @@ export class ModalMatriculaComponent {
     }
   }
   
-
   formatDateTime(date: Date, time: string): string | null {
     if (!this.fecha) {
       this.mostrarMensaje('La fecha del pago es requerida');
@@ -257,13 +291,5 @@ export class ModalMatriculaComponent {
 
   closeModel() {
     this.dialogRef.close()
-  }
-
-  verificarTipoPago(tipoPago: string) {
-    if (tipoPago === 'Transferencia' || tipoPago === 'Tarjeta') {
-      this.nOperacionDisabled = false;  
-    } else if (tipoPago === 'Efectivo') {
-      this.nOperacionDisabled = true;  
-    }
   }
 }

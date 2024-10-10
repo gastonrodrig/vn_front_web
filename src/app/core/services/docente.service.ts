@@ -35,4 +35,7 @@ export class DocenteService {
   obtenerPerfilDocente(id: string) {
     return this.http.get(`${baseUrl}/docente/${id}/profile-picture/`);
   }
+  obtenerDocentePorNroDoc(numero_documento: string, validarUsuario: any) {
+    return this.http.get(`${baseUrl}/docente/documento/${numero_documento}?validarUsuarioAsignado=${validarUsuario}`);
+  }
 }

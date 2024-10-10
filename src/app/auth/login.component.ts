@@ -33,9 +33,15 @@ export class LoginComponent {
       },
       (error) => {
         this.loading = false;
-        this.snack.open('Credenciales Incorrectas', 'Cerrar', {
-          duration: 3000 
-        })
+        if (error.message === 'Usuario deshabilitado') {
+          this.snack.open('Usuario deshabilitado, no se puede iniciar sesión', 'Cerrar', {
+            duration: 3000 
+          });
+        } else {
+          this.snack.open('Credenciales Incorrectas', 'Cerrar', {
+            duration: 3000 
+          });
+        }
       }
     );
   }

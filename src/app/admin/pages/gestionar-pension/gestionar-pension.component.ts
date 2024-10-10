@@ -6,8 +6,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { InputComponent } from '../../../shared/components/UI/input/input.component';
-import Swal from 'sweetalert2';
 import { ModalPensionComponent } from '../../../shared/components/modal/modal-pension/modal-pension.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestionar-pension',
@@ -45,7 +45,12 @@ export class GestionarPensionComponent {
   listarPension(){
     this.pensionService.listarPension().subscribe(
       (data: any) => {
+        this.pensiones = data.sort((a: any, b: any) => {
+          const mesesOrdenados = ['Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+          return mesesOrdenados.indexOf(a.mes) - mesesOrdenados.indexOf(b.mes);
+        });
         console.log(data)
+
         this.pensiones = data.map((pension: any) => {
           pension.n_operacion = this.formatOperacion(pension.n_operacion) 
           pension.metodo_pago = this.formatMetodoPago(pension.metodo_pago)

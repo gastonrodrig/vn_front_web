@@ -7,5 +7,8 @@ export const listaRoles = [
   },
   {
     nombre: 'Tutor'
+  },
+  {
+    nombre: 'Docente'
   }
 ]

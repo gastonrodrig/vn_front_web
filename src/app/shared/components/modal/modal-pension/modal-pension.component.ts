@@ -43,7 +43,7 @@ import { error } from 'console';
 })
 export class ModalPensionComponent {
   listaMetodosPago: any
-  listaMeses: any = listaMeses; // Array
+  listaMeses: any = listaMeses;
   listaEstado: any = listaEstado;
   pension: any
   pensionId: any
@@ -120,20 +120,20 @@ export class ModalPensionComponent {
     };
     this.pensionService.pagarPension(this.pensionId, pagoData).subscribe(
         (data) => {
-            console.log('Respuesta del servidor:', data);
-            this.loading = false;
-            Swal.fire('Pago realizado', 'El pago de la pensión ha sido registrado con éxito', 'success').then(
-                (e) => {
-                    this.closeModel();
-                }
-            );
+          console.log('Respuesta del servidor:', data);
+          this.loading = false;
+          Swal.fire('Pago realizado', 'El pago de la pensión ha sido registrado con éxito', 'success').then(
+            (e) => {
+              this.closeModel();
+            }
+          );
         },
         (error) => {
-            console.error('Error al pagar pensión:', error.error || error.message);
-            this.snack.open('Error al realizar el pago de la pensión: ' + (error.error?.message || 'Solicitud inválida'), 'Cerrar', {
-                duration: 3000,
-            });
-            this.loading = false;
+          console.error('Error al pagar pensión:', error.error || error.message);
+          this.snack.open('Error al realizar el pago de la pensión: ' + (error.error?.message || 'Solicitud inválida'), 'Cerrar', {
+            duration: 3000,
+          });
+          this.loading = false;
         }
     );
   }

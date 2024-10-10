@@ -75,6 +75,7 @@ export class GestionarVacantesComponent {
         this.periodos = periodos;
 
         this.loading = false;
+        console.log(this.vacantes)
       },
       (error) => {
         console.log(error);

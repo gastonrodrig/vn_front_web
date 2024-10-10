@@ -24,8 +24,8 @@ export class GestionarPagosComponent {
   searchTerm: string = ''
 
   columns = [
+    { header: 'Estudiante', field: 'nombre_completo' },
     { header: 'Monto', field: 'monto' },
-    { header: 'Nombre completo', field: 'nombre_completo' },
     { header: 'Estado', field: 'status' },
     { header: 'Tipo Documento', field: 'metadata.tipoDocumento' },
     { header: 'Nro. Documento', field: 'metadata.nroDocumento' },

@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DocenteService } from '../../../../core/services/docente.service';
 import { DocumentoService } from '../../../../core/services/documento.service';
 import Swal from 'sweetalert2';
+import { UserService } from '../../../../core/services/user.service';
 
 @Component({
   selector: 'app-modal-docente',
@@ -43,7 +44,8 @@ export class ModalDocenteComponent {
     private dialogRef: MatDialogRef<ModalDocenteComponent>,
     private snack: MatSnackBar,
     private tipoDocumentService: DocumentoService,
-    private docenteService: DocenteService
+    private docenteService: DocenteService,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -136,19 +138,42 @@ export class ModalDocenteComponent {
 
     if(this.data.isCreate) {
       this.docenteService.agregarDocente(dataDocente).subscribe(
-        (data) => {
+        (data:any) => {
           this.loading = false
           Swal.fire('Docente guardado', 'El docente ha sido guardado con éxito', 'success').then(
             (e)=> {
               this.closeModel()
             }
           );
+  // Asignar el ID del tutor desde la respuesta del servidor
+  const docenteId = data._id; // Suponiendo que el backend te devuelve el ID del tutor
+  
+  const newdataUser = {
+    usuario: this.docente.numero_documento,
+    email: this.docente.numero_documento + '@vn.com',
+    contrasena: '1111111',
+    rol: 'Docente',
+    perfil_id: docenteId, // Aquí utilizamos el tutorId de la respuesta
+  };
+  this.userService.agregarUsuario(newdataUser).subscribe(
+    (data) => {
+      console.log('Usuario creado con éxito', data);
+    },
+    (error) => {
+      console.log('Error al crear el usuario', error);
+    }
+       );  
         },
         (error) => {
-          console.log(error)
+          this.snack.open(error.error.message, 'cerrar', {
+            duration: 3000
+          });
+          this.loading = false;
+          console.log('Error al crear el Docente:', error);
         }
       )
     }
+    
 
     if(this.data.isEdit) {
       this.docenteService.modificarDocente(this.docenteId, dataDocente).subscribe(

@@ -28,6 +28,7 @@ export class GestionarPensionComponent {
     { header: 'Nro. Documento', field: 'estudiante.numero_documento' },
     { header: 'Método de Pago', field: 'metodo_pago' },
     { header: 'Nro. Operacion', field: 'n_operacion' },
+    { header: 'Periodo del estudiante', field: 'periodo.anio' },
     { header: 'Mes', field: 'mes' },
     { header: 'Tiempo de pago', field: 'tiempo_pago' },
   ]

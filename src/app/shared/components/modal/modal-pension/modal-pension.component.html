@@ -49,7 +49,23 @@
               </mat-option>
           </mat-select>
         </mat-form-field>
-    
+
+        <mat-form-field appearance="fill" class="col-span-2">
+          <mat-label>Periodo</mat-label>
+          <mat-select 
+            [(ngModel)]="pension.periodo_id"
+            [disabled]="isPeriodoDisabled"
+            [ngModelOptions]="{standalone: true}"
+          >
+            <mat-option 
+              *ngFor="let e of periodos" 
+              [value]="e._id"
+            >
+              {{ e.anio }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field> 
+
         <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
           <mat-label>Metodo de Pago</mat-label>
           <mat-select 
@@ -76,6 +92,32 @@
           [disabled]="isMetodoPagoDisabled" 
           [ngModelOptions]="{standalone: true}"
         >
+      </mat-form-field>
+       
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <mat-label>Fecha</mat-label>
+        <input 
+          [(ngModel)]="fecha"
+          [disabled]="isfechaDisabled"
+          matInput  
+          [matDatepicker]="picker"
+          [ngModelOptions]="{standalone: true}"
+        >
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+        <mat-label>Tiempo</mat-label>
+        <input
+          [(ngModel)]="tiempo"
+          [disabled]="istiempoDisabled"
+          type="text"
+          placeholder="hh:mm:ss"
+          matInput
+          [ngModelOptions]="{standalone: true}"
+        ><mat-icon matSuffix>access_time</mat-icon>
       </mat-form-field>
 
       </div>

@@ -21,6 +21,7 @@ import { UserService } from '../../../core/services/user.service';
 import { PensionService } from '../../../core/services/pension.service';
 import { listaMeses } from '../../../shared/constants/itemsMonths';
 import { SoloNumerosDirective } from '../../../shared/directives/solo-numeros.directive';
+import { PeriodoService } from '../../../core/services/periodo.service';
 
 @Component({
   selector: 'app-pagar-matricula',
@@ -58,6 +59,7 @@ export class PagarMatriculaComponent implements OnInit {
   line1 = '';
   tipoDoc = '';
   n_doc = '';
+  periodoid: any;
 
   isDisabled = true;
   listaMeses: any
@@ -72,6 +74,7 @@ export class PagarMatriculaComponent implements OnInit {
     private vacanteService: VacanteService,
     private matriculaService: MatriculaService,
     private usuarioService: UserService,
+    private periodoService: PeriodoService,
     private pensionService: PensionService,
     private snack: MatSnackBar
   ) {}
@@ -250,21 +253,27 @@ export class PagarMatriculaComponent implements OnInit {
               
                 const fechaInicio = new Date(currentYear, monthIndex, 1);
                 const fechaFin = new Date(currentYear, monthIndex + 1, 0);
-              
-                const pensionData = {
-                  estudiante_id: this.estudianteId,
-                  monto: 150,
-                  fecha_inicio: fechaInicio.toISOString(),
-                  fecha_limite: fechaFin.toISOString(),
-                  mes: mes.nombre
-                };
-              
-                this.pensionService.agregarPension(pensionData).subscribe(
-                  (data: any) => {
-                    console.log('Pensión agregada:', data);
-                    this.loading = false
+                
+                this.periodoService.obtenerPeriodoporanio(currentYear.toString()).subscribe(
+                  (data: any)=>{
+                    this.periodoid = data._id
+                    
+                    const pensionData = {
+                      estudiante_id: this.estudianteId,
+                      monto: 150,
+                      fecha_inicio: fechaInicio.toISOString(),
+                      fecha_limite: fechaFin.toISOString(),
+                      mes: mes.nombre,
+                      periodo_id: this.periodoid,
+                    };
+                    this.pensionService.agregarPension(pensionData).subscribe(
+                      (data: any) => {
+                        console.log('Pensión agregada:', data);
+                        this.loading = false
+                      }
+                    );
                   }
-                );
+                )
               });
             },
             (error) => {

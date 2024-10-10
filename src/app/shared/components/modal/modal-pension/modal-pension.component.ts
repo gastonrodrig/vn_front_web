@@ -42,6 +42,7 @@ import { error } from 'console';
   styleUrls: ['./modal-pension.component.css']
 })
 export class ModalPensionComponent {
+  periodos: any[] = []
   listaMetodosPago: any
   listaMeses: any = listaMeses;
   listaEstado: any = listaEstado;
@@ -55,6 +56,7 @@ export class ModalPensionComponent {
   
   fecha_inicio: any
   fecha_limite: any
+  fecha: any
   tiempo: any
 
   nombreEstudiante: any
@@ -63,6 +65,9 @@ export class ModalPensionComponent {
   isNombreDisabled = true;
   isMesDisabled = true;
   isMetodoPagoDisabled = true; 
+  isPeriodoDisabled = true;
+  isfechaDisabled = true; 
+  istiempoDisabled = true;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -78,10 +83,19 @@ export class ModalPensionComponent {
     this.listaMeses = listaMeses; 
     this.pension = {
       estudiante_id: '',
+      periodo_id: '',
       fecha_inicio: '',
       fecha_limite: '',
       mes: '',
     };
+    this.periodoService.listarPeriodos().subscribe(
+      (data: any) => {
+        this.periodos = data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
   }
   
   PagarPension() {
@@ -102,9 +116,10 @@ export class ModalPensionComponent {
     
     const pagoData = {
         metodo_pago: this.pension.metodo_pago,
-        n_operacion: this.pension.n_operacion || '-', 
+        n_operacion: this.pension.n_operacion || '-',
+        periodo_id: this.pension.periodo_id, 
         estado: 'Pagado', 
-        tiempo_pago: moment().format('YYYY-MM-DD HH:mm:ss'),
+        tiempo_pago: this.formatDateTime(this.fecha, this.tiempo),
     }
     if (!pagoData.metodo_pago || pagoData.metodo_pago.trim() === '') {
       this.mostrarMensaje('Método de pago no seleccionado');
@@ -117,6 +132,28 @@ export class ModalPensionComponent {
     if(pagoData.n_operacion.length !== 8){
       this.mostrarMensaje('El numero de Operacion debe ser de 8 digitos')
       return
+    }
+    if(this.fecha === ''){
+      this.mostrarMensaje('La fecha del pago es requerida')
+      return
+    }
+
+    if(this.tiempo === ''){
+      this.mostrarMensaje('La hora del pago es requerida')
+      return
+    }
+    const fechaIngresada = this.formatDateTime(this.fecha, this.tiempo);
+
+    if (!fechaIngresada) {
+      this.mostrarMensaje('La fecha y hora del pago es requerida');
+      return;
+    }
+    
+    const fechaActual = new Date();
+    
+    if (new Date(fechaIngresada).getTime() > fechaActual.getTime()) {
+      this.mostrarMensaje('La fecha y hora del pago no puede ser mayor a la fecha y hora actual');
+      return;
     };
     this.pensionService.pagarPension(this.pensionId, pagoData).subscribe(
         (data) => {
@@ -135,6 +172,7 @@ export class ModalPensionComponent {
           });
           this.loading = false;
         }
+
     );
   }
 
@@ -169,6 +207,9 @@ export class ModalPensionComponent {
               this.isMesDisabled = false;
               this.isMetodoPagoDisabled = false;
               this.nOperacionDisabled = false;
+              this.isPeriodoDisabled = false;
+              this.isfechaDisabled = false;
+              this.istiempoDisabled = false;
             },
             (error) => {
               console.error('Error al obtener los meses pendientes', error);
@@ -187,7 +228,10 @@ export class ModalPensionComponent {
       this.isNombreDisabled = true;
       this.isMesDisabled = true; 
       this.isMetodoPagoDisabled = true; 
-      this.nOperacionDisabled = true; 
+      this.nOperacionDisabled = true;
+      this.isPeriodoDisabled = true;
+      this.isfechaDisabled = true;
+      this.istiempoDisabled = true; 
     }
   }
   mostrarMensaje(mensaje: string) {
@@ -195,6 +239,27 @@ export class ModalPensionComponent {
       duration: 3000,
     })
     this.loading = false
+  }
+  formatDateTime(date: Date, time: string): string | null {
+    if (!this.fecha) {
+      this.mostrarMensaje('La fecha del pago es requerida');
+      return null;
+    }
+    
+    if (!this.tiempo) {
+      this.mostrarMensaje('La hora del pago es requerida');
+      return null;
+    }
+  
+    const [hours, minutes, seconds = 0] = time.split(':').map(Number);
+  
+    if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
+      this.mostrarMensaje('La hora no tiene un formato válido');
+      return null;
+    }
+  
+    date.setHours(hours, minutes, seconds);
+    return formatDate(date, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", 'en-US', '+0000');
   }
   closeModel() {
     this.dialogRef.close();

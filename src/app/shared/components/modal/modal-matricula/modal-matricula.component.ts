@@ -159,29 +159,45 @@ export class ModalMatriculaComponent {
 
     this.matriculaService.agregarMatricula(matriculaData).subscribe(
       (data) => {
-        this.loading = false
+        this.loading = false;
         Swal.fire('Matricula agregada', 'La matricula ha sido guardada con éxito', 'success').then(
-          (e)=> {
-            this.closeModel()
+          (e) => {
+            this.closeModel();
             this.periodoService.obtenerPeriodo(this.matricula.periodo_id).subscribe(
               (data: any) => {
+                const periodoId = this.matricula.periodo_id;
+    
+                if (!periodoId) {
+                  console.error('El periodo_id está vacío');
+                  return;
+                }
+    
                 const pensionRequests = listaMeses.map((mes: any) => {
                   const monthIndex = mes.indice;
-                  
-                  const fechaInicio = new Date(Number(data.anio), monthIndex, 1);
-                  const fechaFin = new Date(Number(data.anio), monthIndex + 1, 0);
-                  
+    
+                  let fechaInicio = new Date(Number(data.anio), monthIndex, 1);
+                  let fechaFin = new Date(Number(data.anio), monthIndex + 1, 0);
+    
+                  if (monthIndex === 2) {
+                    fechaInicio = new Date(2024, 2, 18);
+                  }
+    
+                  if (monthIndex === 11) {
+                    fechaFin = new Date(2024, 11, 13);
+                  }
+    
                   const pensionData = {
                     estudiante_id: this.estudianteId,
                     monto: 150,
-                    fecha_inicio: fechaInicio.toISOString(),
-                    fecha_limite: fechaFin.toISOString(),
+                    periodo_id: periodoId,
+                    fecha_inicio: fechaInicio.toISOString().split('T')[0],
+                    fecha_limite: fechaFin.toISOString().split('T')[0],
                     mes: mes.nombre
                   };
-                  
+    
                   return this.pensionService.agregarPension(pensionData).toPromise();
                 });
-            
+    
                 Promise.all(pensionRequests)
                   .then((responses) => {
                     console.log('Todas las pensiones agregadas:', responses);
@@ -193,17 +209,17 @@ export class ModalMatriculaComponent {
                     this.mostrarMensaje(error.error.message);
                   });
               }
-            )
+            );
           }
-        )
+        );
       },
       (error) => {
-        this.loading = false
-        console.log(error)
-        this.mostrarMensaje(error.error.message)
-        return
+        this.loading = false;
+        console.log(error);
+        this.mostrarMensaje(error.error.message);
+        return;
       }
-    )
+    );
   }
 
   validarDNI(dni: string) {

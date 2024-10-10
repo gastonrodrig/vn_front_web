@@ -17,4 +17,7 @@ export class MatriculaService {
   obtenerMatricula(id: string) {
     return this.http.get(`${baseUrl}/matricula/${id}`);
   }
+  listarMatriculasPorEstudiante(id: string) {
+    return this.http.get(`${baseUrl}/matricula/estudiante/${id}`);
+  }
 }

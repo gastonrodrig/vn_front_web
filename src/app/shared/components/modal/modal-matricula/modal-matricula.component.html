@@ -8,13 +8,39 @@
     <p class="pl-0.5 pb-4 font-medium">Datos de la Matrícula:</p>
     <div class="grid grid-cols-2 gap-x-4">
 
+      <mat-form-field appearance="fill" class="col-span-2">
+        <mat-label>Dni del Estudiante</mat-label>
+        <input
+          [(ngModel)]="dni"
+          type="text"
+          (input)="validarDNI(dni)" 
+          placeholder="Ingrese el Dni"
+          matInput
+          appSoloNumeros
+          [ngModelOptions]="{standalone: true}"
+        >
+        <mat-icon matSuffix>badge</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="col-span-2">
+        <mat-label>Nombre del Estudiante</mat-label>
+        <input
+          [(ngModel)]="nombreEstudiante"
+          type="text"
+          matInput
+          disabled
+          [ngModelOptions]="{standalone: true}"
+        >
+        <mat-icon matSuffix>person</mat-icon>
+      </mat-form-field>
+
       <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
         <mat-label>Tipos de Matricula</mat-label>
         <mat-select 
           [(ngModel)]="matricula.tipoMa"
           (selectionChange)="actualizarMonto($event.value)"
           [ngModelOptions]="{standalone: true}"
-          [disabled]="matricula.tipoMa === 'Regular'"
+          [disabled]="alumnoNuevo"
         >
           <mat-option *ngFor="let e of listaTiposMatricula" [value]="e.nombre">
             {{ e.nombre }}
@@ -39,7 +65,6 @@
           <mat-label>Metodo de Pago</mat-label>
           <mat-select 
               [(ngModel)]="matricula.metodo_pago"
-              (selectionChange)="verificarTipoPago($event.value)"
               [ngModelOptions]="{standalone: true}"
           >
               <mat-option 
@@ -61,13 +86,12 @@
           placeholder="Ingrese el nro. de operación"
           matInput
           appSoloNumeros
-          [disabled]="nOperacionDisabled" 
           [ngModelOptions]="{standalone: true}"
         >
       </mat-form-field>
       
 
-      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
+      <mat-form-field appearance="fill" class="col-span-2">
         <mat-label>Periodo</mat-label>
         <mat-select 
           [(ngModel)]="matricula.periodo_id"
@@ -80,32 +104,6 @@
             {{ e.anio }}
           </mat-option>
         </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
-        <mat-label>Dni del Estudiante</mat-label>
-        <input
-          [(ngModel)]="dni"
-          type="text"
-          (input)="validarDNI(dni)" 
-          placeholder="Ingrese el Dni"
-          matInput
-          appSoloNumeros
-          [ngModelOptions]="{standalone: true}"
-        >
-        <mat-icon matSuffix>badge</mat-icon>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" class="col-span-2">
-        <mat-label>Nombre del Estudiante</mat-label>
-        <input
-          [(ngModel)]="nombreEstudiante"
-          type="text"
-          matInput
-          disabled
-          [ngModelOptions]="{standalone: true}"
-        >
-        <mat-icon matSuffix>person</mat-icon>
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">

@@ -17,6 +17,8 @@ import { PeriodoService } from '../../../../core/services/periodo.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import Swal from 'sweetalert2';
 import { listaTiposMatricula } from '../../../constants/itemsRegistration';
+import { listaMeses } from '../../../constants/itemsMonths';
+import { PensionService } from '../../../../core/services/pension.service';
 
 @Component({
   selector: 'app-modal-matricula',
@@ -41,9 +43,9 @@ export class ModalMatriculaComponent {
   periodos: any[] = []
   listaMetodosPago: any
   listaTiposMatricula: any
+  listaMeses: any
   matricula: any
   loading = false
-  nOperacionDisabled = false
 
   dni: any
   fecha: any
@@ -51,6 +53,8 @@ export class ModalMatriculaComponent {
 
   nombreEstudiante: any
   estudianteId: any
+  alumnoNuevo = false
+  anioActual: any
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -58,11 +62,12 @@ export class ModalMatriculaComponent {
     private snack: MatSnackBar,
     private estudianteService: EstudianteService,
     private periodoService: PeriodoService,
+    private pensionService: PensionService,
     private matriculaService: MatriculaService
   ) {}
 
   ngOnInit() {
-    this.nOperacionDisabled = true;  
+    this.listaMeses = listaMeses
     this.listaMetodosPago = listaMetodosPago
     this.listaTiposMatricula = listaTiposMatricula
     this.matricula = {
@@ -86,31 +91,6 @@ export class ModalMatriculaComponent {
   }
 
   guardarInformacion() {
-    if(!this.matricula.tipoMa){
-      this.snack.open('Debe seleccionar un tipo de matricula','', {
-        duration: 3000
-      })
-      return;
-    }
-    if(!this.matricula.metodo_pago){
-      this.snack.open('Debe seleccionar un metodo de pago','', {
-        duration: 3000
-      })
-      return;
-    }
-    if(!this.matricula.periodo_id){
-      this.snack.open('Debe seleccionar periodo','', {
-        duration: 3000
-      })
-      return;
-    }
-    if (this.matricula.metodo_pago !== 'Efectivo' && (!this.matricula.n_operacion || this.matricula.n_operacion.trim() === '')) {
-      this.snack.open('El número de operación no puede estar vacío','', {
-        duration: 3000
-      });
-      return;
-    }
-    
     this.loading = true
     const matriculaData = {
       monto: Number(this.matricula.monto),
@@ -123,29 +103,115 @@ export class ModalMatriculaComponent {
       fecha: this.formatDateTime(this.fecha, this.tiempo)
     }
 
+    if(matriculaData.metodo_pago === ''){
+      this.mostrarMensaje('El metodo de pago es requerido')
+      return
+    }
+
+    if(matriculaData.metodo_pago !== 'Efectivo' && matriculaData.n_operacion === ''){
+      this.mostrarMensaje('El nro. de operacion es requerido')
+      return
+    }
+
+    if(matriculaData.metodo_pago !== 'Efectivo' && matriculaData.n_operacion.length !== 8){
+      this.mostrarMensaje('El nro. de operacion debe tener 8 digitos')
+      return
+    }
+
+    if(matriculaData.periodo_id === ''){
+      this.mostrarMensaje('El periodo escolar es requerido')
+      return
+    }
+
+    if(matriculaData.estudiante_id === ''){
+      this.mostrarMensaje('El estudiante es requerido')
+      return
+    }
+
+    if(matriculaData.tipoMa === ''){
+      this.mostrarMensaje('El tipo de matricula es requerido')
+      return
+    }
+
+    if(this.fecha === ''){
+      this.mostrarMensaje('La fecha del pago es requerida')
+      return
+    }
+
+    if(this.tiempo === ''){
+      this.mostrarMensaje('La hora del pago es requerida')
+      return
+    }
+
+    const fechaIngresada = this.formatDateTime(this.fecha, this.tiempo);
+
+    if (!fechaIngresada) {
+      this.mostrarMensaje('La fecha y hora del pago es requerida');
+      return;
+    }
+    
+    const fechaActual = new Date();
+    
+    if (new Date(fechaIngresada).getTime() > fechaActual.getTime()) {
+      this.mostrarMensaje('La fecha y hora del pago no puede ser mayor a la fecha y hora actual');
+      return;
+    }
+
     this.matriculaService.agregarMatricula(matriculaData).subscribe(
       (data) => {
-        console.log(data)
         this.loading = false
         Swal.fire('Matricula agregada', 'La matricula ha sido guardada con éxito', 'success').then(
           (e)=> {
             this.closeModel()
+            this.periodoService.obtenerPeriodo(this.matricula.periodo_id).subscribe(
+              (data: any) => {
+                const pensionRequests = listaMeses.map((mes: any) => {
+                  const monthIndex = mes.indice;
+                  
+                  const fechaInicio = new Date(Number(data.anio), monthIndex, 1);
+                  const fechaFin = new Date(Number(data.anio), monthIndex + 1, 0);
+                  
+                  const pensionData = {
+                    estudiante_id: this.estudianteId,
+                    monto: 150,
+                    fecha_inicio: fechaInicio.toISOString(),
+                    fecha_limite: fechaFin.toISOString(),
+                    mes: mes.nombre
+                  };
+                  
+                  return this.pensionService.agregarPension(pensionData).toPromise();
+                });
+            
+                Promise.all(pensionRequests)
+                  .then((responses) => {
+                    console.log('Todas las pensiones agregadas:', responses);
+                    this.loading = false;
+                  })
+                  .catch((error) => {
+                    console.error('Error al agregar pensiones:', error);
+                    this.loading = false;
+                    this.mostrarMensaje(error.error.message);
+                  });
+              }
+            )
           }
-        );
+        )
       },
       (error) => {
+        this.loading = false
         console.log(error)
+        this.mostrarMensaje(error.error.message)
+        return
       }
     )
   }
 
   validarDNI(dni: string) {
-
     if (dni.length > 8) {
       this.snack.open('El DNI no puede tener más de 8 dígitos', '', {
         duration: 3000
       });
-      this.nombreEstudiante = '';
+      this.nombreEstudiante = ''
       return;
     }
 
@@ -154,65 +220,76 @@ export class ModalMatriculaComponent {
   
       this.estudianteService.obtenerEstudiantePorNroDoc(dni, false).subscribe(
         (data: any) => {
-          this.loading = false;
-          this.nombreEstudiante = `${data.apellido}, ${data.nombre}`;
-          this.estudianteId = data._id;
-  
-          // Verificar si el estudiante ya tiene una matrícula
-          this.matriculaService.obtenerMatricula(data._id).subscribe(
-            (matricula: any) => {
-              if (matricula) {
-                // Si ya tiene una matrícula, es un estudiante regular
-                this.matricula.tipoMa = 'Regular';
-                // Deshabilitar el selector de tipo de matrícula
-                this.matricula.monto = 300; // Monto para alumnos regulares
-              } else {
-                // Si no tiene matrícula, permitir elegir entre "Nuevo" o "Externo"
-                this.matricula.tipoMa = ''; // Dejar vacío para que el usuario elija
-                // El monto se establecerá al seleccionar el tipo
+          this.loading = false
+          this.nombreEstudiante = `${data.apellido}, ${data.nombre}`
+          this.estudianteId = data._id
+
+          this.matriculaService.listarMatriculasPorEstudiante(data._id).subscribe(
+            (data: any) => {
+              if(data.length >= 1) {
+                this.matricula.tipoMa = 'Regular'
+                this.alumnoNuevo = true
+                this.matricula.monto = 300
               }
-            },
-            (error) => {
-              console.error('Error al verificar matrícula', error);
+              else {
+                this.matricula.tipoMa = ''
+              }
             }
-          );
+          )
         },
         (error) => {
-          console.error('Error al obtener estudiante', error);
-          this.loading = false;
+          this.mostrarMensaje(error.error.message)
+          return
         }
-      );
+      )
     } else {
-      this.nombreEstudiante = '';
+      this.nombreEstudiante = ''
+      this.matricula.monto = ''
+      this.alumnoNuevo = false
+      this.matricula.tipoMa = ''
     }
   }
   
-
-  formatDateTime(date: Date, time: string) {
-    const [hours, minutes, seconds] = time.split(':').map(Number)
+  formatDateTime(date: Date, time: string): string | null {
+    if (!this.fecha) {
+      this.mostrarMensaje('La fecha del pago es requerida');
+      return null;
+    }
+    
+    if (!this.tiempo) {
+      this.mostrarMensaje('La hora del pago es requerida');
+      return null;
+    }
+  
+    const [hours, minutes, seconds = 0] = time.split(':').map(Number);
+  
+    if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
+      this.mostrarMensaje('La hora no tiene un formato válido');
+      return null;
+    }
+  
     date.setHours(hours, minutes, seconds);
     return formatDate(date, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", 'en-US', '+0000');
   }
 
   actualizarMonto(tipoMatricula: string) {
     if (tipoMatricula === 'Nuevo' || tipoMatricula === 'Regular') {
-      this.matricula.monto = 300;
+      this.matricula.monto = 300
     } else if (tipoMatricula === 'Traslado Externo') {
-      this.matricula.monto = 350;
+      this.matricula.monto = 350
     } else {
-      this.matricula.monto = '';
+      this.matricula.monto = ''
     }
+  }
+
+  mostrarMensaje(mensaje: string) {
+    this.snack.open(mensaje, 'Cerrar', {
+      duration: 3000,
+    })
+    this.loading = false
   }
 
   closeModel() {
     this.dialogRef.close()
-  }
-
-  verificarTipoPago(tipoPago: string) {
-    if (tipoPago === 'Transferencia' || tipoPago === 'Tarjeta') {
-      this.nOperacionDisabled = false;  
-    } else if (tipoPago === 'Efectivo') {
-      this.nOperacionDisabled = true;  
-    }
   }
 }

@@ -64,7 +64,7 @@
 
     <p 
       class="pl-0.5 font-medium"  
-      [ngClass]="{ 'mt-2.5 pb-4' : usuario.rol === 'Estudiante' || usuario.rol === 'Tutor' }"
+      [ngClass]="{ 'mt-2.5 pb-4' : usuario.rol === 'Estudiante' || usuario.rol === 'Tutor' || usuario.rol === 'Docente' }"
     >
       @if(usuario.rol === 'Estudiante') {
         Estudiante:
@@ -72,11 +72,20 @@
       @if(usuario.rol === 'Tutor') {
         Tutor:
       }
+      @if(usuario.rol === 'Docente') {
+        Docente:
+      }
     </p>
-    @if(usuario.rol === 'Estudiante' || usuario.rol === 'Tutor') {
+    @if(usuario.rol === 'Estudiante' || usuario.rol === 'Tutor' || usuario.rol === 'Docente' ) {
       <div class="grid grid-cols-2">
         <mat-form-field appearance="fill" class="col-span-2">
-          <mat-label>{{ usuario.rol === 'Estudiante' ? 'Dni del Estudiante' : 'Dni del Tutor' }}</mat-label>
+          <mat-label>
+            {{ 
+              usuario.rol === 'Estudiante' ? 'Dni del Estudiante' : 
+              usuario.rol === 'Docente' ? 'Dni del Docente' : 
+              usuario.rol === 'Tutor' ? 'Dni del Tutor' : ''
+            }}
+          </mat-label>
           <input
             [(ngModel)]="dni"
             type="text"
@@ -89,7 +98,13 @@
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="col-span-2">
-          <mat-label>{{ usuario.rol === 'Estudiante' ? 'Nombre del Estudiante' : 'Nombre del Tutor' }}</mat-label>
+          <mat-label>
+            {{ 
+              usuario.rol === 'Estudiante' ? 'Nombre del Estudiante' : 
+              usuario.rol === 'Docente' ? 'Nombre del Docente' : 
+              usuario.rol === 'Tutor' ? 'Nombre del Tutor' : ''
+            }}
+          </mat-label>
           <input
             [(ngModel)]="nombreCompleto"
             type="text"
@@ -117,14 +132,19 @@
             <i class="fa-solid fa-pen text-white me-1"></i>
             Contraseña
           </button>
-          @if((usuario.rol === 'Estudiante' || usuario.rol === 'Tutor') && this.usuario.perfil !== null) {
+          @if((usuario.rol === 'Estudiante' || usuario.rol === 'Tutor' || usuario.rol === 'Docente') && this.usuario.perfil !== null) {
             <button 
               mat-flat-button 
               (click)="cambiarAsignacion()"
               color="custom-color"
             >
               <i class="fa-solid fa-pen text-white me-1"></i>
-              Cambiar {{ usuario.rol === 'Estudiante' ? 'Estudiante' : 'Tutor' }}
+              Cambiar 
+              {{ 
+                usuario.rol === 'Estudiante' ? 'Estudiante' : 
+                usuario.rol === 'Docente' ? 'Docente' : 
+                usuario.rol === 'Tutor' ? 'Tutor' : ''
+              }}
             </button>
           } 
         </div>

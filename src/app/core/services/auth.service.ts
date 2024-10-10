@@ -20,6 +20,11 @@ export class AuthService {
       .pipe(
         tap(data => {
           if (data.token) {
+            console.log(data)
+            if (data.estado !== 'Habilitado') {
+              throw new Error('Usuario deshabilitado');
+            }
+
             if (this.isLocalStorageAvailable()) {
               if (rolesPermitidos.includes(data.rol)) {
                 const expirationTime = new Date().getTime() + 60 * 60 * 1000; // tiempo de expiración del token (1 hora)

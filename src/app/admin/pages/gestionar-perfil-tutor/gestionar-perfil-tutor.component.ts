@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { SoloNumerosDirective } from '../../../shared/directives/solo-numeros.directive';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestionar-perfil-tutor',
@@ -120,6 +121,42 @@ export class GestionarPerfilTutorComponent {
 
   volverTutor() {
     this.router.navigate([`/admin/gestionar-tutor`])
+  }
+
+  eliminarFoto() {
+    Swal.fire({
+      title: 'Eliminar foto de perfil',
+      text: '¿Estás seguro de eliminar la foto de perfil?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (this.tutor && this.tutor.multimedia && this.tutor.multimedia.url) {
+          this.loading = true
+          this.tutor.multimedia.url = '../../../../assets/images/default.jpg';
+          this.files = [];
+          
+          const formData = new FormData();
+          formData.append('imageFile', ''); 
+          
+          this.tutorService.modificarPerfilTutor(this.tutorId, formData).subscribe(
+            (data: any) => {
+              this.mostrarMensaje('La foto de perfil ha sido eliminada', 3000);
+              this.obtenerTutor(); 
+             
+            },
+            (error) => {
+              console.log(error);
+              this.obtenerTutor(); 
+            }
+          );
+        }
+      }
+    });
   }
 
   onFileSelect(event: Event) {

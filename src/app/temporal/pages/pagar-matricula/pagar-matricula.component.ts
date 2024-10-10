@@ -18,6 +18,9 @@ import { SolicitudService } from '../../../core/services/solicitud.service';
 import { VacanteService } from '../../../core/services/vacante.service';
 import { MatriculaService } from '../../../core/services/matricula.service';
 import { UserService } from '../../../core/services/user.service';
+import { PensionService } from '../../../core/services/pension.service';
+import { listaMeses } from '../../../shared/constants/itemsMonths';
+import { SoloNumerosDirective } from '../../../shared/directives/solo-numeros.directive';
 
 @Component({
   selector: 'app-pagar-matricula',
@@ -30,7 +33,8 @@ import { UserService } from '../../../core/services/user.service';
     MatButtonModule,
     CommonModule,
     MatSelectModule,
-    MatIconModule
+    MatIconModule,
+    SoloNumerosDirective
   ],
   templateUrl: './pagar-matricula.component.html',
   styleUrls: ['./pagar-matricula.component.css']
@@ -56,6 +60,7 @@ export class PagarMatriculaComponent implements OnInit {
   n_doc = '';
 
   isDisabled = true;
+  listaMeses: any
 
   constructor(
     private stripeService: StripeService,
@@ -67,10 +72,12 @@ export class PagarMatriculaComponent implements OnInit {
     private vacanteService: VacanteService,
     private matriculaService: MatriculaService,
     private usuarioService: UserService,
+    private pensionService: PensionService,
     private snack: MatSnackBar
   ) {}
 
   ngOnInit() {
+    this.listaMeses = listaMeses;
     this.estudianteService.listarEstudiantes().subscribe(
       (data: any) => {
         this.estudiantes = data;
@@ -142,7 +149,7 @@ export class PagarMatriculaComponent implements OnInit {
     if (!this.card) {
       return;
     }
-
+    
     const stripe = await this.stripeService.getStripe();
     const { paymentMethod, error } = await stripe!.createPaymentMethod({
       type: 'card',
@@ -159,7 +166,7 @@ export class PagarMatriculaComponent implements OnInit {
         phone: this.number
       },
     });
-
+    
     if (error) {
       console.error(error);
       this.mostrarMensaje(error.message, 3000);
@@ -174,9 +181,33 @@ export class PagarMatriculaComponent implements OnInit {
           tipoDocumento: this.tipoDoc,
           nroDocumento: this.n_doc,
           estudiante_id: this.estudianteId
-        }
+        },
       };
-
+     
+      //VALIDACIONES
+      if(this.name === ''){
+        this.mostrarMensaje('el nombre es requerido',3000);
+        return;
+     }
+     if(this.number === ''){
+      this.mostrarMensaje('el numero es requerido',3000);
+      return;
+     }
+     if(this.email ===''){
+      this.mostrarMensaje('El correo se encuentra vacio',3000);
+      return;
+     }
+     if(this.tipoDoc === ''){
+        this.mostrarMensaje('Tiene que elegir el tipo de documento',3000);
+     }
+     if(this.n_doc === ''){
+       this.mostrarMensaje('Numero de Documento Vacio',3000);
+       return;
+    }
+    if(this.line1 === ''){
+      this.mostrarMensaje('La Direccion se encuentra vacia',3000);
+      return;
+   }
       this.stripeService.procesarPago(paymentData).subscribe(
         async (response: any) => {
           console.log('Payment successful:', response);
@@ -212,7 +243,29 @@ export class PagarMatriculaComponent implements OnInit {
 
           this.matriculaService.agregarMatricula(dataMatricula).subscribe(
             (data: any) => {
-              console.log(data)
+              const currentYear = new Date().getFullYear();
+
+              this.listaMeses.forEach((mes: any) => {
+                const monthIndex = mes.indice;
+              
+                const fechaInicio = new Date(currentYear, monthIndex, 1);
+                const fechaFin = new Date(currentYear, monthIndex + 1, 0);
+              
+                const pensionData = {
+                  estudiante_id: this.estudianteId,
+                  monto: 150,
+                  fecha_inicio: fechaInicio.toISOString(),
+                  fecha_limite: fechaFin.toISOString(),
+                  mes: mes.nombre
+                };
+              
+                this.pensionService.agregarPension(pensionData).subscribe(
+                  (data: any) => {
+                    console.log('Pensión agregada:', data);
+                    this.loading = false
+                  }
+                );
+              });
             },
             (error) => {
               this.mostrarMensaje(error.error.message, 3000)

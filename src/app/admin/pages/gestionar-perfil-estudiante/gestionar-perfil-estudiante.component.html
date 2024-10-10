@@ -37,6 +37,16 @@
             }
           </div>
         </span>
+        @if(estudiante.multimedia != null && estudiante.multimedia.url !== '../../../../assets/images/default.jpg' ) {
+          <div class="flex justify-center items-center -ms-36 -mt-6">
+            <div 
+              class="hover:text-red-500 hover:cursor-pointer hover:scale-125 duration-200"
+              (click)="eliminarFoto()"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </div>
+          </div>
+        }
       </div>
     </div>
 

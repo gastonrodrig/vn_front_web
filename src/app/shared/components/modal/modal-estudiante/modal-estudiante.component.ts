@@ -160,8 +160,8 @@ export class ModalEstudianteComponent {
       return;
     }
     //validacion eleccion de documento
-    if(isNaN(dataEstudiante.numero_documento) || dataEstudiante.numero_documento.length !== 8) {
-      this.snack.open('El Numero de Documento tiene que ser numerico y de 8 digitos', '', {
+    if(dataEstudiante.numero_documento.length !== 8) {
+      this.snack.open('El Numero de Documento tiene que ser de 8 digitos', '', {
         duration: 3000
       })
       this.loading = false

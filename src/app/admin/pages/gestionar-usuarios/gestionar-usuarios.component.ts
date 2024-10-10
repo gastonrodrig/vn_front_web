@@ -10,6 +10,7 @@ import { ModalUsuarioComponent } from '../../../shared/components/modal/modal-us
 import { EstudianteService } from '../../../core/services/estudiante.service';
 import { TutorService } from '../../../core/services/tutor.service';
 import Swal from 'sweetalert2';
+import { DocenteService } from '../../../core/services/docente.service';
 
 @Component({
   selector: 'app-gestionar-usuarios',
@@ -47,6 +48,7 @@ export class GestionarUsuariosComponent {
     private userService: UserService,
     private estudianteService: EstudianteService,
     private tutorService: TutorService,
+    private docenteService: DocenteService,
     public dialog: MatDialog
   ){}
 
@@ -191,6 +193,13 @@ export class GestionarUsuariosComponent {
                   }
                 )
               }
+              if(data.rol === 'Docente') {
+                this.docenteService.eliminarUsuario(data.perfil).subscribe(
+                  (data: any) => {
+                    this.eliminarUsuario(id)
+                  }
+                )
+              }
             }
           )
         }
@@ -264,6 +273,15 @@ export class GestionarUsuariosComponent {
       
       if (usuario.rol === 'Tutor') {
         this.tutorService.obtenerTutor(usuario.perfil).subscribe(
+          (data: any) => {
+            usuario.perfil = data.numero_documento;
+            resolve(usuario);
+          }
+        );
+      }
+
+      if (usuario.rol === 'Docente') {
+        this.docenteService.obtenerDocente(usuario.perfil).subscribe(
           (data: any) => {
             usuario.perfil = data.numero_documento;
             resolve(usuario);

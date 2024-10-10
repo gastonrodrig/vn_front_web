@@ -18,6 +18,7 @@ import { ModalCambiarContraComponent } from '../modal-cambiar-contra/modal-cambi
 import { TutorService } from '../../../../core/services/tutor.service';
 import Swal from 'sweetalert2';
 import { error } from 'console';
+import { DocenteService } from '../../../../core/services/docente.service';
 
 @Component({
   selector: 'app-modal-usuario',
@@ -45,10 +46,12 @@ export class ModalUsuarioComponent {
 
   estudiantes = []
   tutores = []
+  docentes = []
 
   nombreCompleto = ''
   estudianteId = ''
   tutorId = ''
+  docenteId = ''
 
   rol = ''
   searchTerm = ''
@@ -64,7 +67,8 @@ export class ModalUsuarioComponent {
     private snack: MatSnackBar,
     private userService: UserService,
     private estudianteService: EstudianteService,
-    private tutorService: TutorService
+    private tutorService: TutorService,
+    private docenteService: DocenteService
   ) {
     dialogRef.disableClose = true
   }
@@ -88,6 +92,15 @@ export class ModalUsuarioComponent {
 
       if(this.usuario.rol === 'Tutor') {
         this.tutorService.obtenerTutor(this.usuario.perfil_id).subscribe(
+          (data: any) => {
+            this.dni = data.numero_documento
+            this.nombreCompleto = `${data.apellido}, ${data.nombre}`
+          }
+        )
+      }
+
+      if(this.usuario.rol === 'Docente') {
+        this.docenteService.obtenerDocente(this.usuario.perfil_id).subscribe(
           (data: any) => {
             this.dni = data.numero_documento
             this.nombreCompleto = `${data.apellido}, ${data.nombre}`
@@ -201,6 +214,8 @@ export class ModalUsuarioComponent {
         return this.estudianteId || this.usuario.perfil_id;
       case 'Tutor':
         return this.tutorId || this.usuario.perfil_id;
+      case 'Docente':
+        return this.docenteId || this.usuario.perfil_id;
       case 'Admin':
         return null;
       default:
@@ -218,6 +233,10 @@ export class ModalUsuarioComponent {
         return this.tutorService.asignarUsuario(this.tutorId, dataUsuario).subscribe(
           () => { this.loading = false }
         )
+      case 'Docente':
+        return this.docenteService.asignarUsuario(this.docenteId, dataUsuario).subscribe(
+          () => { this.loading = false }
+        )
       case 'Admin':
         this.loading = false
         return of(null);
@@ -232,17 +251,6 @@ export class ModalUsuarioComponent {
       this.loading = true
   
       if(this.usuario.rol === 'Estudiante') {
-
-          const exists = this.estudiantes.some((e: any) => e._id === dni);
-
-          if (exists) {
-            this.snack.open('El estudiante ya está registrado.', 'Cerrar', {
-              duration: 3000
-            });
-            this.searchTerm = '';
-            return;
-          }
-
         this.estudianteService.obtenerEstudiantePorNroDoc(dni, true).subscribe(
           (data: any) => {
             this.loading = false
@@ -263,6 +271,21 @@ export class ModalUsuarioComponent {
             this.loading = false
             this.nombreCompleto = `${data.apellido}, ${data.nombre}`
             this.tutorId = data._id
+          },
+          (error) => {
+            this.mostrarMensaje(error.error.message)
+            console.error(error)
+            this.loading = false
+          }
+        )
+      }
+
+      if(this.usuario.rol === 'Docente') {
+        this.docenteService.obtenerDocentePorNroDoc(dni, true).subscribe(
+          (data: any) => {
+            this.loading = false
+            this.nombreCompleto = `${data.apellido}, ${data.nombre}`
+            this.docenteId = data._id
           },
           (error) => {
             this.mostrarMensaje(error.error.message)
@@ -309,6 +332,19 @@ export class ModalUsuarioComponent {
     }
     if(this.usuario.rol === 'Tutor') {
       this.tutorService.eliminarUsuario(this.usuario.perfil_id).subscribe(
+        (data: any) => { 
+          this.dni = ''
+          this.nombreCompleto = ''
+          this.userService.eliminarPerfil(this.usuarioId).subscribe(
+            (data: any) => {
+              this.loading = false
+            }
+          )
+        }
+      )
+    }
+    if(this.usuario.rol === 'Docente') {
+      this.docenteService.eliminarUsuario(this.usuario.perfil_id).subscribe(
         (data: any) => { 
           this.dni = ''
           this.nombreCompleto = ''

@@ -72,63 +72,58 @@ export class ModalTutorComponent {
       console.log(this.data)
       this.tutor = this.data.tutor;
       this.tutorId = this.data.tutor._id
-      
     }
-else{
-  
-    this.tutor = {
-      nombre: '',
-      apellido: '',
-      direccion: '',
-      telefono: '',
-      numero_documento: '',
-      documento: {
-        _id: ''
-      },
-      periodo: {
-        _id: ''
-      },
-      grado: {
-        _id: ''
-      },
-      seccion: {  // Inicializa seccion para evitar errores
-        _id: ''
+    else{
+      this.tutor = {
+        nombre: '',
+        apellido: '',
+        direccion: '',
+        telefono: '',
+        numero_documento: '',
+        documento: {
+          _id: ''
+        },
+        periodo: {
+          _id: ''
+        },
+        grado: {
+          _id: ''
+        },
+        seccion: { 
+          _id: ''
+        }
+      }
     }
-    
+    this.tipoDocumentService.listarTiposDocumento().subscribe(
+      (data: any) => {
+        this.tipoDocumento = data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    this.periodoService.listarPeriodos().subscribe(
+      (data: any) => {
+        this.periodo = data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    this.gradoService.listarGrados().subscribe(
+      (data: any) => {
+        this.grado = data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    if (this.data.isEdit) {
+      this.listarGrados();
+      this.listarSeccionesPorPeriodoGrado();
     }
   }
-  
-  this.tipoDocumentService.listarTiposDocumento().subscribe(
-    (data: any) => {
-      this.tipoDocumento = data
-    },
-    (error) => {
-      console.log(error)
-    },
-  )
-  this.periodoService.listarPeriodos().subscribe(
-    (data: any) => {
-      this.periodo = data
-    },
-    (error) => {
-      console.log(error)
-    }
-    
-  )
-  this.gradoService.listarGrados().subscribe(
-    (data: any) => {
-      this.grado = data
-    },
-    (error) => {
-      console.log(error)
-    }
-  )
-   // Si estamos editando, cargar grados y secciones iniciales
-   if (this.data.isEdit) {
-    this.listarGrados(); // Cargar grados basados en el periodo del tutor
-    this.listarSeccionesPorPeriodoGrado(); // Cargar secciones basadas en el grado del tutor
-}
-  }
+
   listarGrados() {
     this.loading = true;
     this.gradoService.listarGrados().subscribe(
@@ -147,6 +142,7 @@ else{
       }
     );
   }
+
   listarSeccionesPorPeriodoGrado() {
     if (!this.tutor.grado || !this.tutor.grado._id) {
       console.error('El grado está vacío');
@@ -163,22 +159,22 @@ else{
       this.tutor.grado._id, 
       this.tutor.periodo._id
     ).subscribe(
-        (data: any) => {
-          this.seccion = data// Si `sgp.seccion` es donde está el ID correcto
-            console.log('Secciones cargadas:', this.seccion); // Asegúrate de que aquí haya datos
-            this.loading = false;
-            this.seccionLoaded = true;
-    
-            if (this.seccion.length === 0) {
-                this.snack.open('No se encontraron secciones', 'Cerrar', { duration: 3000 });
-                this.seccionLoaded = false;
-            }
-        },
-        (error) => {
-            console.error('Error al cargar secciones:', error);
-            this.loading = false;
-            this.snack.open('Error al cargar secciones', 'Cerrar', { duration: 3000 });
+      (data: any) => {
+        this.seccion = data
+        console.log('Secciones cargadas:', this.seccion);
+        this.loading = false;
+        this.seccionLoaded = true;
+
+        if (this.seccion.length === 0) {
+          this.snack.open('No se encontraron secciones', 'Cerrar', { duration: 3000 });
+          this.seccionLoaded = false;
         }
+      },
+      (error) => {
+        console.error('Error al cargar secciones:', error);
+        this.loading = false;
+        this.snack.open('Error al cargar secciones', 'Cerrar', { duration: 3000 });
+      }
     );
   }
   
@@ -191,18 +187,18 @@ else{
     this.loading = true;
   
     // Verificar si ya hay un tutor asignado a la sección
-    this.tutorService.listarTutores().subscribe(
-      (tutores: any) => {
+    // this.tutorService.listarTutores().subscribe(
+    //   (tutores: any) => {
         // Filtrar si ya existe un tutor en la misma sección
-        const tutorExistente = tutores.find((tutor: any) => tutor.seccion._id === this.tutor.seccion._id);
+        // const tutorExistente = tutores.find((tutor: any) => tutor.seccion._id === this.tutor.seccion._id);
   
-        if (tutorExistente) {
-          this.snack.open('Ya existe un tutor asignado a esta sección', 'Cerrar', {
-            duration: 3000
-          });
-          this.loading = false;
-          return;
-        }
+        // if (tutorExistente) {
+        //   this.snack.open('Ya existe un tutor asignado a esta sección', 'Cerrar', {
+        //     duration: 3000
+        //   });
+        //   this.loading = false;
+        //   return;
+        // }
   
         // Si no hay un tutor existente en la sección, procedemos a crear o modificar
         const dataTutor = {
@@ -330,6 +326,9 @@ else{
               );
             },
             (error) => {
+              this.snack.open(error.error.message, 'cerrar', {
+                duration: 3000
+              });
               this.loading = false;
               console.log('Error al crear el tutor:', error);
             }
@@ -348,16 +347,19 @@ else{
               );
             },
             (error) => {
+              this.snack.open(error.error.message, 'cerrar', {
+                duration: 3000
+              });
               console.log(error);
             }
           );
         }
-      },
-      (error) => {
-        this.loading = false;
-        console.log('Error al listar tutores:', error);
       }
-    );
-  }
+    //   (error) => {
+    //     this.loading = false;
+    //     console.log('Error al listar tutores:', error);
+    //   }
+    // );
+  // }
   
 }

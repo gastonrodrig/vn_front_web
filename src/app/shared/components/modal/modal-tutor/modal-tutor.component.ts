@@ -184,152 +184,182 @@ export class ModalTutorComponent {
 
   guardarInformacion() {
     console.log('Sección ID:', this.tutor.seccion._id);
-    this.loading = true
-    const dataTutor = {
-      nombre : this.tutor.nombre,
-      apellido : this.tutor.apellido,
-      direccion : this.tutor.direccion,
-      telefono : this.tutor.telefono,
-      numero_documento : this.tutor.numero_documento,
-      documento_id : this.tutor.documento._id,
-      periodo_id : this.tutor.periodo._id,
-      grado_id : this.tutor.grado._id,
-      seccion_id : this.tutor.seccion._id,
-      
-    }
-    //VALIDACIONES 
-    if(!isNaN(dataTutor.nombre)) {
-      this.snack.open('El nombre tiene que ser en letras', '', {
-        duration: 3000
-      })
-      this.loading = false
-      return
-    }
-    if(!isNaN(dataTutor.apellido)) {
-      this.snack.open('El apellido tiene que ser en letras', '', {
-        duration: 3000
-      })
-      this.loading = false
-      return
-    }
-
-    if(dataTutor.nombre === '') {
-      this.snack.open('El nombre del tutor es requerido', '', {
-        duration: 3000
-      })
-      this.loading = false
-      return
-    }
-
-    if(dataTutor.telefono === '') {
-      this.snack.open('El telefono del tutor es requerido', '', {
-        duration: 3000
-      })
-      this.loading = false
-      return
-    }
-
-    if(dataTutor.telefono.length !== 9) {
-      this.snack.open('El telefono debe incluir 9 digitos', '', {
-        duration: 3000
-      })
-      this.loading = false
-      return
-    }
-
-    //VALIDACIONES TERMINADA
-    if (dataTutor.direccion ==='') {
-      this.snack.open('La Direccion es requerida', '', {
-        duration: 3000
-      });
-      this.loading = false;
-      return;
-    }
-
-      //validacion documento 
-    if (!this.tutor.documento._id) {
-      this.snack.open('Tiene que elegir un tipo de Documento', '', {
-        duration: 3000
-      });
-      this.loading = false;
-      return;
-    }
-    //validacion eleccion de documento
-    if(isNaN(dataTutor.numero_documento) || dataTutor.numero_documento.length !== 8) {
-      this.snack.open('El Numero de Documento tiene que ser numerico y de 8 digitos', '', {
-        duration: 3000
-      })
-      this.loading = false
-      return
-    }
-    //validacion periodo
-    if (!this.tutor.periodo._id) {
-      this.snack.open('Tiene que elegir un tipo de Periodo', '', {
-        duration: 3000
-      });
-      this.loading = false;
-      return;
-    }
-    //validacion grado
-    if (!this.tutor.grado._id) {
-      this.snack.open('Tiene que elegir un tipo de grado', '', {
-        duration: 3000
-      });
-      this.loading = false;
-      return;
-    }
-    
-
-    if(this.data.isCreate) {
-      this.tutorService.agregarTutor(dataTutor).subscribe(
-        (data: any) => {
-          Swal.fire('Tutor guardado', 'El Tutor ha sido guardado con éxito', 'success').then(
-            (e)=> {
-              this.closeModel();
-            }
-          );
-
-          const tutorId = data._id;
-
-          const newdataUser = {
-            usuario : this.tutor.numero_documento,
-            email : this.tutor.numero_documento + "@vn.com",
-            contrasena: "0000000",
-            rol: "Tutor",
-            perfil_id: tutorId,
-          };
-
-          this.userService.agregarUsuario(newdataUser).subscribe(
-            (data) => {
-              console.log('Usuario creado con éxito', data);
+    this.loading = true;
+  
+    // Verificar si ya hay un tutor asignado a la sección
+    // this.tutorService.listarTutores().subscribe(
+    //   (tutores: any) => {
+        // Filtrar si ya existe un tutor en la misma sección
+        // const tutorExistente = tutores.find((tutor: any) => tutor.seccion._id === this.tutor.seccion._id);
+  
+        // if (tutorExistente) {
+        //   this.snack.open('Ya existe un tutor asignado a esta sección', 'Cerrar', {
+        //     duration: 3000
+        //   });
+        //   this.loading = false;
+        //   return;
+        // }
+  
+        // Si no hay un tutor existente en la sección, procedemos a crear o modificar
+        const dataTutor = {
+          nombre: this.tutor.nombre,
+          apellido: this.tutor.apellido,
+          direccion: this.tutor.direccion,
+          telefono: this.tutor.telefono,
+          numero_documento: this.tutor.numero_documento,
+          documento_id: this.tutor.documento._id, // Cambiado a tutor.documento._id
+          periodo_id: this.tutor.periodo._id, // Cambiado a tutor.periodo._id
+          grado_id: this.tutor.grado._id, // Cambiado a tutor.grado._id
+          seccion_id: this.tutor.seccion._id, // Cambiado a tutor.seccion._id
+        };
+  
+        // VALIDACIONES
+        if (!isNaN(dataTutor.nombre)) {
+          this.snack.open('El nombre tiene que ser en letras', '', {
+            duration: 3000
+          });
+          this.loading = false;
+          return;
+        }
+  
+        if (!isNaN(dataTutor.apellido)) {
+          this.snack.open('El apellido tiene que ser en letras', '', {
+            duration: 3000
+          });
+          this.loading = false;
+          return;
+        }
+  
+        if (dataTutor.nombre === '') {
+          this.snack.open('El nombre del tutor es requerido', '', {
+            duration: 3000
+          });
+          this.loading = false;
+          return;
+        }
+  
+        if (dataTutor.telefono === '') {
+          this.snack.open('El telefono del tutor es requerido', '', {
+            duration: 3000
+          });
+          this.loading = false;
+          return;
+        }
+  
+        if (dataTutor.telefono.length !== 9) {
+          this.snack.open('El telefono debe incluir 9 digitos', '', {
+            duration: 3000
+          });
+          this.loading = false;
+          return;
+        }
+  
+        if (dataTutor.direccion === '') {
+          this.snack.open('La Direccion es requerida', '', {
+            duration: 3000
+          });
+          this.loading = false;
+          return;
+        }
+  
+        if (!this.tutor.documento._id) {
+          this.snack.open('Tiene que elegir un tipo de Documento', '', {
+            duration: 3000
+          });
+          this.loading = false;
+          return;
+        }
+  
+        if (isNaN(dataTutor.numero_documento) || dataTutor.numero_documento.length !== 8) {
+          this.snack.open('El Numero de Documento tiene que ser numerico y de 8 digitos', '', {
+            duration: 3000
+          });
+          this.loading = false;
+          return;
+        }
+  
+        if (!this.tutor.periodo._id) {
+          this.snack.open('Tiene que elegir un tipo de Periodo', '', {
+            duration: 3000
+          });
+          this.loading = false;
+          return;
+        }
+  
+        if (!this.tutor.grado._id) {
+          this.snack.open('Tiene que elegir un tipo de grado', '', {
+            duration: 3000
+          });
+          this.loading = false;
+          return;
+        }
+  
+        // Si estamos en modo de creación
+        if (this.data.isCreate) {
+          this.tutorService.agregarTutor(dataTutor).subscribe(
+            (data: any) => {
+              Swal.fire('Tutor guardado', 'El Tutor ha sido guardado con éxito', 'success').then(
+                (e) => {
+                  this.closeModel();
+                }
+              );
+  
+              // Asignar el ID del tutor desde la respuesta del servidor
+              const tutorId = data._id; // Suponiendo que el backend te devuelve el ID del tutor
+  
+              const newdataUser = {
+                usuario: this.tutor.numero_documento,
+                email: this.tutor.numero_documento + '@vn.com',
+                contrasena: '0000000',
+                rol: 'Tutor',
+                perfil_id: tutorId, // Aquí utilizamos el tutorId de la respuesta
+              };
+  
+              // Crear el usuario ahora que ya tenemos el tutorId correcto
+              this.userService.agregarUsuario(newdataUser).subscribe(
+                (data) => {
+                  console.log('Usuario creado con éxito', data);
+                },
+                (error) => {
+                  console.log('Error al crear el usuario', error);
+                }
+              );
             },
             (error) => {
-              console.log('Error al crear el usuario', error);
+              this.snack.open(error.error.message, 'cerrar', {
+                duration: 3000
+              });
+              this.loading = false;
+              console.log('Error al crear el tutor:', error);
             }
           );
-        },
-        (error) => {
-          this.loading = false;
-          console.log('Error al crear el tutor:', error);
         }
-      );
-    }
-
-    if(this.data.isEdit) {
-      this.tutorService.modificarTutor(this.tutorId, dataTutor).subscribe(
-        (data) => {
-          this.loading = false
-          Swal.fire('Tutor modificado', 'El tutor ha sido modificado con éxito', 'success').then(
-            (e)=> {
-              this.closeModel()
+  
+        // Si estamos en modo de edición
+        if (this.data.isEdit) {
+          this.tutorService.modificarTutor(this.tutorId, dataTutor).subscribe(
+            (data) => {
+              this.loading = false;
+              Swal.fire('Tutor modificado', 'El tutor ha sido modificado con éxito', 'success').then(
+                (e) => {
+                  this.closeModel();
+                }
+              );
+            },
+            (error) => {
+              this.snack.open(error.error.message, 'cerrar', {
+                duration: 3000
+              });
+              console.log(error);
             }
           );
-        },
-        (error) => {
-          console.log(error)
         }
-      )
-    }
-  }
- 
+      }
+    //   (error) => {
+    //     this.loading = false;
+    //     console.log('Error al listar tutores:', error);
+    //   }
+    // );
+  // }
+  
 }

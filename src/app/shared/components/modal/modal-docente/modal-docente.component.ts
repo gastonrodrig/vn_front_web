@@ -88,53 +88,30 @@ export class ModalDocenteComponent {
       
     }
     //VALIDACIONES 
-    if(!isNaN(dataDocente.nombre)) {
-      this.snack.open('El nombre tiene que ser en letras', '', {
-        duration: 3000
-      })
-      this.loading = false
-      return
+    if(dataDocente.nombre === '') {
+      this.mostrarMensaje('El nombre es requerido')
+      return;
     }
-    if(!isNaN(dataDocente.apellido)) {
-      this.snack.open('El apellido tiene que ser en letras', '', {
-        duration: 3000
-      })
-      this.loading = false
-      return
+    if(dataDocente.apellido === '') {
+      this.mostrarMensaje('El apellido es requerido')
+      return;
     }
      //validacion documento 
      if (!this.docente.documento._id) {
-      this.snack.open('Tiene que elegir un tipo de Documento', '', {
-        duration: 3000
-      });
-      this.loading = false;
+      this.mostrarMensaje('Tiene que elegir un tipo de Documento')
       return;
     }
       
     if(dataDocente.numero_documento.length !== 8) {
-      this.snack.open('El Numero de Documento tiene que de 8 digitos', '', {
-        duration: 3000
-      })
-      this.loading = false
-      return
+      this.mostrarMensaje('El Numero de Documento tiene que de 8 digitos')
+      return;
     }
 
     if(dataDocente.telefono.length !== 9) {
-      this.snack.open('El telefono tiene que ser de 9 digitos', '', {
-        duration: 3000
-      })
-      this.loading = false
-      return
+      this.mostrarMensaje('El telefono tiene que ser de 9 digitos')
+      return;
     }
     //VALIDACIONES TERMINADA
-
-    if(dataDocente.nombre === '') {
-      this.snack.open('El nombre del docente es requerido', '', {
-        duration: 3000
-      })
-      this.loading = false
-      return
-    }
 
     if(this.data.isCreate) {
       this.docenteService.agregarDocente(dataDocente).subscribe(
@@ -190,6 +167,12 @@ export class ModalDocenteComponent {
         }
       )
     }
+  }
+  mostrarMensaje(mensaje: string) {
+    this.snack.open(mensaje, 'Cerrar', {
+      duration: 3000,
+    })
+    this.loading = false
   }
 
   closeModel() {

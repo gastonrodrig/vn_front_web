@@ -131,13 +131,14 @@
         }
         <div class="flex justify-end w-full">
             <div class="p-2">
-                <button  mat-flat-button 
-                color="custom-color" 
-                (click)="guardarInformacion()" 
-                class="me-2"
-                [disabled]="apoderadoList.length === 0">
-                    {{ data.isEdit || data.isCreateOnEdit ? 'Guardar' : 'Terminar' }}
-                </button>
+                <button 
+                 mat-flat-button 
+                 color="custom-color" 
+                 (click)="guardarInformacion()" 
+                 class="me-2" 
+                 [disabled]="!apoderado.nombre || !apoderado.apellido || !apoderado.documento._id || !apoderado.numero_documento">
+                 {{ data.isEdit || data.isCreateOnEdit ? 'Guardar' : 'Terminar' }}
+                 </button>
                 <button mat-button mat-dialog-close color="custom-color" *ngIf="data.isCreateOnEdit || data.isEdit" (click)="closeModel()">Cancelar</button>
             </div>
         </div>

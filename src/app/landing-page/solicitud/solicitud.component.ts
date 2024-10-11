@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { SoloNumerosDirective } from '../../shared/directives/solo-numeros.directive';
 import { MatButton } from '@angular/material/button';
+import { NavLanComponent } from '../../shared/components/nav-lan/nav-lan.component';
 
 
 @Component({
@@ -23,6 +24,7 @@ import { MatButton } from '@angular/material/button';
   CommonModule,
   SoloNumerosDirective,
   MatButton,
+  NavLanComponent
   ],
   templateUrl: './solicitud.component.html',
   styleUrls: ['./solicitud.component.css']

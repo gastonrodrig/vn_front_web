@@ -93,13 +93,44 @@ export class ModalApoderadoComponent {
   }
 
   agregarApoderado() {
-      // Si todas las validaciones pasan, se crea el nuevo apoderado
+
+    if(this.apoderado.nombre === ''){
+      this.mostrarMensaje('Ingrese Nombre');
+      return;
+    }
+    if(this.apoderado.apellido === ''){
+      this.mostrarMensaje('Ingrese Apellido');
+      return;
+    }
+    if(this.apoderado.numero_documento.length !== 8){
+      this.mostrarMensaje('DNI debe ser de 8 dígitos');
+      return;
+    }
+    if(this.apoderado.numero.length !== 9){
+      this.mostrarMensaje('Teléfono debe ser de 9 dígitos');
+      return;
+    }
+    if (!this.apoderado.documento._id || this.apoderado.documento._id.trim() === ''){
+      this.mostrarMensaje('Debe elegir el tipo de documento');
+      return;
+    }
+    if(this.apoderado.direccion === ''){
+      this.mostrarMensaje('Debe agregar una dirección');
+      return;
+    }
+    if(this.apoderado.correo === ''){
+      this.mostrarMensaje('Debe asignar un correo');
+      return;
+    }
+
     const nuevoApoderado = { 
       ...this.apoderado, 
       _id: this.generarIdUnico()
     };
-    this.apoderadoList.push(nuevoApoderado)
-    this.saveToLocalStorage()
+    
+    this.apoderadoList.push(nuevoApoderado);
+    this.saveToLocalStorage();
+
     this.apoderado = {
       nombre: '',
       apellido: '',
@@ -112,59 +143,13 @@ export class ModalApoderadoComponent {
       estudiante_id: this.estudiante._id,
       correo: ''
     };
-  }
+}
 
   generarIdUnico(): string {
     return Math.random().toString(36).substr(2, 9)
   }
 
   guardarInformacion() {
-  if (this.apoderadoList.length === 0){
-   if (!isNaN(Number(this.apoderado.nombre))) {
-    this.snack.open('El nombre debe contener solo letras', '', {
-      duration: 3000
-    });
-    this.loading = false;
-    return;
-  }
-
-  // VALIDACIÓN APELLIDO (debe contener solo letras)
-  if (!isNaN(Number(this.apoderado.apellido))) {
-    this.snack.open('El apellido debe contener solo letras', '', {
-      duration: 3000
-    });
-    this.loading = false;
-    return;
-  }
-
-  // VALIDACIÓN TIPO DE DOCUMENTO (debe estar seleccionado)
-  if (!this.apoderado.documento._id) {
-    this.snack.open('Debe seleccionar un tipo de documento', '', {
-      duration: 3000
-    });
-    this.loading = false;
-    return;
-  }
-
-  // VALIDACIÓN NÚMERO DE DOCUMENTO (debe ser de 8 dígitos)
-  if (this.apoderado.numero_documento.length !== 8) {
-    this.snack.open('El número de documento debe tener 8 dígitos', '', {
-      duration: 3000
-    });
-    this.loading = false;
-    return;
-  }
-
-  // VALIDACIÓN TELÉFONO (debe ser de 9 dígitos)
-  if (this.apoderado.numero.length !== 9) {
-    this.snack.open('El número de teléfono debe tener 9 dígitos', '', {
-      duration: 3000
-    });
-    this.loading = false;
-    return;
-  }
-}
-
     if(this.data.isCreate) {
       if (this.apoderadoList.length < 1) {
         this.snack.open('Debe incluir como mínimo 1 apoderado', 'Cerrar', {
@@ -184,7 +169,34 @@ export class ModalApoderadoComponent {
           estudiante_id: e.estudiante_id,
           correo: e.correo
         }
-    
+        if(apoderado.nombre===''){
+          this.mostrarMensaje('Ingrese Nombre')
+          return;
+        }
+        if(apoderado.apellido===''){
+          this.mostrarMensaje('Ingrese Apellido')
+          return;
+        }
+        if(apoderado.numero_documento.length !== 8){
+          this.mostrarMensaje('Dni debe ser de 8 digitos ')
+          return;
+        }
+        if(apoderado.numero.length !==9){
+          this.mostrarMensaje('Telefono debe ser de 9 digitos')
+          return;
+        }
+        if (!apoderado.documento_id || apoderado.documento_id.trim() ===''){
+          this.mostrarMensaje('Debe elegir el tipo de documento')
+          return;
+        }
+        if(apoderado.direccion === ''){
+          this.mostrarMensaje('Debe agregar una dirreccion')
+          return;
+        }
+        if(apoderado.correo === ''){
+          this.mostrarMensaje('Debe asignar un correo')
+          return;
+        }
         this.apoderadoService.agregarApoderado(apoderado).subscribe(
           (data: any) => {
             this.loading = false
@@ -215,6 +227,34 @@ export class ModalApoderadoComponent {
         estudiante_id: this.apoderado.estudiante_id,
         correo: this.apoderado.correo
       }
+      if(apoderado.nombre===''){
+        this.mostrarMensaje('Ingrese Nombre')
+        return;
+      }
+      if(apoderado.apellido===''){
+        this.mostrarMensaje('Ingrese Apellido')
+        return;
+      }
+      if(apoderado.numero_documento.length !== 8){
+        this.mostrarMensaje('Dni debe ser de 8 digitos ')
+        return;
+      }
+      if(apoderado.numero.length !==9){
+        this.mostrarMensaje('Telefono debe ser de 9 digitos')
+        return;
+      }
+      if (!apoderado.documento_id || apoderado.documento_id.trim() ===''){
+        this.mostrarMensaje('Debe elegir el tipo de documento')
+        return;
+      }
+      if(apoderado.direccion === ''){
+        this.mostrarMensaje('Debe agregar una dirreccion')
+        return;
+      }
+      if(apoderado.correo === ''){
+        this.mostrarMensaje('Debe asignar un correo')
+        return;
+      }
       
       this.loading = true
       this.apoderadoService.agregarApoderado(apoderado).subscribe(
@@ -241,49 +281,35 @@ export class ModalApoderadoComponent {
         estudiante_id: this.data.estudiante_id,
         correo: this.apoderado.correo
       }
-      if (!isNaN(Number(this.apoderado.nombre))) {
-        this.snack.open('El nombre debe contener solo letras', '', {
-          duration: 3000
-        });
-        this.loading = false;
+      if(apoderado.nombre===''){
+        this.mostrarMensaje('Ingrese Nombre')
         return;
       }
-    
-      // VALIDACIÓN APELLIDO (debe contener solo letras)
-      if (!isNaN(Number(this.apoderado.apellido))) {
-        this.snack.open('El apellido debe contener solo letras', '', {
-          duration: 3000
-        });
-        this.loading = false;
+      if(apoderado.apellido===''){
+        this.mostrarMensaje('Ingrese Apellido')
         return;
       }
-    
-      // VALIDACIÓN TIPO DE DOCUMENTO (debe estar seleccionado)
-      if (!this.apoderado.documento._id) {
-        this.snack.open('Debe seleccionar un tipo de documento', '', {
-          duration: 3000
-        });
-        this.loading = false;
+      if(apoderado.numero_documento.length !== 8){
+        this.mostrarMensaje('Dni debe ser de 8 digitos ')
         return;
       }
-    
-      // VALIDACIÓN NÚMERO DE DOCUMENTO (debe ser  de 8 dígitos)
-      if (this.apoderado.numero_documento.length !== 8) {
-        this.snack.open('El número de documento debe tener 8 dígitos', '', {
-          duration: 3000
-        });
-        this.loading = false;
+      if(apoderado.numero.length !==9){
+        this.mostrarMensaje('Telefono debe ser de 9 digitos')
         return;
       }
-    
-      // VALIDACIÓN TELÉFONO (debe ser numérico y de 9 dígitos)
-      if (this.apoderado.numero.length !== 9) {
-        this.snack.open('El número de teléfono debe tener 9 dígitos', '', {
-          duration: 3000
-        });
-        this.loading = false;
+      if (!apoderado.documento_id || apoderado.documento_id.trim() ===''){
+        this.mostrarMensaje('Debe elegir el tipo de documento')
         return;
       }
+      if(apoderado.direccion === ''){
+        this.mostrarMensaje('Debe agregar una dirreccion')
+        return;
+      }
+      if(apoderado.correo === ''){
+        this.mostrarMensaje('Debe asignar un correo')
+        return;
+      }
+      
       this.loading = true
       this.apoderadoService.modificarApoderado(this.apoderadoId, apoderado).subscribe(
         (data) => {
@@ -321,6 +347,12 @@ export class ModalApoderadoComponent {
   loadFromLocalStorage() {
     const storedList = localStorage.getItem('apoderadoList')
     return storedList ? JSON.parse(storedList) : []
+  }
+  mostrarMensaje(mensaje: string) {
+    this.snack.open(mensaje, 'Cerrar', {
+      duration: 3000,
+    })
+    this.loading = false
   }
 
   closeModel() {

@@ -138,65 +138,41 @@ export class ModalEstudianteComponent {
     }
     //validaciones
     if(!isNaN(dataEstudiante.nombre)) {
-      this.snack.open('El nombre tiene que ser en letras', '', {
-        duration: 3000
-      })
-      this.loading = false
-      return
+      this.mostrarMensaje('El nombre tiene que ser en letras')
+      return;
     }
-    if(!isNaN(dataEstudiante.apellido)) {
-      this.snack.open('El apellido tiene que ser en letras', '', {
-        duration: 3000
-      })
-      this.loading = false
-      return
+    if(dataEstudiante.apellido ==='') {
+      this.mostrarMensaje('Debe poner un apellido')
+      return;
     }
     //validacion documento 
     if (!this.estudiante.documento._id) {
-      this.snack.open('Tiene que elegir un tipo de Documento', '', {
-        duration: 3000
-      });
-      this.loading = false;
+      this.mostrarMensaje('Debe elegir un documento')
       return;
     }
     //validacion eleccion de documento
     if(dataEstudiante.numero_documento.length !== 8) {
-      this.snack.open('El Numero de Documento tiene que ser de 8 digitos', '', {
-        duration: 3000
-      })
-      this.loading = false
+      this.mostrarMensaje('Documento debe ser de 8 digitos')
       return
     }
     //validacion periodo
     if (!this.estudiante.periodo._id) {
-      this.snack.open('Tiene que elegir un tipo de Periodo', '', {
-        duration: 3000
-      });
-      this.loading = false;
+      this.mostrarMensaje('Periodo requerido')
       return;
     }
     //validacion grado
     if (!this.estudiante.grado._id) {
-      this.snack.open('Tiene que elegir un tipo de grado', '', {
-        duration: 3000
-      });
-      this.loading = false;
+      this.mostrarMensaje('Debe elegir un tipo de grado')
       return;
     }
     
     if (dataEstudiante.direccion ==='') {
-      this.snack.open('La Direccion es requerida', '', {
-        duration: 3000
-      });
-      this.loading = false;
+      this.mostrarMensaje('La Direccion debe ser elegida')
       return;
     }
     
     if(dataEstudiante.nombre === '') {
-      this.snack.open('El nombre del estudiante es requerido', 'Cerrar', {
-        duration: 3000
-      })
-      this.loading = false
+      this.mostrarMensaje('Debe poner un nombre')
       return
     }   
 
@@ -315,6 +291,12 @@ export class ModalEstudianteComponent {
         )
       }
     });
+  }
+  mostrarMensaje(mensaje: string) {
+    this.snack.open(mensaje, 'Cerrar', {
+      duration: 3000,
+    })
+    this.loading = false
   }
 
   closeModel() {

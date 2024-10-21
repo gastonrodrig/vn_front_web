@@ -8,21 +8,16 @@
       <p class="font-normal text-sm mb-3">Seleccione las opciones para buscar el horario de un salón en específico:</p>
       <div class="bg-gray-50 p-2 rounded-xl ring-1 ring-gray-300">
         <div class="grid grid-cols-3 justify-center gap-x-3 pt-1 -mb-3 mx-1">
-          <mat-form-field appearance="fill" class="col-span-3 md:col-span-1">
+
+          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
             <mat-label>Periodo Escolar</mat-label>
-            <mat-select 
-              [(ngModel)]="periodo._id"
+            <input
+              [(ngModel)]="periodoEscolar"
+              type="text"
+              matInput
+              disabled
               [ngModelOptions]="{standalone: true}"
-              (ngModelChange)="listarGrados()"
-              [disabled]="periodoBlocked"
             >
-              <mat-option 
-                *ngFor="let e of periodos" 
-                [value]="e._id"
-              >
-                {{ e.anio }}
-              </mat-option>
-            </mat-select>
           </mat-form-field>
     
           <mat-form-field appearance="fill" class="col-span-3 md:col-span-1">

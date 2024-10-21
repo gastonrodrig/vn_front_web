@@ -17,6 +17,7 @@ import { listaHoras } from '../../../shared/constants/itemsHoursPerDayClass';
 import { listaDias } from '../../../shared/constants/itemsDays';
 import { GradoCursosHorasService } from '../../../core/services/grado-cursos-horas.service';
 import { CursoDocenteService } from '../../../core/services/curso-docente.service';
+import { SeccionCursoDocenteService } from '../../../core/services/seccion-curso-docente.service';
 
 @Component({
   selector: 'app-gestionar-horarios',
@@ -37,7 +38,7 @@ import { CursoDocenteService } from '../../../core/services/curso-docente.servic
   styleUrl: './gestionar-horarios.component.css'
 })
 export class GestionarHorariosComponent {
-  periodos: any
+  periodoId: any
   grados: any
   secciones: any
   horarios: any
@@ -49,12 +50,7 @@ export class GestionarHorariosComponent {
   cursosLoaded = false
   docentesLoaded = false
   horarioLoaded = false
-  periodoBlocked = false
   horas: any
-
-  periodo = {
-    _id: ''
-  }
 
   horario = {
     dia_semana: '',
@@ -65,6 +61,8 @@ export class GestionarHorariosComponent {
     curso_id: '',
     docente_id: ''
   }
+
+  periodoEscolar = new Date().getFullYear().toString();
 
   days = listaDias
   times = listaHoras
@@ -78,19 +76,18 @@ export class GestionarHorariosComponent {
     private sgpService: SeccionGradoPeriodoService,
     private gchService: GradoCursosHorasService,
     private horarioService: HorarioService,
+    private scdService: SeccionCursoDocenteService,
     private snack: MatSnackBar
   ){}
 
   ngOnInit() {
-    this.periodoService.listarPeriodos().subscribe(
+    this.loading = true
+    this.periodoService.obtenerPeriodoporanio(this.periodoEscolar).subscribe(
       (data: any) => {
-        this.periodos = data
+        this.periodoId = data._id
+        this.loading = false
       }
     )
-  }
-
-  listarGrados() {
-    this.loading = true
     this.gradoService.listarGrados().subscribe(
       (data: any) => {
         this.grados = data
@@ -104,7 +101,7 @@ export class GestionarHorariosComponent {
     this.loading = true
     this.sgpService.listarSeccionesPorGradoPeriodo(
       this.horario.grado_id, 
-      this.periodo._id
+      this.periodoId
     ).subscribe(
       (data: any) => {
         this.secciones = data
@@ -190,7 +187,6 @@ export class GestionarHorariosComponent {
       return;
     }
 
-    this.periodoBlocked = true
     this.gradosLoaded = false
     this.seccionLoaded = false
   
@@ -297,6 +293,21 @@ export class GestionarHorariosComponent {
               duration: 3000
             });
             this.loading = false;
+            
+            const scdData = {
+              seccion_id: data.seccion._id,
+              curso_id: data.curso._id,
+              docente_id: data.docente._id
+            }
+
+            this.scdService.agregarSeccionCursoDocente(scdData).subscribe(
+              (data: any) => {
+                console.log(data);
+              },
+              (error) => {
+                console.log(error);
+              }
+            )
           },
           (error) => {
             const mensaje = error.error.message
@@ -319,31 +330,65 @@ export class GestionarHorariosComponent {
   }
 
   eliminar(key: string) {
-    this.loading = true
+    this.loading = true;
+  
+    this.horarioService.obtenerHorario(this.cellInfo[key]._id).subscribe(
+      (data: any) => {
+        this.scdService.obtenerSeccionCursoDocentePorSeccionCursoYDocente(
+          data.seccion._id,
+          data.curso._id,
+          data.docente._id
+        ).subscribe(
+          (data: any) => {
+            this.scdService.eliminarSeccionCursoDocente(data._id).subscribe(
+              (data: any) => {
+                this.eliminarHorarioYContinuar(key);
+              },
+              (error) => {
+                console.log('Error al eliminar SeccionCursoDocente, probablemente ya fue eliminado.');
+                this.eliminarHorarioYContinuar(key);
+              }
+            );
+          },
+          (error) => {
+            console.log('No se encontró SeccionCursoDocente, probablemente ya fue eliminado.');
+            this.eliminarHorarioYContinuar(key);
+          }
+        );
+      },
+      (error) => {
+        this.snack.open('Error al obtener el horario.', 'Cerrar', {
+          duration: 3000
+        });
+        this.loading = false;
+      }
+    );
+  }
+  
+  eliminarHorarioYContinuar(key: string) {
     this.horarioService.eliminarHorario(this.cellInfo[key]._id).subscribe(
       (data: any) => {
         delete this.cellInfo[key];
-        this.loading = false
-        this.snack.open('Horario eliminado.', 'Cerrar', { 
-          duration: 3000 
+        this.loading = false;
+        this.snack.open('Horario eliminado.', 'Cerrar', {
+          duration: 3000
         });
       },
       (error) => {
-        this.snack.open('Error al eliminar el horario.', 'Cerrar', { 
-          duration: 3000 
+        this.snack.open('Error al eliminar el horario.', 'Cerrar', {
+          duration: 3000
         });
+        this.loading = false;
       }
     );
   }
 
   cambiarHorario() {
     this.horarioLoaded = false
-    this.periodoBlocked = false
-    this.gradosLoaded = false
+    this.gradosLoaded = true
     this.seccionLoaded = false
     this.cursosLoaded = false
     this.docentesLoaded = false
-    this.periodo._id = ''
     this.horario.grado_id = ''
     this.horario.seccion_id = ''
     this.horario.curso_id = ''

@@ -1,26 +1,38 @@
 @if(loading){
-    <mat-progress-bar mode="indeterminate" class="-mt-7 mb-8"></mat-progress-bar>
-  }
-  <div class="mx-5 mt-2">
-    <p class="text-xl font-medium mb-4">Gestionar Pension</p>
-    <div class="flex justify-between">
+  <mat-progress-bar mode="indeterminate" class="-mt-7 mb-8"></mat-progress-bar>
+}
+<div class="mx-5 mt-2">
+  <p class="text-xl font-medium mb-4">Gestionar Pension</p>
+  <div class="grid grid-cols-3 gap-2 items-center"> <!-- Usando grid -->
       <app-input 
           [(model)]="searchTerm" 
           [placeholder]="'Buscar'" 
           [icon]="'magnifying-glass'"
           [widthFont]="'font-normal bg-gray-50'"
       ></app-input>
-      <button 
-          (click)="agregarPension()"
-          mat-flat-button 
-          color="custom-color" 
-      > + Pagar </button>
-    </div>
+      <div></div> <!-- Espaciador para el grid -->
+      <div class="flex space-x-2 justify-end">  <!-- Contenedor flexible para los botones -->
+          <button 
+              (click)="agregarPension()"
+              mat-flat-button 
+              color="custom-color"
+          > 
+              + Pagar 
+          </button>
+          <button 
+              (click)="importarExcel()" 
+              mat-flat-button 
+              color="custom-color"
+          > 
+              Descargar Excel 
+          </button>
+      </div>
   </div>
-  <app-table 
-    [columns]="columns" 
-    [data]="displayedPension()"
-    [trackByField]="trackByField"
-    [noActions]="true"
-    [loadedComplete]="loadedComplete"
-  ></app-table>
+</div>
+<app-table 
+  [columns]="columns" 
+  [data]="displayedPension()"
+  [trackByField]="trackByField"
+  [noActions]="true"
+  [loadedComplete]="loadedComplete"
+></app-table>

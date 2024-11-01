@@ -26,4 +26,7 @@ export class PensionService {
   getMesesPendientes(estudiante_id: string) {
     return this.http.get(`${baseUrl}/pension/pendiente/${estudiante_id}`);
   }
+  descargarExcel() {
+    return this.http.get(`${baseUrl}/pension/reporte/excel`, { responseType: 'blob' });
+  }
 }

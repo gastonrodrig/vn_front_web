@@ -120,4 +120,15 @@ export class GestionarPensionComponent {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 
+  importarExcel() {
+    this.pensionService.descargarExcel().subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'reportePensiones_VirgenNatividad.xlsx';
+      a.click();
+    }, error => {
+      console.error('Error al descargar el archivo Excel', error);
+    });
+  }
 }

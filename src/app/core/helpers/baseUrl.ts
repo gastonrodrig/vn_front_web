@@ -1,4 +1,4 @@
-export const baseUrl = 'https://vnback-production.up.railway.app'
+export const baseUrl = 'http://localhost:3000'
 
 // 'https://backend-virgen-natividad.vercel.app'
 // 'http://localhost:3000' 

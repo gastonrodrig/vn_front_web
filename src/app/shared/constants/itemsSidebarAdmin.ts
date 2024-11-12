@@ -90,6 +90,11 @@ export const listaModulosAdmin = [
         route: 'gestionar-pension',
         titulo: 'Pension',
         icon: 'money-check-dollar'
-    }
-
+    },
+    {
+        id: 16,
+        route: 'gestionar-solicitud-notas',
+        titulo: 'Notas',
+        icon: 'user-graduate'
+    },
 ]

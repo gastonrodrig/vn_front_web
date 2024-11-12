@@ -20,6 +20,7 @@ import { GestionarPagosComponent } from './pages/gestionar-pagos/gestionar-pagos
 import { GestionarPensionComponent } from './pages/gestionar-pension/gestionar-pension.component';
 import { GestionarTutorComponent } from './pages/gestionar-tutor/gestionar-tutor.component';
 import { GestionarPerfilTutorComponent } from './pages/gestionar-perfil-tutor/gestionar-perfil-tutor.component';
+import { GestionarSolicitudNotas } from './pages/gestionar-solicitud-notas/gestionar-solicitud-notas.component';
 
 export const ADMIN_ROUTES: Routes = [
   { 
@@ -77,6 +78,10 @@ export const ADMIN_ROUTES: Routes = [
       {
         path: 'gestionar-solicitud',
         component: GestionarSolicitudComponent
+      },
+      {
+        path: 'gestionar-solicitud-notas',
+        component: GestionarSolicitudNotas
       },
       {
         path: 'gestionar-cupos',

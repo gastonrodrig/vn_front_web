@@ -158,7 +158,7 @@ export class ModalMatriculaComponent {
     }
 
     this.matriculaService.agregarMatricula(matriculaData).subscribe(
-      (data) => {
+      (dataMatricula: any) => {
         this.loading = false;
         Swal.fire('Matricula agregada', 'La matricula ha sido guardada con éxito', 'success').then(
           (e) => {
@@ -171,16 +171,25 @@ export class ModalMatriculaComponent {
                   console.error('El periodo_id está vacío');
                   return;
                 }
-    
-                const pensionRequests = listaMeses.map((mes: any) => {
+                
+                const fechaActual = new Date();
+                let mesInicio = fechaActual.getMonth() + 1;
+
+                if (matriculaData.tipoMa === 'Traslado Externo') {
+                  mesInicio += 1; // Asegurar que comience desde el siguiente mes adicional
+                }
+
+                mesInicio = mesInicio - 2;
+
+                const mesesSeleccionados = listaMeses.filter(
+                  (mes) => mes.indice >= mesInicio
+                );
+
+                const pensionRequests = mesesSeleccionados.map((mes: any) => {
                   const monthIndex = mes.indice;
     
-                  let fechaInicio = new Date(Number(data.anio), monthIndex, 1);
+                  let fechaInicio = new Date(Number(data.anio), monthIndex, 1); // Primer día del mes
                   let fechaFin = new Date(Number(data.anio), monthIndex + 1, 0);
-    
-                  if (monthIndex === 2) {
-                    fechaInicio = new Date(2024, 2, 18);
-                  }
     
                   if (monthIndex === 11) {
                     fechaFin = new Date(2024, 11, 13);

@@ -174,7 +174,6 @@ export class ModalMatriculaComponent {
     
                 const pensionRequests = listaMeses.map((mes: any) => {
                   const monthIndex = mes.indice;
-    
                   let fechaInicio = new Date(Number(data.anio), monthIndex, 1);
                   let fechaFin = new Date(Number(data.anio), monthIndex + 1, 0);
     

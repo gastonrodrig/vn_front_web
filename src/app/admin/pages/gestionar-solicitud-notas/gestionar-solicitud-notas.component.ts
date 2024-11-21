@@ -188,7 +188,7 @@ export class GestionarSolicitudNotas {
   }
 
   cambiarNotaCancelado(id: any) {
-    this.loading = true
+    this.loading = true;
     this.solicitudNotasService.obtenerSolicitudNotas(id).subscribe(
       (dataSolicitud: any) => {
         this.notasService.obtenerNota(
@@ -199,14 +199,42 @@ export class GestionarSolicitudNotas {
           dataSolicitud.tipoNota
         ).subscribe(
           (dataNota: any) => {
-            this.notasService.cambiarEstadoCancelado(dataNota[0]._id).subscribe(
-              () => {}
-            );
+            if (dataNota.length > 0) {
+              this.notasService.cambiarEstadoCancelado(dataNota[0]._id).subscribe(
+                () => {
+                  this.solicitudNotasService.rechazarSolicitudNotas(id).subscribe(
+                    () => {
+                      this.loading = false;
+                    },
+                    (error) => {
+                      console.error('Error al eliminar la solicitud:', error);
+                      this.loading = false;
+                    }
+                  );
+                },
+                (error) => {
+                  console.error('Error al cambiar el estado de la nota:', error);
+                  this.loading = false; 
+                }
+              );
+            } else {
+              console.error('No se encontró ninguna nota relacionada.');
+              this.loading = false;
+            }
+          },
+          (error) => {
+            console.error('Error al obtener la nota:', error);
+            this.loading = false;
           }
-        )
+        );
+      },
+      (error) => {
+        console.error('Error al obtener la solicitud:', error);
+        this.loading = false;
       }
-    )
+    );
   }
+  
 
   mostrarMensaje(mensaje: any) {
     this.snack.open(mensaje, '', {

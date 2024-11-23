@@ -32,4 +32,7 @@ export class SolicitudService {
   obtenerSolicitudPorDni(dni: string) {
     return this.http.get(`${baseUrl}/solicitud/documento/${dni}`);
   }
+  obtenerSolicitudPorMes(){
+    return this.http.get<number>(`${baseUrl}/solicitud/solicitudes/por-mes`);
+  }
 }

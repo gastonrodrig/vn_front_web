@@ -52,7 +52,7 @@ export class ModalMatriculaComponent {
   dni: any
   fecha: any
   tiempo: any
-  cursos: any[] = []
+  cursos: any
   nombreEstudiante: any
   estudianteId: any
   alumnoNuevo = false
@@ -190,22 +190,24 @@ export class ModalMatriculaComponent {
 
                 // Listar cursos del grado
                 this.gradoCursosHorasService.listarGradoCursosHorasPorGrado(this.grados).subscribe(
-                  (cursos) => {
-                    console.log('Cursos obtenidos para el grado:', cursos);
+                  (datacursos) => {
+                    console.log('Cursos obtenidos para el grado:', datacursos);
 
                     // Validar si hay cursos disponibles
-                    if (!Array.isArray(cursos) || cursos.length === 0) {
+                    if (!Array.isArray(datacursos) || datacursos.length === 0) {
                       console.warn('No hay cursos asociados al grado seleccionado');
                       this.mostrarMensaje('No hay cursos asociados al grado seleccionado');
                       return;
                     }
+                    //
+                    //
+                    //
 
                     // Crear solicitudes para asignar los cursos al estudiante
-                    const estudianteCursoRequests = cursos.map((curso) => {
+                    const estudianteCursoRequests = datacursos.map((datacursos) => {
                       const estudianteCursoData = {
                         estudiante_id: this.estudianteId,
-                        curso_id: curso.curso._id, // ID del curso asociado
-                        
+                        curso_id: datacursos.curso._id, // ID del curso asociado
                       };
 
                       console.log('Datos del curso asignado:', estudianteCursoData);
@@ -213,7 +215,9 @@ export class ModalMatriculaComponent {
                       // Agregar la solicitud para asignar el curso al estudiante
                       return this.estudianteCursoService.agregarEstudianteCurso(estudianteCursoData).toPromise();
                     });
-
+                    //
+                    //
+                    //
                     // Ejecutar todas las solicitudes en paralelo
                     Promise.all(estudianteCursoRequests)
                       .then(() => {

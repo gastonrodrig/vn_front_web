@@ -40,6 +40,7 @@ import { PensionService } from '../../../../core/services/pension.service';
   styleUrl: './modal-matricula.component.css'
 })
 export class ModalMatriculaComponent {
+  isPeriodoDisabled: boolean = false; 
   periodos: any[] = []
   listaMetodosPago: any
   listaTiposMatricula: any
@@ -145,81 +146,84 @@ export class ModalMatriculaComponent {
 
     const fechaIngresada = this.formatDateTime(this.fecha, this.tiempo);
 
-    if (!fechaIngresada) {
-      this.mostrarMensaje('La fecha y hora del pago es requerida');
-      return;
-    }
-    
-    const fechaActual = new Date();
-    
-    if (new Date(fechaIngresada).getTime() > fechaActual.getTime()) {
-      this.mostrarMensaje('La fecha y hora del pago no puede ser mayor a la fecha y hora actual');
-      return;
-    }
+  if (!fechaIngresada) {
+    this.mostrarMensaje('La fecha y hora del pago es requerida');
+    return;
+  }
 
-    this.matriculaService.agregarMatricula(matriculaData).subscribe(
-      (data) => {
-        this.loading = false;
-        Swal.fire('Matricula agregada', 'La matricula ha sido guardada con éxito', 'success').then(
-          (e) => {
-            this.closeModel();
-            this.periodoService.obtenerPeriodo(this.matricula.periodo_id).subscribe(
-              (data: any) => {
-                const periodoId = this.matricula.periodo_id;
-    
-                if (!periodoId) {
-                  console.error('El periodo_id está vacío');
-                  return;
-                }
-    
-                const pensionRequests = listaMeses.map((mes: any) => {
-                  const monthIndex = mes.indice;
-                  let fechaInicio = new Date(Number(data.anio), monthIndex, 1);
-                  let fechaFin = new Date(Number(data.anio), monthIndex + 1, 0);
-    
-                  if (monthIndex === 2) {
-                    fechaInicio = new Date(2024, 2, 18);
-                  }
-    
-                  if (monthIndex === 11) {
-                    fechaFin = new Date(2024, 11, 13);
-                  }
-    
-                  const pensionData = {
-                    estudiante_id: this.estudianteId,
-                    monto: 150,
-                    periodo_id: periodoId,
-                    fecha_inicio: fechaInicio.toISOString().split('T')[0],
-                    fecha_limite: fechaFin.toISOString().split('T')[0],
-                    mes: mes.nombre
-                  };
-    
-                  return this.pensionService.agregarPension(pensionData).toPromise();
-                });
-    
-                Promise.all(pensionRequests)
-                  .then((responses) => {
-                    console.log('Todas las pensiones agregadas:', responses);
-                    this.loading = false;
-                  })
-                  .catch((error) => {
-                    console.error('Error al agregar pensiones:', error);
-                    this.loading = false;
-                    this.mostrarMensaje(error.error.message);
-                  });
+  const fechaActual = new Date();
+  if (new Date(fechaIngresada).getTime() > fechaActual.getTime()) {
+    this.mostrarMensaje('La fecha y hora del pago no puede ser mayor a la fecha y hora actual');
+    return;
+  }
+
+  this.matriculaService.agregarMatricula(matriculaData).subscribe(
+    (data) => {
+      this.loading = false;
+      Swal.fire('Matrícula agregada', 'La matrícula ha sido guardada con éxito', 'success').then(() => {
+        this.periodoService.obtenerPeriodo(this.matricula.periodo_id).subscribe(
+          (data: any) => {
+            const periodoId = this.matricula.periodo_id;
+
+            if (!periodoId) {
+              console.error('El periodo_id está vacío');
+              return;
+            }
+
+            let mesesProcesar = listaMeses;
+
+            if (matriculaData.tipoMa === 'Traslado Interno') {
+              const mesActual = new Date().getMonth();
+              mesesProcesar = listaMeses.filter((mes: any) => mes.indice >= mesActual);
+            }
+
+            const pensionRequests = mesesProcesar.map((mes: any) => {
+              const monthIndex = mes.indice;
+              let fechaInicio = new Date(Number(data.anio), monthIndex, 1);
+              let fechaFin = new Date(Number(data.anio), monthIndex + 1, 0);
+
+              if (monthIndex === 2) {
+                fechaInicio = new Date(2024, 2, 18);
               }
-            );
+
+              if (monthIndex === 11) {
+                fechaFin = new Date(2024, 11, 13);
+              }
+
+              const pensionData = {
+                estudiante_id: this.estudianteId,
+                monto: 150,
+                periodo_id: periodoId,
+                fecha_inicio: fechaInicio.toISOString().split('T')[0],
+                fecha_limite: fechaFin.toISOString().split('T')[0],
+                mes: mes.nombre
+              };
+
+              return this.pensionService.agregarPension(pensionData).toPromise();
+            });
+
+            Promise.all(pensionRequests)
+              .then((responses) => {
+                console.log('Todas las pensiones agregadas:', responses);
+                this.loading = false;
+              })
+              .catch((error) => {
+                console.error('Error al agregar pensiones:', error);
+                this.loading = false;
+                this.mostrarMensaje(error.error.message);
+              });
           }
         );
-      },
-      (error) => {
-        this.loading = false;
-        console.log(error);
-        this.mostrarMensaje(error.error.message);
-        return;
-      }
-    );
-  }
+      });
+    },
+    (error) => {
+      this.loading = false;
+      console.log(error);
+      this.mostrarMensaje(error.error.message);
+      return;
+    }
+  );
+}
 
   validarDNI(dni: string) {
     if (dni.length > 8) {
@@ -286,14 +290,27 @@ export class ModalMatriculaComponent {
     date.setHours(hours, minutes, seconds);
     return formatDate(date, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", 'en-US', '+0000');
   }
-
+  getPeriodoActualId(): string {
+    const periodoActual = this.periodos.find(
+      (periodo) =>
+       periodo.anio === new Date().getFullYear().toString()
+    );
+    return periodoActual ? periodoActual._id : ''; 
+  }
+  
   actualizarMonto(tipoMatricula: string) {
     if (tipoMatricula === 'Nuevo' || tipoMatricula === 'Regular') {
       this.matricula.monto = 300
+      this.isPeriodoDisabled = true; 
     } else if (tipoMatricula === 'Traslado Externo') {
       this.matricula.monto = 350
+      console.log("Periodos cargados:", this.periodos);
+      console.log(this.getPeriodoActualId());
+        this.matricula.periodo_id = this.getPeriodoActualId();
+        this.isPeriodoDisabled = true;
     } else {
       this.matricula.monto = ''
+      this.isPeriodoDisabled = true;
     }
   }
 

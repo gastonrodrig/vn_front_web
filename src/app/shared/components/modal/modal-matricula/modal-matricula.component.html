@@ -96,6 +96,7 @@
         <mat-select 
           [(ngModel)]="matricula.periodo_id"
           [ngModelOptions]="{standalone: true}"
+          [disabled]="isPeriodoDisabled" 
         >
           <mat-option 
             *ngFor="let e of periodos" 

@@ -15,12 +15,12 @@ import { listaMetodosPago } from '../../../constants/itemsPayment';
 import { EstudianteService } from '../../../../core/services/estudiante.service';
 import { PeriodoService } from '../../../../core/services/periodo.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import Swal from 'sweetalert2';
 import { listaTiposMatricula } from '../../../constants/itemsRegistration';
 import { listaMeses } from '../../../constants/itemsMonths';
 import { PensionService } from '../../../../core/services/pension.service';
-import { EstudianteCursoService } from '../../../../core/services/estudiante-curso.service';
+import { EstudianteCursoPeriodoService } from '../../../../core/services/estudiante-curso-periodo.service';
 import { GradoCursosHorasService } from '../../../../core/services/grado-cursos-horas.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal-matricula',
@@ -48,7 +48,7 @@ export class ModalMatriculaComponent {
   listaMeses: any
   matricula: any
   loading = false
-  grados: any
+  grado: any
   dni: any
   fecha: any
   tiempo: any
@@ -66,7 +66,7 @@ export class ModalMatriculaComponent {
     private periodoService: PeriodoService,
     private pensionService: PensionService,
     private matriculaService: MatriculaService,
-    private estudianteCursoService: EstudianteCursoService,
+    private estudianteCursoPeriodoService: EstudianteCursoPeriodoService,
     private gradoCursosHorasService: GradoCursosHorasService
   ) {}
 
@@ -170,81 +170,54 @@ export class ModalMatriculaComponent {
             this.periodoService.obtenerPeriodo(this.matricula.periodo_id).subscribe(
               (data: any) => {
                 const periodoId = this.matricula.periodo_id;
-    
+
                 if (!periodoId) {
                   console.error('El periodo_id está vacío');
                   return;
                 }
-               // Obtener estudiante por ID
-            this.estudianteService.obtenerEstudiante(this.estudianteId).subscribe(
-              (estudiante: any) => {
-                console.log('Estudiante obtenido:', estudiante);
-                if (!estudiante.grado || !estudiante.grado._id) {
-                  console.warn('El estudiante no tiene un grado asignado');
-                  this.mostrarMensaje('El estudiante no tiene un grado asignado');
-                  this.loading = false;
-                  return;
-                }
-                this.grados = estudiante.grado._id;
-                console.log('Grado obtenido:', this.grados);
 
-                // Listar cursos del grado
-                this.gradoCursosHorasService.listarGradoCursosHorasPorGrado(this.grados).subscribe(
-                  (datacursos) => {
-                    console.log('Cursos obtenidos para el grado:', datacursos);
+                this.estudianteService.obtenerEstudiante(this.estudianteId).subscribe(
+                  (estudiante: any) => {
+                    this.grado = estudiante.grado._id;
+                    this.gradoCursosHorasService.listarGradoCursosHorasPorGrado(this.grado).subscribe(
+                      (dataGC: any) => {
+                        const gcRequest = dataGC.map((datita: any) => {
+                          const anioActual = new Date().getFullYear().toString();
+                          this.periodoService.obtenerPeriodoporanio(anioActual).subscribe(
+                            (data: any) => {
+                              const periodoId = data._id;
+                              const estudianteCursoPeriodoData = {
+                                estudiante_id: this.estudianteId,
+                                curso_id: datita.curso._id,
+                                periodo_id: periodoId,
+                              };
+                              return this.estudianteCursoPeriodoService.agregarEstudianteCursoPeriodo(estudianteCursoPeriodoData).toPromise()
+                            }
+                          )
+                        });
 
-                    // Validar si hay cursos disponibles
-                    if (!Array.isArray(datacursos) || datacursos.length === 0) {
-                      console.warn('No hay cursos asociados al grado seleccionado');
-                      this.mostrarMensaje('No hay cursos asociados al grado seleccionado');
-                      return;
-                    }
-                    //
-                    //
-                    //
-
-                    // Crear solicitudes para asignar los cursos al estudiante
-                    const estudianteCursoRequests = datacursos.map((datacursos) => {
-                      const estudianteCursoData = {
-                        estudiante_id: this.estudianteId,
-                        curso_id: datacursos.curso._id, // ID del curso asociado
-                      };
-
-                      console.log('Datos del curso asignado:', estudianteCursoData);
-
-                      // Agregar la solicitud para asignar el curso al estudiante
-                      return this.estudianteCursoService.agregarEstudianteCurso(estudianteCursoData).toPromise();
-                    });
-                    //
-                    //
-                    //
-                    // Ejecutar todas las solicitudes en paralelo
-                    Promise.all(estudianteCursoRequests)
-                      .then(() => {
-                        Swal.fire(
-                          'Cursos asignados',
-                          'El estudiante ha sido matriculado en todos los cursos del grado seleccionado',
-                          'success'
-                        );
-                      })
-                      .catch((error) => {
-                        console.error('Error al asignar cursos:', error);
-                        this.mostrarMensaje('Hubo un error al asignar los cursos al estudiante');
-                      });
+                        Promise.all(gcRequest)
+                          .then((responses) => {
+                            console.log('Todos los estudianteCursoPeriodo agregados:', responses);
+                            this.loading = false;
+                          })
+                          .catch((error) => {
+                            console.error('Error al agregar estudianteCursoPeriodo:', error);
+                            this.loading = false;
+                            this.mostrarMensaje(error.error.message);
+                          });
+                      },
+                      (error) => {
+                        console.error('Error al listar los cursos:', error);
+                        this.mostrarMensaje('No se pudieron listar los cursos del grado');
+                      }
+                    );
                   },
                   (error) => {
-                    console.error('Error al listar los cursos:', error);
-                    this.mostrarMensaje('No se pudieron listar los cursos del grado');
+                    console.error('Error al obtener el estudiante:', error);
+                    this.mostrarMensaje('No se pudo obtener el estudiante');
                   }
                 );
-              },
-              (error) => {
-                console.error('Error al obtener el estudiante:', error);
-                this.mostrarMensaje('No se pudo obtener el estudiante');
-              }
-            );
-                   
-    
 
                 const pensionRequests = listaMeses.map((mes: any) => {
                   const monthIndex = mes.indice;

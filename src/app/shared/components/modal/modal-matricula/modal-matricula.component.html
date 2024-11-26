@@ -47,7 +47,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      
+
       <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
         <mat-label>Monto (S/.)</mat-label>
         <input
@@ -76,8 +76,6 @@
           </mat-select>
       </mat-form-field>
 
-      
-
       <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1">
         <mat-label>Número de Operacion</mat-label>
         <input
@@ -89,7 +87,6 @@
           [ngModelOptions]="{standalone: true}"
         >
       </mat-form-field>
-      
 
       <mat-form-field appearance="fill" class="col-span-2">
         <mat-label>Periodo</mat-label>
@@ -132,7 +129,6 @@
       </mat-form-field>
     </div>
 
-
     <div class="flex justify-end w-full">
       <div class="p-2">
         <button mat-flat-button color="custom-color" class="me-2">Guardar</button>
@@ -141,6 +137,7 @@
     </div>
   </form>
 </div>
+
 @if(loading) {
   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 }

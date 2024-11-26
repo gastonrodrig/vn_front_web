@@ -1,1 +1,37 @@
-<p>inicio works!</p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div class="bg-white p-8 rounded-lg drop-shadow-lg w-full md:w-94 hover:scale-105 transform transition-all duration-300 cursor-pointer" (click)="goToVacantes()">
+    <div class="grid grid-cols-2 gap-4 items-center">
+      <div class="bg-dark-blue-2 rounded-md flex justify-center items-center w-32 h-32">
+        <i class="fa-solid fa-user-graduate text-white text-6xl"></i>
+      </div>
+      <div class="flex flex-col justify-center items-start space-y-2">
+        <p class="text-5xl font-semibold -ml-20">{{ vacantesPorAnio }}</p>
+        <p class="text-xl font-medium text-gray-800 -ml-20">Vacantes por Periodo Actual</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white p-8 rounded-lg drop-shadow-lg w-full md:w-94 hover:scale-105 transform transition-all duration-300 cursor-pointer" (click)="goToSolicitudes()">
+    <div class="grid grid-cols-2 gap-4 items-center">
+      <div class="bg-dark-blue-2 rounded-md flex justify-center items-center w-32 h-32">
+        <i class="fa-solid fa-id-card text-white text-6xl"></i>
+      </div>
+      <div class="flex flex-col justify-center items-start space-y-2">
+        <p class="text-5xl font-semibold -ml-20">{{ solicitudesPorMes }}</p>
+        <p class="text-xl font-medium text-gray-800 -ml-20">Solicitudes por Mes</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white p-8 rounded-lg drop-shadow-lg w-full md:w-94 hover:scale-105 transform transition-all duration-300 cursor-pointer" (click)="goToUsuarios()">
+    <div class="grid grid-cols-2 gap-4 items-center">
+      <div class="bg-dark-blue-2 rounded-md flex justify-center items-center w-32 h-32">
+        <i class="fa-solid fa-user-pen text-white text-6xl"></i>
+      </div>
+      <div class="flex flex-col justify-center items-start space-y-2">
+        <p class="text-5xl font-semibold -ml-20">{{usuariosHabilitados}}</p>
+        <p class="text-xl font-medium text-gray-800 -ml-20">Usuarios Disponibles</p>
+      </div>
+    </div>
+  </div>
+</div>

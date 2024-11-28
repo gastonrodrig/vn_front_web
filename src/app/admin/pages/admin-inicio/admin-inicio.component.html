@@ -35,3 +35,56 @@
     </div>
   </div>
 </div>
+
+<div class="flex space-x-6 mt-8">
+  <div class="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
+    <div class="flex justify-between items-center mb-4">
+      <button (click)="prevMonth()" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-200 rounded-full transition-all duration-200">
+        Anterior
+      </button>
+      <div class="text-lg font-bold">{{ currentMonth + 1 }} - {{ currentYear }}</div>
+      <button (click)="nextMonth()" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-200 rounded-full transition-all duration-200">
+        Siguiente
+      </button>
+    </div>
+
+    <div class="grid grid-cols-7 gap-2 text-center text-sm font-semibold">
+      <div *ngFor="let day of ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']" class="text-gray-600 py-2">
+        {{ day }}
+      </div>
+
+      <div *ngFor="let day of [].constructor(firstDayOfMonth)"></div>
+
+      <div *ngFor="let day of daysInMonth" 
+           [ngClass]="{'bg-dark-blue-2 text-white': isToday(day), 'hover:bg-blue-300': true}" 
+           class="p-4 cursor-pointer rounded-lg transition-all duration-200">
+        {{ day }}
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-5xl bg-white p-6 rounded-lg shadow-lg dark:bg-gray-800 w-full">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h3 class="text-3xl font-semibold text-gray-900 dark:text-white">Ganancias del Colegio</h3>
+        <p class="text-lg text-gray-500 dark:text-gray-400">Ganancias por Mes</p>
+      </div>
+    </div>
+  
+    <div id="ganancias-chart" class="h-72 mb-6 bg-gray-100 rounded-lg w-full">
+      <canvas id="monthly-gains-chart" class="w-full h-full"></canvas>
+    </div>
+  
+    <div class="mt-4 flex justify-between items-center">
+      <button class="px-4 py-2 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200">
+        Últimos 7 días
+      </button>
+      <button class="px-4 py-2 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200">
+        Últimos 30 días
+      </button>
+      <button class="px-4 py-2 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200">
+        Últimos 90 días
+      </button>
+    </div>
+  </div>  
+</div>

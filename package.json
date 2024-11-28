@@ -24,6 +24,7 @@
     "@angular/router": "^18.0.0",
     "@angular/ssr": "^18.0.5",
     "@stripe/stripe-js": "^4.4.0",
+    "chart.js": "^4.4.6",
     "express": "^4.18.2",
     "file-saver": "^2.0.5",
     "moment": "^2.30.1",

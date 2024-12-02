@@ -22,7 +22,7 @@ import { PensionService } from '../../../core/services/pension.service';
 import { listaMeses } from '../../../shared/constants/itemsMonths';
 import { SoloNumerosDirective } from '../../../shared/directives/solo-numeros.directive';
 import { PeriodoService } from '../../../core/services/periodo.service';
-
+import { MatRadioModule } from '@angular/material/radio';
 @Component({
   selector: 'app-pagar-matricula',
   standalone: true,
@@ -35,7 +35,8 @@ import { PeriodoService } from '../../../core/services/periodo.service';
     CommonModule,
     MatSelectModule,
     MatIconModule,
-    SoloNumerosDirective
+    SoloNumerosDirective,
+    MatRadioModule
   ],
   templateUrl: './pagar-matricula.component.html',
   styleUrls: ['./pagar-matricula.component.css']
@@ -49,6 +50,8 @@ export class PagarMatriculaComponent implements OnInit {
   estudiante: any;
   estudianteId: any;
   tiposDocumento: any;
+  tipoPago: string = ''; // Boleta o Factura
+  ruc: string = ''; // RUC en caso de Factura
 
   dni = '';
   nombreUsuario = '';
@@ -78,6 +81,15 @@ export class PagarMatriculaComponent implements OnInit {
     private pensionService: PensionService,
     private snack: MatSnackBar
   ) {}
+
+  tipoPagoSeleccionado: boolean = false;
+
+onTipoPagoChange() {
+    this.tipoPagoSeleccionado = !!this.tipoPago; // true si `tipoPago` tiene valor, false de lo contrario
+}
+  
+  
+  
 
   ngOnInit() {
     this.listaMeses = listaMeses;

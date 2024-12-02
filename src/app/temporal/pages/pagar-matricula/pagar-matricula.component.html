@@ -53,21 +53,69 @@
       </div>
     </div>
   </div>
-  <div class="grid grid-cols-2 mt-6 gap-x-10">
+   <!-- Selección de tipo de pago (Boleta o Factura) -->
+   <div class="min-[1100px]:w-[760px] max-[1100px]:w-[630px] max-[950px]:w-auto py-2 ">
+    <div class="bg-gray-50 p-2 rounded-xl ring-1 ring-gray-300">
+      <div class="min-[1100px]:flex  py-2 mx-1 min-[1100px]:-py-2">
+        <!-- Radio buttons para elegir entre Boleta o Factura -->
+        <mat-radio-group [(ngModel)]="tipoPago" (change)="onTipoPagoChange()">
+          <mat-radio-button value="boleta">Boleta</mat-radio-button>
+          <mat-radio-button value="factura">Factura</mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="tipoPagoSeleccionado" >
+  <div class="grid grid-cols-2 mt-4 gap-x-10">
     <div class="col-span-2 md:col-span-1">
       <div class="rounded-xl ring-1 ring-gray-300 p-5" [ngClass]="{'pointer-events-none opacity-50 bg-gray-100': isDisabled }">
         <div class="grid md:w-auto">
           <p class="font-medium text-lg mb-2">Datos Personales</p>
-          <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 -mb-3">
-            <mat-label>Nombre</mat-label>
-            <input
-              [(ngModel)]="name"
-              type="text"
-              placeholder="Ingrese el nombre"
-              matInput
-              [ngModelOptions]="{standalone: true}"
-            >
-          </mat-form-field>
+         <!-- Selección de Nombre y RUC (cuando se selecciona Factura) -->
+  <div class="grid grid-cols-2 gap-2"> <!-- Usamos grid-cols-2 para dividir el espacio en dos columnas -->
+
+  <!-- Campo de Nombre -->
+  <mat-form-field appearance="fill" class="col-span-1 -mb-3"> <!-- col-span-1 para que ocupe la mitad del ancho -->
+    <mat-label>Nombre</mat-label>
+    <input
+      [(ngModel)]="name"
+      type="text"
+      placeholder="Ingrese el nombre"
+      matInput
+      [ngModelOptions]="{standalone: true}"
+    >
+  </mat-form-field>
+
+  <!-- Mostrar campo de RUC solo si se selecciona 'Factura' -->
+  <div *ngIf="tipoPago === 'factura'">
+    <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 -mb-3 w-full"> <!-- col-span-1 para que ocupe la mitad del ancho -->
+      <mat-label>RUC</mat-label>
+      <input
+        [(ngModel)]="ruc"
+        type="text"
+        placeholder="Ingrese el RUC"
+        matInput
+        [ngModelOptions]="{standalone: true}"
+      >
+    </mat-form-field>
+  </div>
+  <div *ngIf="tipoPago === 'boleta'">
+  <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 -mb-3 w-full">
+    <mat-label>Nro. Documento</mat-label>
+    <input
+      [(ngModel)]="n_doc"
+      type="text"
+      placeholder="Ingrese el numero"
+      matInput
+      appSoloNumeros
+      [ngModelOptions]="{standalone: true}"
+    >
+    <mat-icon matSuffix>badge</mat-icon>
+  </mat-form-field>
+  </div>
+</div>
     
           <div class="grid grid-cols-2 gap-x-2 col-span-2 sm:col-span-1">
             <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 -mb-3">
@@ -95,43 +143,15 @@
               <mat-icon matSuffix>email</mat-icon>
             </mat-form-field>
           </div>
-    
-          <div class="grid grid-cols-2 gap-x-2 col-span-2 sm:col-span-1">
-            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 -mb-3">
-              <mat-label>Tipo de Documento</mat-label>
-              <mat-select 
-                  [(ngModel)]="tipoDoc"
-                  [ngModelOptions]="{standalone: true}"
-              >
-                  <mat-option 
-                      *ngFor="let e of tiposDocumento" 
-                      [value]="e._id"
-                  >
-                      {{ e.type }}
-                  </mat-option>
-              </mat-select>
-          </mat-form-field>
-    
-            <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 -mb-3">
-              <mat-label>Nro. Documento</mat-label>
-              <input
-                [(ngModel)]="n_doc"
-                type="text"
-                placeholder="Ingrese el numero"
-                matInput
-                appSoloNumeros
-                [ngModelOptions]="{standalone: true}"
-              >
-              <mat-icon matSuffix>badge</mat-icon>
-            </mat-form-field>
-          </div>
-    
+          <div *ngIf="tipoPago === 'boleta' || tipoPago === 'factura'">
           <p class="font-medium text-lg mb-2">Datos del Pago</p>
           <div class="col-span-2 sm:col-span-1 mb-2">
             <div id="card-element" class="card-element">
     
             </div>
           </div>
+          </div>
+    
     
           <p class="font-medium text-lg mb-2">Dirección de Facturación</p>
           <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 -mb-3">
@@ -178,5 +198,6 @@
           figurarán en Boleta/Ruc como Peru, Lima, Departamento de Lima respectivamente.</p>
       </div>
     </div>
+  </div>
   </div>
 </div>

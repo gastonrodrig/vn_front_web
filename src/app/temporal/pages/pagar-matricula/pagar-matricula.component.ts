@@ -203,6 +203,8 @@ export class PagarMatriculaComponent implements OnInit {
         divisa: 'pen',
         paymentMethodId: paymentMethod.id,
         metadata: {
+          direccion: this.line1,
+          tipoDocumento: this.tipoPago === 'Boleta' ? 'Dni' : 'Ruc',
           nroDocumento: this.documento,
         },
       };
@@ -264,29 +266,6 @@ export class PagarMatriculaComponent implements OnInit {
 
           this.matriculaService.agregarMatricula(dataMatricula).subscribe(
             (data: any) => {
-              const pagoData = {
-                monto: data.monto,
-                divisa: 'PEN',
-                paymentMethodId: data.metodo_pago,
-                nombre_completo: `${this.estudiante.nombre} ${this.estudiante.apellido}`,
-                transactionDetails: `Pago de matrícula del estudiante con ID ${this.estudiante._id}`,
-                status: 'Aprobado',
-                stripeOperationId: data.n_operacion,
-                metadata: {
-                  direccion: this.line1,
-                  tipoDocumento: this.tipoPago === 'Boleta' ? 'Dni' : 'Ruc',
-                  nroDocumento: this.documento,
-                },
-                paymentDate: data.fecha,
-              };
-
-              this.pagoService.crearPago(pagoData).subscribe(
-                (data: any) => {
-                  console.log('Pago creado:', data);
-                  this.loading = false
-                }
-              );
-
               const currentYear = new Date().getFullYear();
 
               this.listaMeses.forEach((mes: any) => {

@@ -61,8 +61,8 @@
         <div class="rounded-xl ring-1 ring-gray-300 p-5 mb-3">
           <div class="min-[1100px]:flex  py-2 mx-1 min-[1100px]:-py-2">
             <mat-radio-group [(ngModel)]="tipoPago" (change)="onTipoPagoChange()">
-              <mat-radio-button value="boleta">Boleta</mat-radio-button>
-              <mat-radio-button value="factura">Factura</mat-radio-button>
+              <mat-radio-button value="Boleta">Boleta</mat-radio-button>
+              <mat-radio-button value="Factura">Factura</mat-radio-button>
             </mat-radio-group>
           </div>
         </div>
@@ -83,7 +83,7 @@
                 >
               </mat-form-field>
 
-              @if(tipoPago === 'boleta') {
+              @if(tipoPago === 'Boleta') {
                 <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 -mb-3 w-full">
                   <mat-label>DNI</mat-label>
                   <input
@@ -97,7 +97,7 @@
                   <mat-icon matSuffix>badge</mat-icon>
                 </mat-form-field>
               }
-              @if(tipoPago === 'factura') {
+              @if(tipoPago === 'Factura') {
                 <mat-form-field appearance="fill" class="col-span-2 sm:col-span-1 -mb-3 w-full"> <!-- col-span-1 para que ocupe la mitad del ancho -->
                   <mat-label>RUC</mat-label>
                   <input

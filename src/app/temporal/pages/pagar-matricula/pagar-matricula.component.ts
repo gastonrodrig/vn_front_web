@@ -52,7 +52,7 @@ export class PagarMatriculaComponent implements OnInit {
   estudiante: any;
   estudianteId: any;
   tiposDocumento: any;
-  tipoPago: string = 'boleta';
+  tipoPago: string = 'Boleta';
   documento: any
 
   dni = '';
@@ -273,6 +273,8 @@ export class PagarMatriculaComponent implements OnInit {
                 status: 'Aprobado',
                 stripeOperationId: data.n_operacion,
                 metadata: {
+                  direccion: this.line1,
+                  tipoDocumento: this.tipoPago === 'Boleta' ? 'Dni' : 'Ruc',
                   nroDocumento: this.documento,
                 },
                 paymentDate: data.fecha,

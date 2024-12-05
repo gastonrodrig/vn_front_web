@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { TableComponent } from '../../../shared/components/table/table.component';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { InputComponent } from '../../../shared/components/UI/input/input.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -23,10 +21,8 @@ import { SeccionCursoDocenteService } from '../../../core/services/seccion-curso
   selector: 'app-gestionar-horarios',
   standalone: true,
   imports: [
-    TableComponent, 
     MatProgressBarModule, 
     FormsModule, 
-    InputComponent, 
     MatButtonModule,
     MatFormFieldModule, 
     MatInputModule, 

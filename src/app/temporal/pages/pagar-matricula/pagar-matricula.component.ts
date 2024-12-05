@@ -191,26 +191,27 @@ export class PagarMatriculaComponent implements OnInit {
       if(this.name === ''){
         this.mostrarMensaje('el nombre es requerido',3000);
         return;
-     }
-     if(this.number === ''){
-      this.mostrarMensaje('el numero es requerido',3000);
-      return;
-     }
-     if(this.email ===''){
-      this.mostrarMensaje('El correo se encuentra vacio',3000);
-      return;
-     }
-     if(this.tipoDoc === ''){
-        this.mostrarMensaje('Tiene que elegir el tipo de documento',3000);
-     }
-     if(this.n_doc === ''){
-       this.mostrarMensaje('Numero de Documento Vacio',3000);
-       return;
-    }
-    if(this.line1 === ''){
-      this.mostrarMensaje('La Direccion se encuentra vacia',3000);
-      return;
-   }
+      }
+      if(this.number === ''){
+        this.mostrarMensaje('el numero es requerido',3000);
+        return;
+      }
+      if(this.email ===''){
+        this.mostrarMensaje('El correo se encuentra vacio',3000);
+        return;
+      }
+      if(this.tipoDoc === ''){
+          this.mostrarMensaje('Tiene que elegir el tipo de documento',3000);
+      }
+      if(this.n_doc === ''){
+        this.mostrarMensaje('Numero de Documento Vacio',3000);
+        return;
+      }
+      if(this.line1 === ''){
+        this.mostrarMensaje('La Direccion se encuentra vacia',3000);
+        return;
+      }
+
       this.stripeService.procesarPago(paymentData).subscribe(
         async (response: any) => {
           console.log('Payment successful:', response);

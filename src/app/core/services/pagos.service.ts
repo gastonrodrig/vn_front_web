@@ -11,4 +11,8 @@ export class PagoService {
   listarPagos() {
     return this.http.get(`${baseUrl}/pago/`);
   }
+
+  obtenerGananciasPorMes(){
+    return this.http.get<{ _id: string, totalGanancias: number }[]>(`${baseUrl}/pago/ganancias-mensuales`);
+  }
 }

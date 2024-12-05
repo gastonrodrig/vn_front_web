@@ -15,10 +15,12 @@ import { listaMetodosPago } from '../../../constants/itemsPayment';
 import { EstudianteService } from '../../../../core/services/estudiante.service';
 import { PeriodoService } from '../../../../core/services/periodo.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import Swal from 'sweetalert2';
 import { listaTiposMatricula } from '../../../constants/itemsRegistration';
 import { listaMeses } from '../../../constants/itemsMonths';
 import { PensionService } from '../../../../core/services/pension.service';
+import { EstudianteCursoPeriodoService } from '../../../../core/services/estudiante-curso-periodo.service';
+import { GradoCursosHorasService } from '../../../../core/services/grado-cursos-horas.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal-matricula',
@@ -46,11 +48,11 @@ export class ModalMatriculaComponent {
   listaMeses: any
   matricula: any
   loading = false
-
+  grado: any
   dni: any
   fecha: any
   tiempo: any
-
+  cursos: any
   nombreEstudiante: any
   estudianteId: any
   alumnoNuevo = false
@@ -63,7 +65,9 @@ export class ModalMatriculaComponent {
     private estudianteService: EstudianteService,
     private periodoService: PeriodoService,
     private pensionService: PensionService,
-    private matriculaService: MatriculaService
+    private matriculaService: MatriculaService,
+    private estudianteCursoPeriodoService: EstudianteCursoPeriodoService,
+    private gradoCursosHorasService: GradoCursosHorasService
   ) {}
 
   ngOnInit() {
@@ -166,29 +170,16 @@ export class ModalMatriculaComponent {
             this.periodoService.obtenerPeriodo(this.matricula.periodo_id).subscribe(
               (data: any) => {
                 const periodoId = this.matricula.periodo_id;
-    
+
                 if (!periodoId) {
                   console.error('El periodo_id está vacío');
                   return;
                 }
-                
-                const fechaActual = new Date();
-                let mesInicio = fechaActual.getMonth() + 1;
-
-                if (matriculaData.tipoMa === 'Traslado Externo') {
-                  mesInicio += 1; // Asegurar que comience desde el siguiente mes adicional
-                }
-
-                mesInicio = mesInicio - 2;
-
-                const mesesSeleccionados = listaMeses.filter(
-                  (mes) => mes.indice >= mesInicio
-                );
-
-                const pensionRequests = mesesSeleccionados.map((mes: any) => {
+    
+                const pensionRequests = listaMeses.map((mes: any) => {
                   const monthIndex = mes.indice;
     
-                  let fechaInicio = new Date(Number(data.anio), monthIndex, 1); // Primer día del mes
+                  let fechaInicio = new Date(Number(data.anio), monthIndex, 1);
                   let fechaFin = new Date(Number(data.anio), monthIndex + 1, 0);
     
                   if (monthIndex === 11) {

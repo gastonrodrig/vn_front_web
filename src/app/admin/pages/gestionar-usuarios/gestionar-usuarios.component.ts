@@ -71,7 +71,7 @@ export class GestionarUsuariosComponent {
         // Inicializamos la lista de usuarios vacía antes de formatear
         this.usuarios = [];
         
-        // Recorremos cada usuario para formatearlos
+        console.log(usuariosFiltrados)
         usuariosFiltrados.forEach((usuario: any) => {
           this.formatearUsuarios(usuario).then((usuarioFormateado: any) => {
             this.usuarios.push(usuarioFormateado);

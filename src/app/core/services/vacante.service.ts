@@ -27,4 +27,7 @@ export class VacanteService {
   cambiarEstadoCancelado(id: string) {
     return this.http.patch(`${baseUrl}/vacante/${id}/cancelar/`, null);
   }
+  contarVacantesPorAño() {
+    return this.http.get<number>(`${baseUrl}/vacante/dashboard/conteo-actual`);
+  }
 }

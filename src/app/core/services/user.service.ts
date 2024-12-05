@@ -35,4 +35,8 @@ export class UserService {
   eliminarPerfil(id: string){
     return this.http.patch(`${baseUrl}/user/${id}/remove-profile`, null);
   }
+
+  contarUsuariosHabilitados() {
+    return this.http.get<number>(`${baseUrl}/user/usuarios/count/habilitados`);
+  }
 }

@@ -31,6 +31,6 @@ export class SolicitudNotasService {
   }
 
   rechazarSolicitudNotas(id: string): Observable<any> {
-    return this.http.patch(`${baseUrl}/solicitud-notas/reject/${id}`, null);
+    return this.http.delete(`${baseUrl}/solicitud-notas/reject/${id}`);
   }
 }

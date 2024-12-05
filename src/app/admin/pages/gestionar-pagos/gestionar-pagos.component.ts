@@ -24,10 +24,9 @@ export class GestionarPagosComponent {
   searchTerm: string = ''
 
   columns = [
-    { header: 'Estudiante', field: 'nombre_completo' },
+    { header: 'Remitente', field: 'nombre_completo' },
     { header: 'Monto', field: 'monto' },
     { header: 'Estado', field: 'status' },
-    { header: 'Tipo Documento', field: 'metadata.tipoDocumento' },
     { header: 'Nro. Documento', field: 'metadata.nroDocumento' },
     { header: 'Fecha', field: 'paymentDate' }
   ]

@@ -19,6 +19,6 @@ export class StripeService {
   }
   
   procesarPago(data: any) {
-    return this.http.post(`${baseUrl}/stripe/`, data)
+    return this.http.post(`${baseUrl}/stripe/angular`, data)
   }
 }

@@ -21,7 +21,9 @@ import { UserService } from '../../../core/services/user.service';
 import { PensionService } from '../../../core/services/pension.service';
 import { listaMeses } from '../../../shared/constants/itemsMonths';
 import { SoloNumerosDirective } from '../../../shared/directives/solo-numeros.directive';
+import { MatRadioModule } from '@angular/material/radio';
 import { PeriodoService } from '../../../core/services/periodo.service';
+import { PagoService } from '../../../core/services/pagos.service';
 
 @Component({
   selector: 'app-pagar-matricula',
@@ -35,7 +37,8 @@ import { PeriodoService } from '../../../core/services/periodo.service';
     CommonModule,
     MatSelectModule,
     MatIconModule,
-    SoloNumerosDirective
+    SoloNumerosDirective,
+    MatRadioModule
   ],
   templateUrl: './pagar-matricula.component.html',
   styleUrls: ['./pagar-matricula.component.css']
@@ -49,6 +52,8 @@ export class PagarMatriculaComponent implements OnInit {
   estudiante: any;
   estudianteId: any;
   tiposDocumento: any;
+  tipoPago: string = 'boleta';
+  documento: any
 
   dni = '';
   nombreUsuario = '';
@@ -57,12 +62,12 @@ export class PagarMatriculaComponent implements OnInit {
   number = '';
   email = '';
   line1 = '';
-  tipoDoc = '';
   n_doc = '';
   periodoid: any;
 
   isDisabled = true;
   listaMeses: any
+  tipoPagoSeleccionado: boolean = false;
 
   constructor(
     private stripeService: StripeService,
@@ -76,8 +81,14 @@ export class PagarMatriculaComponent implements OnInit {
     private usuarioService: UserService,
     private periodoService: PeriodoService,
     private pensionService: PensionService,
+    private pagoService: PagoService,
     private snack: MatSnackBar
   ) {}
+
+  onTipoPagoChange() {
+    this.tipoPagoSeleccionado = !!this.tipoPago;
+    this.cargarElementosStripe();
+  }
 
   ngOnInit() {
     this.listaMeses = listaMeses;
@@ -138,12 +149,23 @@ export class PagarMatriculaComponent implements OnInit {
     if (stripe) {
       this.elements = stripe.elements();
       this.card = this.elements.create('card', { hidePostalCode: false });
-      this.card.mount('#card-element');
-      this.card.on('change', (event: StripeElementChangeEvent) => {
-        if (event.error) {
-          this.mostrarMensaje(event.error?.message, 3000);
+  
+      // Verifica que el contenedor exista antes de montar
+      setTimeout(() => {
+        const cardElementContainer = document.getElementById('card-element');
+        if (cardElementContainer) {
+          this.card?.mount('#card-element');
+  
+          // Manejo de errores en validación
+          this.card?.on('change', (event: StripeElementChangeEvent) => {
+            if (event.error) {
+              this.mostrarMensaje(event.error.message, 3000); // Mostrar mensaje de error
+            }
+          });
+        } else {
+          console.error('El contenedor #card-element no está disponible.');
         }
-      });
+      }, 0); // Espera mínima para garantizar que el DOM esté listo
     }
   }
 
@@ -181,9 +203,7 @@ export class PagarMatriculaComponent implements OnInit {
         divisa: 'pen',
         paymentMethodId: paymentMethod.id,
         metadata: {
-          tipoDocumento: this.tipoDoc,
-          nroDocumento: this.n_doc,
-          estudiante_id: this.estudianteId
+          nroDocumento: this.documento,
         },
       };
      
@@ -200,10 +220,7 @@ export class PagarMatriculaComponent implements OnInit {
         this.mostrarMensaje('El correo se encuentra vacio',3000);
         return;
       }
-      if(this.tipoDoc === ''){
-          this.mostrarMensaje('Tiene que elegir el tipo de documento',3000);
-      }
-      if(this.n_doc === ''){
+      if(this.documento === ''){
         this.mostrarMensaje('Numero de Documento Vacio',3000);
         return;
       }
@@ -247,6 +264,27 @@ export class PagarMatriculaComponent implements OnInit {
 
           this.matriculaService.agregarMatricula(dataMatricula).subscribe(
             (data: any) => {
+              const pagoData = {
+                monto: data.monto,
+                divisa: 'PEN',
+                paymentMethodId: data.metodo_pago,
+                nombre_completo: `${this.estudiante.nombre} ${this.estudiante.apellido}`,
+                transactionDetails: `Pago de matrícula del estudiante con ID ${this.estudiante._id}`,
+                status: 'Aprobado',
+                stripeOperationId: data.n_operacion,
+                metadata: {
+                  nroDocumento: this.documento,
+                },
+                paymentDate: data.fecha,
+              };
+
+              this.pagoService.crearPago(pagoData).subscribe(
+                (data: any) => {
+                  console.log('Pago creado:', data);
+                  this.loading = false
+                }
+              );
+
               const currentYear = new Date().getFullYear();
 
               this.listaMeses.forEach((mes: any) => {

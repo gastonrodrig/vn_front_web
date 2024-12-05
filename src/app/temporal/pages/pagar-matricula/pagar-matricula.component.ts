@@ -205,6 +205,7 @@ export class PagarMatriculaComponent implements OnInit {
         metadata: {
           direccion: this.line1,
           tipoDocumento: this.tipoPago === 'Boleta' ? 'Dni' : 'Ruc',
+          tipoServicio: 'Matrícula',
           nroDocumento: this.documento,
         },
       };

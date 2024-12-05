@@ -26,6 +26,7 @@ export class GestionarPagosComponent {
   columns = [
     { header: 'Remitente', field: 'nombre_completo' },
     { header: 'Monto', field: 'monto' },
+    { header: 'Tipo de Servicio', field: 'tipoServicio' },
     { header: 'Estado', field: 'status' },
     { header: 'Nro. Documento', field: 'metadata.nroDocumento' },
     { header: 'Fecha', field: 'paymentDate' }
@@ -88,7 +89,7 @@ export class GestionarPagosComponent {
 
   convertMonto(monto: number): string {
     const montoConvertido = monto * (300 / 1000);
-    return montoConvertido.toFixed(2);
+    return Math.round(montoConvertido).toFixed(2);
   }
 
   formatFecha(fecha: any) {
